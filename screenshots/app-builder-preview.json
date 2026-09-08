@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Codepackr Finance",
+      "hasCanvas": false,
+      "bodyTextLen": 1349,
+      "bodyTextHash": "9ef419127dca62b205b81e4549d5e52d09d48b925f5ec798279b3b4fc09794ea",
+      "bodyTextPrefix": "C Codepackr Finance finance.codepackr.com Search calculators ⌘K ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Codepackr Finance",
+      "hasCanvas": false,
+      "bodyTextLen": 1312,
+      "bodyTextHash": "82967e47702af2e3eee95f49750b91db1ef7487e97828c71be08edc1d0fa2469",
+      "bodyTextPrefix": "C Codepackr Finance Search CODEPACKR FINANCE Calculators only. E",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--surface-elevated);
+  --color-fg: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-subtle: var(--ink-subtle);
+  --color-primary: var(--brand);
+  --color-primary-fg: var(--brand-fg);
+  --color-primary-hover: var(--brand-hover);
+  --color-border: var(--border);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-ring: var(--brand);
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+}
+
+:root {
+  --bg: #f6f4ef;
+  --surface: #fffcf7;
+  --surface-elevated: #f1eee6;
+  --surface-2: #f6f4ef;
+  --ink: #161410;
+  --ink-muted: #5c574e;
+  --ink-subtle: #8a8478;
+  --brand: #1d4ed8;
+  --brand-hover: #1e40af;
+  --brand-fg: #f8fafc;
+  --brand-light: color-mix(in oklab, var(--brand) 12%, transparent);
+  --border: color-mix(in oklab, var(--ink) 12%, transparent);
+  --border-strong: color-mix(in oklab, var(--ink) 22%, transparent);
+  --ok: #047857;
+  --warn: #b45309;
+  --danger: #b91c1c;
+  --shadow-border:
+    0px 0px 0px 1px rgba(22, 20, 16, 0.06),
+    0px 1px 2px -1px rgba(22, 20, 16, 0.06),
+    0px 2px 4px 0px rgba(22, 20, 16, 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px rgba(22, 20, 16, 0.08),
+    0px 1px 2px -1px rgba(22, 20, 16, 0.08),
+    0px 2px 4px 0px rgba(22, 20, 16, 0.06);
+  --motion-quick: 150ms;
+  --motion-fast: 250ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.dark {
+  --bg: #0c0b0a;
+  --surface: #161412;
+  --surface-elevated: #1f1c19;
+  --surface-2: #0c0b0a;
+  --ink: #f4f1ea;
+  --ink-muted: #b4aea3;
+  --ink-subtle: #7d776c;
+  --brand: #60a5fa;
+  --brand-hover: #93c5fd;
+  --brand-fg: #0b1220;
+  --brand-light: color-mix(in oklab, var(--brand) 16%, transparent);
+  --border: color-mix(in oklab, var(--ink) 14%, transparent);
+  --border-strong: color-mix(in oklab, var(--ink) 24%, transparent);
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-border-hover: 0 0 0 1px rgba(255, 255, 255, 0.13);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  font-family: var(--font-display);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

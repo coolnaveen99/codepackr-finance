@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    @font-face {
+      font-family: "Fraunces";
+      font-weight: 600 700;
+      font-style: normal;
+      src: url("fonts/fraunces-700.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Source Sans 3";
+      font-weight: 500 600;
+      font-style: normal;
+      src: url("fonts/sourcesans3-500.woff2") format("woff2");
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #F8FAFC;
+    }
+    .card {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      background:
+        radial-gradient(ellipse 64% 70% at 50% 40%, rgba(37, 99, 235, 0.09), transparent 64%),
+        linear-gradient(180deg, #FCFDFF 0%, #F1F5F9 100%);
+      color: #0F172A;
+      font-family: "Source Sans 3", sans-serif;
+    }
+    .ledgers {
+      position: absolute;
+      inset: 56px 64px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0 55px,
+        rgba(15, 23, 42, 0.028) 55px 56px
+      );
+      pointer-events: none;
+    }
+    .grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.14;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .lockup {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .mark {
+      width: 88px;
+      height: 88px;
+      margin-bottom: 26px;
+    }
+    h1 {
+      font-family: "Fraunces", serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-size: 92px;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: #0F172A;
+      text-align: center;
+    }
+    h2 {
+      font-family: "Fraunces", serif;
+      font-optical-sizing: auto;
+      font-weight: 600;
+      font-size: 92px;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: #2563EB;
+      text-align: center;
+      margin-top: 6px;
+    }
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .rule span.line {
+      width: 48px;
+      height: 1px;
+      background: #2563EB;
+      opacity: 0.4;
+    }
+    .rule p {
+      font-family: "Source Sans 3", sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: 0.045em;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .horizon {
+      position: absolute;
+      left: 50%;
+      bottom: 52px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+      opacity: 0.2;
+    }
+    .horizon i {
+      display: block;
+      width: 12px;
+      border-radius: 3px 3px 0 0;
+      background: #2563EB;
+    }
+    .horizon i:nth-child(1) { height: 16px; }
+    .horizon i:nth-child(2) { height: 28px; }
+    .horizon i:nth-child(3) { height: 42px; background: #059669; }
+    .horizon i:nth-child(4) { height: 24px; }
+    .horizon i:nth-child(5) { height: 34px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="ledgers"></div>
+    <div class="grain"></div>
+    <div class="lockup">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path
+          d="M20.6 9.4a9.2 9.2 0 1 0 0 13.2"
+          fill="none"
+          stroke="#2563EB"
+          stroke-width="5"
+          stroke-linecap="round"
+        />
+        <rect x="20.6" y="18.2" width="2.8" height="5.6" rx="0.7" fill="#2563EB"/>
+        <rect x="24.2" y="14.6" width="2.8" height="9.2" rx="0.7" fill="#2563EB"/>
+        <rect x="27.8" y="10.6" width="2.8" height="13.2" rx="0.7" fill="#059669"/>
+      </svg>
+      <h1>Codepackr</h1>
+      <h2>Finance</h2>
+      <div class="rule">
+        <span class="line"></span>
+        <p>Private in-browser calculators</p>
+        <span class="line"></span>
+      </div>
+    </div>
+    <div class="horizon" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</body>
+</html>
