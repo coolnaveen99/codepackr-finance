@@ -710,7 +710,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onBack }) => {
                     const isSaving = savingToolId === tool.id;
                     const isSelected = selectedToolIds.includes(tool.id);
                     const rolloutVal = gov.rolloutPercentage !== undefined ? gov.rolloutPercentage : 100;
-                    const hits = gov.monthlyHits || (tool.category === 'edi' ? 14200 : tool.category === 'formatters' ? 22400 : 8500);
+                    const hits = gov.monthlyHits || (tool.id === 'financial-planner' ? 24500 : 18500);
 
                     return (
                       <tr

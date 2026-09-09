@@ -248,7 +248,7 @@ export function useToolGovernance() {
       visibility: 'public',
       rolloutPercentage: 100,
       healthStatus: 'healthy',
-      monthlyHits: tool?.category === 'edi' ? 14200 : tool?.category === 'formatters' ? 22400 : 8500,
+      monthlyHits: tool?.id === 'financial-planner' ? 24500 : 18500,
     };
   };
 

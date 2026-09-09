@@ -187,7 +187,7 @@ The project is pre-configured for Vercel:
 - **Bing Webmaster Verification**: Included in `index.html` and `BingSiteAuth.xml`.
 - **Yandex Verification**: Included in `index.html`.
 - **Google AdSense**:
-  - Publisher ID: `pub-7526363571565796`
+  - Publisher ID: `pub-7368262160205015`
   - Auto-Ads script and `<meta name="google-adsense-account">` in `<head>`.
   - Authorized digital seller records in `public/ads.txt`.
   - Crawler access enabled for `User-agent: Mediapartners-Google` in `public/robots.txt`.
