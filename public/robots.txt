@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+User-agent: Yandex
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon.svg
+Allow: /favicon-*.png
+Allow: /apple-touch-icon.png
+
+User-agent: YandexBot
+Allow: /
+Allow: /favicon.ico
+Allow: /favicon.svg
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /
+
+Sitemap: https://www.codepackr.com/sitemap.xml

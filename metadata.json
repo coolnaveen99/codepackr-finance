@@ -1,0 +1,6 @@
+{
+  "name": "Codepackr Finance",
+  "description": "Free browser-based financial calculators for retirement planning, loans, SIPs, and investments, calculated locally.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

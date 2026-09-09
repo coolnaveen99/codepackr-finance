@@ -1,0 +1,346 @@
+{
+  "calculators": {
+    "name": "Financial Calculators",
+    "title": "Financial Calculators - CodePackr Finance",
+    "description": "Calculate loans, monthly EMIs, amortization schedules, SIP returns, retirement corpus, and investment growth with multi-currency support.",
+    "canonicalPath": "/calculators",
+    "canonicalUrl": "https://finance.codepackr.com/calculators",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for Financial Calculators.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for Financial Calculators.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Financial Calculators?",
+        "answer": "No. All operations in Financial Calculators execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Financial Calculators offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Financial Calculators offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Financial Calculators handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "financial-planner": {
+    "name": "Financial Planning & Retirement Calculator",
+    "title": "Financial Planning & Retirement Calculator - CodePackr Finance",
+    "description": "Calculate your retirement corpus, investment growth, retirement income, financial health, corpus sustainability and savings gap with our advanced financial planning calculator.",
+    "canonicalPath": "/financial-planner",
+    "canonicalUrl": "https://finance.codepackr.com/financial-planner",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for Financial Planning & Retirement Calculator.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for Financial Planning & Retirement Calculator.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Financial Planning & Retirement Calculator?",
+        "answer": "No. All operations in Financial Planning & Retirement Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Financial Planning & Retirement Calculator offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Financial Planning & Retirement Calculator offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Financial Planning & Retirement Calculator handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "loan-calculator": {
+    "name": "Loan & EMI Calculator",
+    "title": "Loan & EMI Calculator - CodePackr Finance",
+    "description": "Calculate monthly loan EMI, total interest, and comprehensive repayment timeline.",
+    "canonicalPath": "/loan-calculator",
+    "canonicalUrl": "https://finance.codepackr.com/loan-calculator",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for Loan & EMI Calculator.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for Loan & EMI Calculator.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Loan & EMI Calculator?",
+        "answer": "No. All operations in Loan & EMI Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Loan & EMI Calculator offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Loan & EMI Calculator offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Loan & EMI Calculator handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "sip-calculator": {
+    "name": "SIP Calculator",
+    "title": "SIP Calculator - CodePackr Finance",
+    "description": "Calculate future wealth and expected maturity values for Systematic Investment Plans (SIP) and mutual fund investments with compounding graphs.",
+    "canonicalPath": "/sip-calculator",
+    "canonicalUrl": "https://finance.codepackr.com/sip-calculator",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for SIP Calculator.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for SIP Calculator.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using SIP Calculator?",
+        "answer": "No. All operations in SIP Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use SIP Calculator offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using SIP Calculator offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does SIP Calculator handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "investment-calculator": {
+    "name": "Investment Calculator",
+    "title": "Investment Calculator - CodePackr Finance",
+    "description": "Calculate long-term investment growth, future portfolio values, and compound interest earnings with customizable deposit schedules and interactive graphs.",
+    "canonicalPath": "/investment-calculator",
+    "canonicalUrl": "https://finance.codepackr.com/investment-calculator",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for Investment Calculator.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for Investment Calculator.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Investment Calculator?",
+        "answer": "No. All operations in Investment Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Investment Calculator offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Investment Calculator offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Investment Calculator handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "contact": {
+    "name": "Contact & Feedback",
+    "title": "Contact & Feedback - CodePackr Finance",
+    "description": "Get in touch with the CodePackr Finance team for bug reports, tool requests, and user feedback.",
+    "canonicalPath": "/contact",
+    "canonicalUrl": "https://finance.codepackr.com/contact",
+    "category": "general",
+    "features": [
+      "Fast, responsive browser calculator for Contact & Feedback with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Contact & Feedback?",
+        "answer": "No. All operations in Contact & Feedback execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Contact & Feedback offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Contact & Feedback offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Contact & Feedback handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "privacy": {
+    "name": "Privacy Policy",
+    "title": "Privacy Policy - CodePackr Finance",
+    "description": "Learn how CodePackr Finance protects your privacy with 100% client-side calculations and zero server data storage.",
+    "canonicalPath": "/privacy",
+    "canonicalUrl": "https://finance.codepackr.com/privacy",
+    "category": "general",
+    "features": [
+      "Fast, responsive browser calculator for Privacy Policy with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Privacy Policy?",
+        "answer": "No. All operations in Privacy Policy execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Privacy Policy offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Privacy Policy offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Privacy Policy handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "terms": {
+    "name": "Terms and Conditions",
+    "title": "Terms and Conditions - CodePackr Finance",
+    "description": "Terms of service, user guidelines, and disclaimer for using CodePackr Finance free online financial calculators.",
+    "canonicalPath": "/terms",
+    "canonicalUrl": "https://finance.codepackr.com/terms",
+    "category": "general",
+    "features": [
+      "Fast, responsive browser calculator for Terms and Conditions with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Terms and Conditions?",
+        "answer": "No. All operations in Terms and Conditions execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Terms and Conditions offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Terms and Conditions offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Terms and Conditions handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "home": {
+    "name": "CodePackr Finance",
+    "title": "CodePackr Finance - Free Smart Financial Calculators",
+    "description": "Free online financial calculators for loans, mortgages, retirement, budgeting, and investing — calculated instantly and privately in your browser.",
+    "canonicalPath": "/",
+    "canonicalUrl": "https://finance.codepackr.com/",
+    "category": "finance",
+    "features": [
+      "Smart financial calculators for loans, mortgages, retirement, and budgeting.",
+      "100% client-side execution ensuring zero financial data leaves your browser.",
+      "PWA offline caching for reliable access without internet.",
+      "Clean, responsive design with full dark mode and light mode support.",
+      "No registration, no accounts, and no usage limitations."
+    ],
+    "howToUse": [
+      "Browse tools by category or press Ctrl+K / Cmd+K to search instantly.",
+      "Select any formatter, validator, converter, or calculator.",
+      "Paste your input data to view real-time processed results.",
+      "Bookmark your most frequently used tools for one-click access."
+    ],
+    "faqs": [
+      {
+        "question": "What is CodePackr Finance?",
+        "answer": "CodePackr Finance is a collection of high-performance financial calculators designed to run entirely client-side in your web browser with maximum speed and complete privacy."
+      },
+      {
+        "question": "Are my code and data private on CodePackr Finance?",
+        "answer": "Yes. All data processing occurs locally on your machine using JavaScript. We never upload or save your code, secrets, or inputs to any external server."
+      },
+      {
+        "question": "Is CodePackr Finance free to use?",
+        "answer": "Yes, CodePackr Finance is completely free with no usage limits or account registration required."
+      }
+    ]
+  }
+}

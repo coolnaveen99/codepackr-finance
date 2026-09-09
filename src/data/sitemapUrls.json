@@ -1,0 +1,80 @@
+{
+  "updatedAt": "2026-09-09",
+  "host": "finance.codepackr.com",
+  "baseUrl": "https://finance.codepackr.com",
+  "totalUrls": 9,
+  "urls": [
+    {
+      "loc": "https://finance.codepackr.com/",
+      "path": "/",
+      "name": "CodePackr Finance - Free Online Financial Calculators",
+      "priority": "1.0",
+      "changefreq": "weekly",
+      "category": "home"
+    },
+    {
+      "loc": "https://finance.codepackr.com/calculators",
+      "path": "/calculators",
+      "name": "Financial Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/financial-planner",
+      "path": "/financial-planner",
+      "name": "Financial Planning & Retirement Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/loan-calculator",
+      "path": "/loan-calculator",
+      "name": "Loan & EMI Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/sip-calculator",
+      "path": "/sip-calculator",
+      "name": "SIP Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/investment-calculator",
+      "path": "/investment-calculator",
+      "name": "Investment Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/contact",
+      "path": "/contact",
+      "name": "Contact & Support",
+      "priority": "0.7",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/privacy",
+      "path": "/privacy",
+      "name": "Privacy Policy",
+      "priority": "0.6",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/terms",
+      "path": "/terms",
+      "name": "Terms and Conditions",
+      "priority": "0.6",
+      "changefreq": "monthly",
+      "category": "legal"
+    }
+  ]
+}
