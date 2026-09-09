@@ -15,7 +15,13 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Private in-browser finance calculators from Codepackr — EMI, SIP, investment, retirement planning, and everyday math. Zero data leaves your browser.",
+          "Financial planning and calculator suite featuring loan, SIP, investment, tip, and percentage calculators.",
+      },
+      { property: "og:title", content: APP_NAME },
+      {
+        property: "og:description",
+        content:
+          "Financial planning and calculator suite featuring loan, SIP, investment, tip, and percentage calculators.",
       },
       { name: "theme-color", content: "#1d4ed8" },
     ],

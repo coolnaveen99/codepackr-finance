@@ -1,0 +1,8 @@
+{
+  "name": "CodePackr Finance",
+  "description": "Financial planning and calculator suite featuring loan, SIP, investment, tip, and percentage calculators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

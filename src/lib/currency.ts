@@ -51,7 +51,7 @@ export function formatMoney(
 }
 
 export function parseAmount(raw: string): number {
-  const cleaned = raw.replace(/[^0-9.\-]/g, "");
+  const cleaned = raw.replace(/[^0-9.-]/g, "");
   const n = Number(cleaned);
   return Number.isFinite(n) ? n : 0;
 }
