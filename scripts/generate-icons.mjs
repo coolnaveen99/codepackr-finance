@@ -4,334 +4,179 @@ import zlib from 'node:zlib';
 
 function crc32(buf) {
   let crc = 0 ^ -1;
-  for (let i = 0; i < buf.length; i++) {
-    crc = (crc >>> 8) ^ table[(crc ^ buf[i]) & 0xff];
-  }
+  for (let i = 0; i < buf.length; i++) crc = (crc >>> 8) ^ table[(crc ^ buf[i]) & 0xff];
   return (crc ^ -1) >>> 0;
 }
 
 const table = new Uint32Array(256);
 for (let i = 0; i < 256; i++) {
   let c = i;
-  for (let k = 0; k < 8; k++) {
-    c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
-  }
+  for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
   table[i] = c;
 }
 
 function makeChunk(type, data) {
-  const len = Buffer.alloc(4);
-  len.writeUInt32BE(data.length, 0);
+  const len = Buffer.alloc(4); len.writeUInt32BE(data.length, 0);
   const typeBuf = Buffer.from(type, 'ascii');
-  const crcInput = Buffer.concat([typeBuf, data]);
-  const crc = Buffer.alloc(4);
-  crc.writeUInt32BE(crc32(crcInput), 0);
+  const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(Buffer.concat([typeBuf, data])), 0);
   return Buffer.concat([len, typeBuf, data, crc]);
 }
 
 function createPng(width, height, drawFn) {
-  const header = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-
+  const header = Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);
   const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(width, 0);
-  ihdr.writeUInt32BE(height, 4);
-  ihdr.writeUInt8(8, 8); // bit depth
-  ihdr.writeUInt8(6, 9); // RGBA
-  ihdr.writeUInt8(0, 10);
-  ihdr.writeUInt8(0, 11);
-  ihdr.writeUInt8(0, 12);
-
-  const rawScanlines = Buffer.alloc(height * (1 + width * 4));
+  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4);
+  ihdr.writeUInt8(8, 8); ihdr.writeUInt8(6, 9);
+  const raw = Buffer.alloc(height * (1 + width * 4));
   let offset = 0;
-
   for (let y = 0; y < height; y++) {
-    rawScanlines[offset++] = 0; // Filter: None
+    raw[offset++] = 0;
     for (let x = 0; x < width; x++) {
-      const [r, g, b, a] = drawFn(x, y, width, height);
-      rawScanlines[offset++] = r;
-      rawScanlines[offset++] = g;
-      rawScanlines[offset++] = b;
-      rawScanlines[offset++] = a;
+      const [r,g,b,a] = drawFn(x,y,width,height);
+      raw[offset++] = r; raw[offset++] = g; raw[offset++] = b; raw[offset++] = a;
     }
   }
-
-  const compressed = zlib.deflateSync(rawScanlines);
-  const idat = makeChunk('IDAT', compressed);
-  const iend = makeChunk('IEND', Buffer.alloc(0));
-
-  return Buffer.concat([header, makeChunk('IHDR', ihdr), idat, iend]);
+  return Buffer.concat([header, makeChunk('IHDR', ihdr), makeChunk('IDAT', zlib.deflateSync(raw)), makeChunk('IEND', Buffer.alloc(0))]);
 }
 
-// Distance from point (px, py) to line segment (x1, y1)-(x2, y2)
 function distToSegment(px, py, x1, y1, x2, y2) {
-  const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-  if (l2 === 0) return Math.hypot(px - x1, py - y1);
-  let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
-  t = Math.max(0, Math.min(1, t));
-  return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
+  const l2 = (x2-x1)**2 + (y2-y1)**2;
+  if (!l2) return Math.hypot(px-x1, py-y1);
+  const t = Math.max(0, Math.min(1, ((px-x1)*(x2-x1)+(py-y1)*(y2-y1))/l2));
+  return Math.hypot(px-(x1+t*(x2-x1)), py-(y1+t*(y2-y1)));
 }
 
-// Draw icon with Codepackr brand gradient (#5B52E8 -> #009F88) and finance growth chart (bars + trend arrow)
+// CodePackr Finance mark from the approved HD brand artwork:
+// blue C/ribbon + green ascending bars and growth arrow.
 function drawIcon(x, y, w, h) {
   const nx = (x + 0.5) / w;
   const ny = (y + 0.5) / h;
-  const cx = 0.5;
-  const cy = 0.5;
+  const r = Math.max(0, Math.abs(nx-.5)-.42);
+  const s = Math.max(0, Math.abs(ny-.5)-.42);
+  if (Math.hypot(r,s) > .08) return [0,0,0,0];
 
-  // Background rounded square
-  const r = 0.22; // corner radius normalized
-  const dx = Math.max(0, Math.abs(nx - cx) - (0.45 - r));
-  const dy = Math.max(0, Math.abs(ny - cy) - (0.45 - r));
-  const dist = Math.sqrt(dx * dx + dy * dy);
+  const blue = (t) => [
+    Math.round(19*(1-t)+7*t), Math.round(181*(1-t)+92*t), Math.round(244*(1-t)+234*t)
+  ];
+  const green = (t) => [Math.round(145*(1-t)+20*t), Math.round(238*(1-t)+184*t), Math.round(99*(1-t)+61*t)];
 
-  if (dist > r) {
-    return [0, 0, 0, 0]; // Transparent outside rounded container
+  // Large blue C/ribbon silhouette, approximated from the supplied master artwork.
+  const topC = ny >= .10 && ny <= .34 && nx >= .11 && nx <= .82 && nx <= (.72 + (ny-.10)*1.1);
+  const leftC = nx >= .08 && nx <= .36 && ny >= .10 && ny <= .82;
+  const bottomC = ny >= .66 && ny <= .90 && nx >= .10 && nx <= .67 && nx >= (.12 + (ny-.66)*.12);
+  const innerCut = nx >= .18 && nx <= .66 && ny >= .25 && ny <= .70;
+  if ((topC || leftC || bottomC) && !innerCut) {
+    const t = Math.max(0, Math.min(1, (nx+ny)/1.5));
+    return [...blue(t),255];
   }
 
-  // Brand gradient: #5B52E8 (91, 82, 232) to #009F88 (0, 159, 136)
-  const grad = Math.max(0, Math.min(1, (nx + ny) * 0.5));
-  let bgR = Math.round(91 * (1 - grad) + 0 * grad);
-  let bgG = Math.round(82 * (1 - grad) + 159 * grad);
-  let bgB = Math.round(232 * (1 - grad) + 136 * grad);
-
-  // Bars (normalized coords matching SVG)
+  // Green bars.
   const bars = [
-    { x: 0.219, y: 0.562, w: 0.109, h: 0.187 },
-    { x: 0.391, y: 0.437, w: 0.109, h: 0.312 },
-    { x: 0.562, y: 0.281, w: 0.109, h: 0.469 },
+    {x:.225,y:.56,w:.115,h:.19},
+    {x:.405,y:.42,w:.115,h:.33},
+    {x:.585,y:.25,w:.115,h:.50}
   ];
-
-  for (const b of bars) {
-    if (nx >= b.x && nx <= b.x + b.w && ny >= b.y && ny <= b.y + b.h) {
-      return [255, 255, 255, 255];
-    }
+  for (const b of bars) if (nx>=b.x && nx<=b.x+b.w && ny>=b.y && ny<=b.y+b.h) {
+    return [...green(Math.max(0,Math.min(1,(nx+ny)/1.5))),255];
   }
 
-  // Trend line segments + arrow head
-  const strokeWidth = w <= 20 ? 0.07 : 0.055;
-
+  // Green growth curve and arrow head.
   const segs = [
-    [0.219, 0.625, 0.391, 0.500],
-    [0.391, 0.500, 0.562, 0.344],
-    [0.562, 0.344, 0.781, 0.188],
-    [0.688, 0.188, 0.781, 0.188],
-    [0.781, 0.188, 0.781, 0.281],
+    [.16,.69,.34,.76],[.34,.76,.53,.70],[.53,.70,.67,.57],[.67,.57,.76,.39]
   ];
-
-  let minDist = Infinity;
-  for (const [x1, y1, x2, y2] of segs) {
-    const d = distToSegment(nx, ny, x1, y1, x2, y2);
-    if (d < minDist) minDist = d;
+  let d = Infinity;
+  for (const s2 of segs) d = Math.min(d, distToSegment(nx,ny,...s2));
+  if (d < .035) return [...green(Math.max(0,Math.min(1,(nx+ny)/1.5))),255];
+  if (nx>=.70 && nx<=.88 && ny>=.25 && ny<=.47) {
+    const ax = nx-.79, ay = ny-.36;
+    if (Math.abs(ay) < .11 && ax > -.05) return [...green(.45),255];
   }
 
-  if (minDist <= strokeWidth) {
-    return [255, 255, 255, 255];
-  } else if (minDist <= strokeWidth + 0.025) {
-    const alpha = 1 - (minDist - strokeWidth) / 0.025;
-    return [
-      Math.round(255 * alpha + bgR * (1 - alpha)),
-      Math.round(255 * alpha + bgG * (1 - alpha)),
-      Math.round(255 * alpha + bgB * (1 - alpha)),
-      255
-    ];
-  }
-
-  return [bgR, bgG, bgB, 255];
+  // Transparent outside the mark; subtle dark anti-aliasing is intentionally avoided.
+  return [0,0,0,0];
 }
 
-// Generate DIB ICO file containing multiple sizes (16x16 and 32x32)
-// This is standard 32bpp BMP DIB format compatible with all crawlers & browsers
 function createIcoFile(sizes) {
-  const numImages = sizes.length;
-  const header = Buffer.alloc(6);
-  header.writeUInt16LE(0, 0); // reserved
-  header.writeUInt16LE(1, 2); // icon type (1 = icon)
-  header.writeUInt16LE(numImages, 4); // count
-
-  const dirEntries = [];
-  const imageBuffers = [];
-
-  let currentOffset = 6 + numImages * 16;
-
+  const header = Buffer.alloc(6); header.writeUInt16LE(0,0); header.writeUInt16LE(1,2); header.writeUInt16LE(sizes.length,4);
+  const entries = []; const images = []; let offset = 6 + sizes.length*16;
   for (const size of sizes) {
-    const width = size;
-    const height = size;
-
-    // BitmapInfoHeader (40 bytes)
     const bih = Buffer.alloc(40);
-    bih.writeUInt32LE(40, 0); // biSize
-    bih.writeInt32LE(width, 4); // biWidth
-    bih.writeInt32LE(height * 2, 8); // biHeight (doubled for XOR + AND mask)
-    bih.writeUInt16LE(1, 12); // biPlanes
-    bih.writeUInt16LE(32, 14); // biBitCount (32-bit RGBA)
-    bih.writeUInt32LE(0, 16); // biCompression (BI_RGB)
-    bih.writeUInt32LE(width * height * 4, 20); // biSizeImage
-    bih.writeInt32LE(0, 24); // biXPelsPerMeter
-    bih.writeInt32LE(0, 28); // biYPelsPerMeter
-    bih.writeUInt32LE(0, 32); // biClrUsed
-    bih.writeUInt32LE(0, 36); // biClrImportant
-
-    // Pixel data: bottom-to-top rows
-    const pixelData = Buffer.alloc(width * height * 4);
-    let pOffset = 0;
-    for (let y = height - 1; y >= 0; y--) {
-      for (let x = 0; x < width; x++) {
-        const [r, g, b, a] = drawIcon(x, y, width, height);
-        pixelData[pOffset++] = b; // Blue
-        pixelData[pOffset++] = g; // Green
-        pixelData[pOffset++] = r; // Red
-        pixelData[pOffset++] = a; // Alpha
-      }
+    bih.writeUInt32LE(40,0); bih.writeInt32LE(size,4); bih.writeInt32LE(size*2,8);
+    bih.writeUInt16LE(1,12); bih.writeUInt16LE(32,14); bih.writeUInt32LE(0,16);
+    bih.writeUInt32LE(size*size*4,20);
+    const pixels = Buffer.alloc(size*size*4); let p=0;
+    for (let y=size-1;y>=0;y--) for (let x=0;x<size;x++) {
+      const [r,g,b,a]=drawIcon(x,y,size,size);
+      pixels[p++]=b; pixels[p++]=g; pixels[p++]=r; pixels[p++]=a;
     }
-
-    // AND mask (1 bit per pixel, rows padded to multiple of 4 bytes)
-    const rowBytes = Math.ceil(width / 32) * 4;
-    const andMask = Buffer.alloc(rowBytes * height, 0); // 0 means opaque (since alpha channel is used)
-
-    const imgBuf = Buffer.concat([bih, pixelData, andMask]);
-    imageBuffers.push(imgBuf);
-
-    // Directory entry (16 bytes)
-    const entry = Buffer.alloc(16);
-    entry.writeUInt8(width >= 256 ? 0 : width, 0);
-    entry.writeUInt8(height >= 256 ? 0 : height, 1);
-    entry.writeUInt8(0, 2); // color palette count
-    entry.writeUInt8(0, 3); // reserved
-    entry.writeUInt16LE(1, 4); // color planes
-    entry.writeUInt16LE(32, 6); // bits per pixel
-    entry.writeUInt32LE(imgBuf.length, 8); // image size in bytes
-    entry.writeUInt32LE(currentOffset, 12); // offset
-
-    dirEntries.push(entry);
-    currentOffset += imgBuf.length;
+    const rowBytes=Math.ceil(size/32)*4;
+    const mask=Buffer.alloc(rowBytes*size,0);
+    const image=Buffer.concat([bih,pixels,mask]); images.push(image);
+    const entry=Buffer.alloc(16);
+    entry.writeUInt8(size>=256?0:size,0); entry.writeUInt8(size>=256?0:size,1);
+    entry.writeUInt16LE(1,4); entry.writeUInt16LE(32,6); entry.writeUInt32LE(image.length,8); entry.writeUInt32LE(offset,12);
+    entries.push(entry); offset += image.length;
   }
-
-  return Buffer.concat([header, ...dirEntries, ...imageBuffers]);
+  return Buffer.concat([header,...entries,...images]);
 }
 
-// Generate SVG Favicon
 function generateSvgFavicon() {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <defs>
-    <!-- CodePackr Brand Gradient: Indigo Violet to Teal -->
-    <linearGradient id="codepackr-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#5B52E8" />
-      <stop offset="100%" stop-color="#009F88" />
-    </linearGradient>
-    
-    <!-- Subtle Inner Shadow -->
-    <filter id="inner-glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="2" result="blur" />
-      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowDiff" />
-      <feFlood flood-color="white" flood-opacity="0.3" />
-      <feComposite in2="shadowDiff" operator="in" />
-      <feComposite in2="SourceGraphic" operator="over" />
-    </filter>
-  </defs>
-
-  <!-- Background Canvas -->
-  <rect width="64" height="64" rx="16" fill="url(#codepackr-grad)" filter="url(#inner-glow)"/>
-
-  <!-- Finance Growth: Ascending bars + strong trend arrow -->
-  <g fill="#ffffff">
-    <rect x="14" y="36" width="7" height="12" rx="1.5"/>
-    <rect x="25" y="28" width="7" height="20" rx="1.5"/>
-    <rect x="36" y="18" width="7" height="30" rx="1.5"/>
-  </g>
-  <g fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="14 40 25 32 36 22 50 12"/>
-    <polyline points="44 12 50 12 50 18"/>
-  </g>
-</svg>
-`;
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">CodePackr Finance</title><desc id="desc">Blue CodePackr finance mark with green growth bars and arrow</desc>
+<defs><linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#13B5F4"/><stop offset=".55" stop-color="#087CFF"/><stop offset="1" stop-color="#075BEA"/></linearGradient><linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#91EE63"/><stop offset="1" stop-color="#14B83D"/></linearGradient></defs>
+<path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
+<path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
+<path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
+<rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/><rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/><rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
+</svg>`;
 }
 
-// Draw OpenGraph preview banner (1200x630)
-function drawOgBanner(x, y, w, h) {
-  const nx = x / w;
-  const ny = y / h;
-
-  // Modern dark navy gradient background: #0B0F19 to #171E2E
-  const bgR = Math.round(11 + nx * 14 + ny * 6);
-  const bgG = Math.round(15 + nx * 18 + ny * 8);
-  const bgB = Math.round(25 + nx * 28 + ny * 12);
-
-  // Top accent line in Brand Violet / Teal gradient
-  if (ny < 0.015) {
-    return [Math.round(91 * (1 - nx)), Math.round(82 * (1 - nx) + 159 * nx), Math.round(232 * (1 - nx) + 136 * nx), 255];
-  }
-
-  // Left card icon preview (center around nx: 0.20, ny: 0.5)
-  if (nx >= 0.12 && nx <= 0.28 && ny >= 0.35 && ny <= 0.65) {
-    const iconX = Math.round((nx - 0.12) / 0.16 * 128);
-    const iconY = Math.round((ny - 0.35) / 0.30 * 128);
-    const [ir, ig, ib, ia] = drawIcon(iconX, iconY, 128, 128);
-    if (ia > 0) return [ir, ig, ib, ia];
-  }
-
-  // Title area horizontal glow bars (simulating typography banner)
-  if (nx >= 0.33 && nx <= 0.85) {
-    // Title bar
-    if (ny >= 0.38 && ny <= 0.44) return [255, 255, 255, 240];
-    // Subtitle bars
-    if (ny >= 0.48 && ny <= 0.51 && nx <= 0.78) return [160, 174, 192, 220];
-    if (ny >= 0.53 && ny <= 0.56 && nx <= 0.68) return [160, 174, 192, 220];
-    // Tag pill
-    if (ny >= 0.62 && ny <= 0.67 && nx <= 0.52) return [91, 82, 232, 255];
-  }
-
-  return [bgR, bgG, bgB, 255];
+function generateLogoSvg() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1274 384" role="img" aria-labelledby="title desc"><title id="title">CodePackr Finance</title><desc id="desc">CodePackr Finance — Calculate, Plan, Grow</desc><rect width="1274" height="384" rx="20" fill="#000"/><g transform="translate(24 36) scale(.66)">${generateSvgFavicon().split('<svg')[1].split('>')[1].split('</svg>')[0]}</g><text x="420" y="184" font-family="Arial,Helvetica,sans-serif" font-size="126" font-weight="800" letter-spacing="-6" fill="#fff">Code</text><text x="700" y="184" font-family="Arial,Helvetica,sans-serif" font-size="126" font-weight="800" letter-spacing="-6" fill="#0797ED">packr</text><text x="600" y="270" font-family="Arial,Helvetica,sans-serif" font-size="58" font-weight="700" letter-spacing="25" fill="#48D95B">FINANCE</text><text x="390" y="332" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="500" letter-spacing="9" fill="#B8C0D0">CALCULATE  •  PLAN  •  GROW</text></svg>`;
 }
 
-const publicDir = path.resolve('public');
-const distDir = path.resolve('dist');
-const ogDir = path.join(publicDir, 'assets', 'og');
-fs.mkdirSync(ogDir, { recursive: true });
-
-console.log('Generating favicon assets...');
-
-// 1. Generate PNGs
-const sizes = [
-  { file: 'favicon-16x16.png', size: 16 },
-  { file: 'favicon-32x32.png', size: 32 },
-  { file: 'apple-touch-icon.png', size: 180 },
-  { file: 'android-chrome-192x192.png', size: 192 },
-  { file: 'android-chrome-512x512.png', size: 512 }
-];
-
-for (const { file, size } of sizes) {
-  const png = createPng(size, size, drawIcon);
-  fs.writeFileSync(path.join(publicDir, file), png);
-  if (fs.existsSync(distDir)) {
-    fs.writeFileSync(path.join(distDir, file), png);
-  }
-  console.log(`Generated ${file} (${size}x${size})`);
+function drawOgBanner(x,y,w,h) {
+  const nx=x/w, ny=y/h;
+  const bgR=Math.round(11+nx*14+ny*6), bgG=Math.round(15+nx*18+ny*8), bgB=Math.round(25+nx*28+ny*12);
+  if (ny<.015) return [Math.round(91*(1-nx)),Math.round(82*(1-nx)+159*nx),Math.round(232*(1-nx)+136*nx),255];
+  return [bgR,bgG,bgB,255];
 }
 
-// 2. Generate SVG Favicon
-const svgFavicon = generateSvgFavicon();
-fs.writeFileSync(path.join(publicDir, 'favicon.svg'), svgFavicon, 'utf8');
+const publicDir=path.resolve('public');
+const distDir=path.resolve('dist');
+const ogDir=path.join(publicDir,'assets','og');
+fs.mkdirSync(ogDir,{recursive:true});
+
+const sizes=[16,32,48,64,96,128,180,192,256,384,512];
+for (const size of sizes) {
+  const png=createPng(size,size,drawIcon);
+  fs.writeFileSync(path.join(publicDir,`favicon-${size}x${size}.png`),png);
+  if (fs.existsSync(distDir)) fs.writeFileSync(path.join(distDir,`favicon-${size}x${size}.png`),png);
+}
+fs.writeFileSync(path.join(publicDir,'apple-touch-icon.png'),createPng(180,180,drawIcon));
+fs.writeFileSync(path.join(publicDir,'android-chrome-192x192.png'),createPng(192,192,drawIcon));
+fs.writeFileSync(path.join(publicDir,'android-chrome-512x512.png'),createPng(512,512,drawIcon));
+
+const svgFavicon=generateSvgFavicon();
+fs.writeFileSync(path.join(publicDir,'favicon.svg'),svgFavicon,'utf8');
+fs.writeFileSync(path.join(publicDir,'codepackr-finance-logo.svg'),generateLogoSvg(),'utf8');
 if (fs.existsSync(distDir)) {
-  fs.writeFileSync(path.join(distDir, 'favicon.svg'), svgFavicon, 'utf8');
+  fs.writeFileSync(path.join(distDir,'favicon.svg'),svgFavicon,'utf8');
+  fs.writeFileSync(path.join(distDir,'codepackr-finance-logo.svg'),generateLogoSvg(),'utf8');
 }
-console.log('Generated favicon.svg');
 
-// 3. Generate multi-resolution DIB ICO file (16x16 and 32x32)
-const icoFile = createIcoFile([16, 32]);
-fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoFile);
-if (fs.existsSync(distDir)) {
-  fs.writeFileSync(path.join(distDir, 'favicon.ico'), icoFile);
-}
-console.log(`Generated favicon.ico (Dual 16x16 & 32x32 DIB, ${icoFile.length} bytes)`);
+const ico=createIcoFile([16,32,48,64,128,256]);
+fs.writeFileSync(path.join(publicDir,'favicon.ico'),ico);
+if (fs.existsSync(distDir)) fs.writeFileSync(path.join(distDir,'favicon.ico'),ico);
 
-// 4. Generate OG Default preview image
-console.log('Generating assets/og/default.png (1200x630)...');
-const ogPng = createPng(1200, 630, drawOgBanner);
-fs.writeFileSync(path.join(ogDir, 'default.png'), ogPng);
+const ogPng=createPng(1200,630,drawOgBanner);
+fs.writeFileSync(path.join(ogDir,'default.png'),ogPng);
 if (fs.existsSync(distDir)) {
-  const distOgDir = path.join(distDir, 'assets', 'og');
-  fs.mkdirSync(distOgDir, { recursive: true });
-  fs.writeFileSync(path.join(distOgDir, 'default.png'), ogPng);
+  const distOgDir=path.join(distDir,'assets','og');
+  fs.mkdirSync(distOgDir,{recursive:true});
+  fs.writeFileSync(path.join(distOgDir,'default.png'),ogPng);
 }
-console.log('Generated assets/og/default.png');
+
+console.log(`Generated CodePackr Finance branding assets: ${sizes.length} PNG sizes + ICO + SVG + logo SVG.`);
