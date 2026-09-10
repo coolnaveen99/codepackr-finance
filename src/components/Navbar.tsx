@@ -50,6 +50,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  // Theme-aware logo: dark text version for light theme, light text for dark theme
+  const logoSrc = darkMode
+    ? '/codepackr-finance-logo-dark.svg'
+    : '/codepackr-finance-logo.svg';
+
   return (
     <header id="main-header" className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors border-[color:var(--border)] bg-[color:var(--surface)]/85">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,13 +80,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onGoHome();
                 }
               }}
-              className="flex items-center cursor-pointer focus:outline-none rounded-xl overflow-hidden bg-black shadow-sm hover:shadow-md transition-shadow"
+              className="flex items-center cursor-pointer focus:outline-none rounded-xl overflow-hidden transition-opacity hover:opacity-90"
               aria-label="CodePackr Finance home"
             >
               <img
-                src="/codepackr-finance-logo.svg"
+                src={logoSrc}
                 alt="CodePackr Finance — Calculate, Plan, Grow"
-                className="h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[250px] object-contain"
+                className="h-10 sm:h-11 w-auto max-w-[200px] sm:max-w-[240px] object-contain"
                 width="1274"
                 height="384"
               />
