@@ -43,6 +43,25 @@ const planningCards = [
   { title: 'Check My Financial Position', description: 'See the bigger picture across savings, debt, and net worth.', icon: BarChart3, matches: ['net worth', 'financial health', 'financial planner'], category: 'calculators' as CategoryFilter },
 ];
 
+const categoryCards = [
+  ['Loans & Debt', 'loans'],
+  ['Investments', 'investments'],
+  ['Tax', 'tax'],
+  ['Salary', 'salary'],
+  ['Retirement', 'retirement'],
+  ['Personal Finance', 'personal-finance'],
+  ['Real Estate', 'real-estate'],
+  ['Business Finance', 'business-finance'],
+  ['Advanced Finance', 'advanced-finance'],
+];
+
+const signaturePatterns = [
+  { title: 'Financial Health Check', description: 'A structured view of savings, debt, emergency funds, investments, and retirement readiness.', patterns: ['financial health', 'health check'] },
+  { title: 'Retirement Planner', description: 'Estimate future corpus needs with transparent assumptions and scenario thinking.', patterns: ['retirement', 'financial planner'] },
+  { title: 'FIRE Planner', description: 'Explore financial independence timelines using your own assumptions.', patterns: ['fire planner', 'fire'] },
+  { title: 'Net Worth Calculator', description: 'Understand the gap between what you own, what you owe, and where you are heading.', patterns: ['net worth'] },
+];
+
 export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onSelectTool, selectedCategory, onSelectCategory, onOpenSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -76,43 +95,49 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onSelectTool, sele
 
   return (
     <div id="home-dashboard" className="space-y-16 pb-20 animate-fade-in">
-      <section className="relative overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-sm">
-        <div className="absolute inset-0 pointer-events-none opacity-70">
-          <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[color:var(--brand)]/10 blur-3xl" />
+      {/* Hero - mirrors the established CodePackr landing-page hierarchy */}
+      <section className="relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] shadow-sm">
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[color:var(--brand)] via-[color:var(--accent)] to-[color:var(--success)]" />
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute right-[-80px] top-1/2 -translate-y-1/2 opacity-[0.07] text-[color:var(--brand)]" aria-hidden="true">
+            <span className="block text-[20rem] font-mono font-bold leading-none">&gt;=</span>
+          </div>
+          <div className="absolute -right-28 -top-28 h-72 w-72 rounded-full bg-[color:var(--brand)]/10 blur-3xl" />
           <div className="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-[color:var(--accent)]/10 blur-3xl" />
         </div>
-        <div className="relative z-10 px-6 py-10 sm:px-10 lg:px-14 lg:py-14">
+        <div className="relative z-10 px-6 py-12 sm:px-10 lg:px-12 lg:py-14">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-3 py-1.5 text-xs font-semibold text-[color:var(--ink-muted)]">
-              <ShieldCheck className="h-3.5 w-3.5 text-[color:var(--success)]" />
-              Transparent calculations. Clear assumptions. Private by design.
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)] mb-6">
+              <span className="w-2 h-2 rounded-full bg-[color:var(--success)] animate-pulse" />
+              100% Client-Side Execution
             </div>
-            <h1 className="mt-6 max-w-4xl text-4xl font-extrabold tracking-tight text-[color:var(--ink)] sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-              Free Financial Calculators &amp; Smart Money Tools
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[color:var(--ink)] leading-[1.08] mb-5 max-w-4xl">
+              Free Financial Calculators,<br />
+              Built for <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--brand)] to-[color:var(--accent)]">Smart Money Decisions.</span>
             </h1>
-            <p className="mt-5 max-w-3xl text-base leading-8 text-[color:var(--ink-muted)] sm:text-lg">
+            <p className="text-lg sm:text-xl text-[color:var(--ink-muted)] mb-8 max-w-3xl leading-relaxed">
               Calculate, compare and understand loans, investments, retirement, salary and personal finance with transparent assumptions and clear results.
             </p>
-            <div className="mt-8 max-w-3xl">
-              <button onClick={onOpenSearch} className="group flex w-full items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-4 py-4 text-left shadow-sm transition hover:border-[color:var(--brand)] focus:outline-none focus:ring-2 focus:ring-[color:var(--brand)]/30" aria-label="Search financial calculators">
-                <Search className="h-5 w-5 shrink-0 text-[color:var(--ink-muted)] group-hover:text-[color:var(--brand)]" />
-                <span className="flex-1 truncate text-sm font-medium text-[color:var(--ink-muted)] sm:text-base">Search financial calculators...</span>
-                <kbd className="hidden rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-2.5 py-1 font-mono text-xs text-[color:var(--ink-muted)] sm:inline-flex">Ctrl K</kbd>
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                onClick={() => document.getElementById('popular-tools')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-6 py-3 rounded-xl font-bold text-white bg-[color:var(--brand)] hover:bg-[color:var(--brand-hover)] transition-colors shadow-sm cursor-pointer inline-flex items-center gap-2"
+              >
+                Explore Calculators <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <button onClick={() => document.getElementById('popular-tools')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--brand)] px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[color:var(--brand-hover)]">
-                Explore Calculators <ArrowRight className="h-4 w-4" />
+              <button
+                onClick={onOpenSearch}
+                className="px-6 py-3 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+              >
+                <Search className="w-5 h-5" />
+                Search Calculators ({typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac') ? '⌘' : 'Ctrl'} K)
               </button>
-              <span className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-4 py-3 text-xs font-medium text-[color:var(--ink-muted)]">
-                <CircleDollarSign className="h-4 w-4" />
-                Built for everyday money decisions
-              </span>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Popular Tools */}
       <section id="popular-tools" className="space-y-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -145,6 +170,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onSelectTool, sele
         </div>
       </section>
 
+      {/* Intent-based navigation */}
       <section className="space-y-6">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Start with your goal</p>
@@ -166,10 +192,89 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({ onSelectTool, sele
         </div>
       </section>
 
+      {/* Categories */}
       <section className="space-y-6">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Explore by area</p>
           <h2 className="mt-1 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">Financial tool categories</h2>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {categoryCards.map(([title]) => (
+            <button key={title} onClick={() => onSelectCategory('calculators')} className="group rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-5 text-left transition hover:-translate-y-0.5 hover:border-[color:var(--brand)] hover:shadow-md">
+              <div className="text-sm font-bold text-[color:var(--ink)] group-hover:text-[color:var(--brand)]">{title}</div>
+              <div className="mt-2 text-xs text-[color:var(--ink-muted)]">Explore tools →</div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Signature Tools */}
+      <section className="space-y-6">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Signature</p>
+          <h2 className="mt-1 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">Tools for bigger decisions</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {signaturePatterns.map((item) => {
+            const target = findTool(...item.patterns);
+            return (
+              <button key={item.title} onClick={() => target ? onSelectTool(target) : onOpenSearch()} className="group rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 text-left transition hover:border-[color:var(--brand)] hover:shadow-lg">
+                <h3 className="font-extrabold text-[color:var(--ink)] group-hover:text-[color:var(--brand)]">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-muted)]">{item.description}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[color:var(--brand)]">Explore <ArrowRight className="h-4 w-4" /></span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Why */}
+      <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 sm:p-9">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Why CodePackr Finance?</p>
+          <h2 className="mt-2 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">Designed for clarity before commitment.</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {[
+              ['Free to use', 'Core calculators are available without a mandatory account.'],
+              ['Browser-first', 'Calculations are designed to run locally in your browser.'],
+              ['Transparent', 'Assumptions and methodology are easier to inspect and understand.'],
+              ['Export-ready', 'Turn important results into reports and reusable scenarios.'],
+            ].map(([title, text]) => (
+              <div key={title} className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-4">
+                <h3 className="font-bold text-[color:var(--ink)]">{title}</h3>
+                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-muted)]">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 sm:p-9">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">How calculations work</p>
+          <div className="mt-6 space-y-3">
+            {['Inputs', 'Formula', 'Result', 'Scenario', 'Export'].map((step, index) => (
+              <div key={step} className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-4 py-3">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--brand)] text-xs font-bold text-white">{index + 1}</span>
+                <span className="font-semibold text-[color:var(--ink)]">{step}</span>
+                {index < 4 && <ArrowRight className="ml-auto h-4 w-4 text-[color:var(--ink-muted)]" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust / methodology */}
+      <section className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 sm:p-9">
+        <div className="max-w-4xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Trust & methodology</p>
+          <h2 className="mt-2 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">Understand what the numbers mean.</h2>
+          <p className="mt-3 text-sm sm:text-base leading-7 text-[color:var(--ink-muted)]">Review calculation assumptions, methodology, sources and update context before using results for important financial decisions. Outputs are educational calculations based on the information and assumptions entered.</p>
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {['Editorial methodology', 'Calculation methodology', 'Data sources', 'Last reviewed'].map((item) => (
+            <div key={item} className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-4 py-4 text-sm font-semibold text-[color:var(--ink)]">
+              <ShieldCheck className="h-5 w-5 text-[color:var(--success)]" />
+              {item}
+            </div>
+          ))}
         </div>
       </section>
     </div>
