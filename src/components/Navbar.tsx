@@ -75,23 +75,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onGoHome();
                 }
               }}
-              className="flex items-center gap-3 group text-left cursor-pointer focus:outline-none"
+              className="flex items-center cursor-pointer focus:outline-none rounded-xl overflow-hidden bg-black shadow-sm hover:shadow-md transition-shadow"
+              aria-label="CodePackr Finance home"
             >
-              <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 bg-[color:var(--surface-elevated)]">
-                <img
-                  src="/favicon.svg"
-                  alt="CodePackr Finance"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg leading-tight tracking-tight text-[color:var(--ink)]">
-                  CodePackr Finance
-                </span>
-                <span className="text-[10px] font-mono font-medium tracking-wider text-[color:var(--ink-muted)] uppercase">
-                  Wealth &amp; Goals
-                </span>
-              </div>
+              <img
+                src="/codepackr-finance-logo.svg"
+                alt="CodePackr Finance — Calculate, Plan, Grow"
+                className="h-11 sm:h-12 w-auto max-w-[210px] sm:max-w-[250px] object-contain"
+                width="1274"
+                height="384"
+              />
             </a>
           </div>
 
