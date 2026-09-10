@@ -35,6 +35,7 @@ export const SLUG_TO_TOOL_ID: Record<string, string> = {
   'income-tax': 'income-tax-calculator',
   'tax-calculator': 'income-tax-calculator',
   'ctc-to-in-hand-calculator': 'ctc-to-in-hand-calculator',
+  'ctc-to-in-hand-salary-calculator': 'ctc-to-in-hand-calculator',
   'ctc-calculator': 'ctc-to-in-hand-calculator',
   'salary-calculator': 'ctc-to-in-hand-calculator',
   'loan-amortization-calculator': 'loan-amortization-calculator',
@@ -155,12 +156,17 @@ export function resolveCurrentRoute(): {
     return { page: 'privacy', tool: null, category: 'terms' };
   }
 
-  // 3. Check direct path slug (e.g. "json-formatter.html", "json-formatter", or "formatters")
+  // 3. Check direct path slug or a category-prefixed calculator path.
+  // Category-prefixed paths are aliases; direct tool slugs remain canonical.
   if (pathname && pathname !== 'index.html') {
-    const rawSlug = pathname.replace(/\.html$/, '');
+    const rawPath = pathname.replace(/\.html$/, '');
+    const pathSegments = rawPath.split('/').filter(Boolean);
+    const rawSlug = pathSegments.length === 2 && CATEGORY_SLUG_MAP[pathSegments[0]]
+      ? pathSegments[1]
+      : rawPath;
 
-    // Check category hubs first
-    if (CATEGORY_SLUG_MAP[rawSlug]) {
+    // Check category hubs first for one-segment paths.
+    if (pathSegments.length === 1 && CATEGORY_SLUG_MAP[rawSlug]) {
       return { page: 'home', tool: null, category: CATEGORY_SLUG_MAP[rawSlug] };
     }
 
