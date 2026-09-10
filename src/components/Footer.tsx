@@ -6,6 +6,7 @@ interface FooterProps {
   onGoHome: () => void;
   onGoContact: () => void;
   onGoPrivacy: (tab: 'privacy' | 'terms') => void;
+  onGoTrustPage: (page: 'about' | 'financial-disclaimer' | 'cookie-policy' | 'calculation-methodology' | 'editorial-policy') => void;
   onOpenSitemap: () => void;
   onOpenAdminLogin?: () => void;
 }
@@ -14,6 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
   onGoHome,
   onGoContact,
   onGoPrivacy,
+  onGoTrustPage,
   onOpenSitemap,
   onOpenAdminLogin,
 }) => {
@@ -37,6 +39,11 @@ export const Footer: React.FC<FooterProps> = ({
             <button onClick={onGoContact} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Contact</button>
             <button onClick={() => onGoPrivacy('privacy')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Privacy</button>
             <button onClick={() => onGoPrivacy('terms')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Terms</button>
+            <button onClick={() => onGoTrustPage('about')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">About</button>
+            <button onClick={() => onGoTrustPage('financial-disclaimer')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Disclaimer</button>
+            <button onClick={() => onGoTrustPage('cookie-policy')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Cookies</button>
+            <button onClick={() => onGoTrustPage('calculation-methodology')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Methodology</button>
+            <button onClick={() => onGoTrustPage('editorial-policy')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Editorial</button>
             <button onClick={onOpenSitemap} className="flex items-center gap-1.5 hover:text-[color:var(--brand)] transition-colors cursor-pointer">
               <Globe className="w-4 h-4" /> Index &amp; Sitemap
             </button>
