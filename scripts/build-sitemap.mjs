@@ -43,7 +43,12 @@ const specializedAliases = [];
 
 // 4. Legal & Company Pages
 const legalPages = [
+  { slug: 'about', name: 'About CodePackr Finance', priority: '0.7', changefreq: 'monthly', category: 'legal' },
   { slug: 'contact', name: 'Contact & Support', priority: '0.7', changefreq: 'monthly', category: 'legal' },
+  { slug: 'financial-disclaimer', name: 'Financial Disclaimer', priority: '0.6', changefreq: 'monthly', category: 'legal' },
+  { slug: 'cookie-policy', name: 'Cookie Policy', priority: '0.6', changefreq: 'monthly', category: 'legal' },
+  { slug: 'calculation-methodology', name: 'Calculation Methodology', priority: '0.6', changefreq: 'monthly', category: 'legal' },
+  { slug: 'editorial-policy', name: 'Editorial Policy', priority: '0.6', changefreq: 'monthly', category: 'legal' },
   { slug: 'privacy', name: 'Privacy Policy', priority: '0.6', changefreq: 'monthly', category: 'legal' },
   { slug: 'terms', name: 'Terms and Conditions', priority: '0.6', changefreq: 'monthly', category: 'legal' },
 ];
