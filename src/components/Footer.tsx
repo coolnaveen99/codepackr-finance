@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Globe, Lock } from 'lucide-react';
+import { Globe, Lock } from 'lucide-react';
 import { GithubIcon, XTwitterIcon, LinkedinIcon, YoutubeIcon, InstagramIcon } from './BrandIcons';
 
 interface FooterProps {
@@ -25,9 +25,13 @@ export const Footer: React.FC<FooterProps> = ({
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white bg-[color:var(--brand)]">
-              <Terminal className="w-4 h-4" />
-            </div>
+            <img
+              src="/codepackr-finance-icon.svg"
+              alt="CodePackr Finance"
+              className="w-8 h-8 rounded-lg object-contain shrink-0"
+              width="32"
+              height="32"
+            />
             <div>
               <span className="font-bold text-lg text-[color:var(--ink)] block leading-none">CodePackr Finance</span>
               <span className="text-xs text-[color:var(--ink-muted)]">Smart Financial Calculators</span>

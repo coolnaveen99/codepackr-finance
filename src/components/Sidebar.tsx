@@ -80,10 +80,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-6 custom-scrollbar">
           <div className="flex items-center justify-between lg:hidden pb-4 border-b border-[color:var(--border)]">
-            <span className="font-semibold text-[color:var(--ink)]">Financial Navigation</span>
+            <div className="flex items-center gap-2">
+              <img
+                src="/codepackr-finance-icon.svg"
+                alt=""
+                className="w-5 h-5 object-contain"
+                width="20"
+                height="20"
+              />
+              <span className="font-semibold text-[color:var(--ink)]">Financial Navigation</span>
+            </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg border border-[color:var(--border)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)]"
+              className="p-1.5 rounded-lg border border-[color:var(--border)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer"
               aria-label="Close navigation"
             >
               <X className="w-5 h-5" />

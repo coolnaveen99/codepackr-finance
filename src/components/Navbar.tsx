@@ -50,10 +50,16 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  // Theme-aware logo: dark text version for light theme, light text for dark theme
-  const logoSrc = darkMode
+  // Aspect-ratio responsive logos:
+  // - Web Browser / Desktop (>= 640px): Full horizontal banner logo (3.3:1 aspect ratio)
+  // - Android Phone / Mobile (< 640px): Square app icon badge (1:1 aspect ratio) so it does NOT shrink into micro-text
+  const desktopLogoSrc = darkMode
     ? '/codepackr-finance-logo-dark.svg'
     : '/codepackr-finance-logo.svg';
+
+  const mobileIconSrc = darkMode
+    ? '/codepackr-finance-icon-dark.svg'
+    : '/codepackr-finance-icon.svg';
 
   return (
     <header id="main-header" className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors border-[color:var(--border)] bg-[color:var(--surface)]/85">
@@ -61,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 gap-3 sm:gap-6">
           
           {/* Left: Sidebar Toggle & Brand */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
             {onToggleSidebar && (
               <button
                 id="sidebar-toggle-btn"
@@ -80,16 +86,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onGoHome();
                 }
               }}
-              className="flex items-center cursor-pointer focus:outline-none rounded-xl overflow-hidden transition-opacity hover:opacity-90"
+              className="flex items-center gap-2 sm:gap-3 cursor-pointer focus:outline-none rounded-xl transition-opacity hover:opacity-90 shrink-0"
               aria-label="CodePackr Finance home"
             >
-              <img
-                src={logoSrc}
-                alt="CodePackr Finance — Calculate, Plan, Grow"
-                className="h-10 sm:h-11 w-auto max-w-[200px] sm:max-w-[240px] object-contain"
-                width="1274"
-                height="384"
-              />
+              <picture className="flex items-center shrink-0">
+                {/* Mobile devices & Android phones (< 640px): Pick square 1:1 app icon badge */}
+                <source media="(max-width: 639px)" srcSet={mobileIconSrc} />
+                {/* Desktop & Web browsers (>= 640px): Pick full horizontal banner */}
+                <source media="(min-width: 640px)" srcSet={desktopLogoSrc} />
+                <img
+                  src={desktopLogoSrc}
+                  alt="CodePackr Finance — Calculate, Plan, Grow"
+                  className="h-10 w-10 sm:h-11 sm:w-auto object-contain"
+                  width="1274"
+                  height="384"
+                />
+              </picture>
+
+              {/* On mobile screens (<640px), show clean readable brand typography alongside the square app icon */}
+              <div className="flex flex-col sm:hidden justify-center min-w-0">
+                <span className="font-extrabold text-base leading-none tracking-tight text-[color:var(--ink)]">
+                  Code<span className="text-[#0797ED] dark:text-[#4DB8FF]">packr</span>
+                </span>
+                <span className="text-[9px] font-bold tracking-widest text-[#14B83D] dark:text-[#48D95B] uppercase leading-none mt-1">
+                  FINANCE
+                </span>
+              </div>
             </a>
           </div>
 
