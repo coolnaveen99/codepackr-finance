@@ -20,12 +20,14 @@
   <!-- Background Canvas -->
   <rect width="64" height="64" rx="16" fill="url(#codepackr-grad)" filter="url(#inner-glow)"/>
 
-  <!-- Terminal Prompt Icon: > _ -->
-  <g transform="translate(14, 16)">
-    <!-- The greater-than symbol '>' -->
-    <polyline points="4 28 18 14 4 0" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <!-- The cursor '_' -->
-    <line x1="22" y1="28" x2="36" y2="28" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+  <!-- Finance Growth: Ascending bars + strong trend arrow -->
+  <g fill="#ffffff">
+    <rect x="14" y="36" width="7" height="12" rx="1.5"/>
+    <rect x="25" y="28" width="7" height="20" rx="1.5"/>
+    <rect x="36" y="18" width="7" height="30" rx="1.5"/>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="14 40 25 32 36 22 50 12"/>
+    <polyline points="44 12 50 12 50 18"/>
   </g>
 </svg>
