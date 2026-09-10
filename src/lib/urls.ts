@@ -1,6 +1,8 @@
 import { ToolDef } from '../types';
 import { TOOLS } from '../data/tools';
 
+export type SpecialPage = 'home' | 'contact' | 'privacy' | 'admin' | 'about' | 'financial-disclaimer' | 'cookie-policy' | 'calculation-methodology' | 'editorial-policy';
+
 /**
  * Mapping of legacy or direct HTML slugs to Tool IDs or special pages
  */
@@ -126,7 +128,7 @@ export const CATEGORY_SLUG_MAP: Record<string, string> = {
  * Resolves the active route based on the current window location (pathname + search)
  */
 export function resolveCurrentRoute(): {
-  page: 'home' | 'contact' | 'privacy' | 'admin';
+  page: SpecialPage;
   tool: ToolDef | null;
   category?: string;
 } {
@@ -154,6 +156,11 @@ export function resolveCurrentRoute(): {
 
   if (pathname === 'terms.html' || pathname === 'terms' || searchParams.get('page') === 'terms') {
     return { page: 'privacy', tool: null, category: 'terms' };
+  }
+
+  const trustPages = ['about', 'financial-disclaimer', 'cookie-policy', 'calculation-methodology', 'editorial-policy'] as const;
+  if (trustPages.includes(pathname as typeof trustPages[number])) {
+    return { page: pathname as typeof trustPages[number], tool: null };
   }
 
   // 3. Check direct path slug or a category-prefixed calculator path.
