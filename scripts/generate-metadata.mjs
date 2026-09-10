@@ -84,6 +84,31 @@ const aliasDefinitions = {
     category: 'general',
     description: 'Get in touch with the CodePackr Finance team for bug reports, tool requests, and user feedback.'
   },
+  'about': {
+    name: 'About CodePackr Finance',
+    category: 'legal',
+    description: 'Learn about CodePackr Finance, its browser-first privacy philosophy, transparent calculations, and financial education mission.'
+  },
+  'financial-disclaimer': {
+    name: 'Financial Disclaimer',
+    category: 'legal',
+    description: 'Review the assumptions, limitations, and educational purpose of CodePackr Finance financial calculator estimates.'
+  },
+  'cookie-policy': {
+    name: 'Cookie Policy',
+    category: 'legal',
+    description: 'Learn how CodePackr Finance uses browser storage and why its calculators do not require tracking or profiling cookies.'
+  },
+  'calculation-methodology': {
+    name: 'Calculation Methodology',
+    category: 'legal',
+    description: 'Read how CodePackr Finance governs formulas, validates inputs, tests calculations, and applies rounding rules.'
+  },
+  'editorial-policy': {
+    name: 'Editorial Policy',
+    category: 'legal',
+    description: 'Learn how CodePackr Finance researches, reviews, updates, and corrects financial explanations and rules.'
+  },
   'privacy': {
     name: 'Privacy Policy',
     category: 'general',
