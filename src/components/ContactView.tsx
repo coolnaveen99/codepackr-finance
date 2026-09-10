@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Mail, Send, CheckCircle2, MessageSquare, ShieldCheck, ArrowLeft, Loader2, AlertCircle, Settings, Check, RefreshCw } from 'lucide-react';
-import { safeLocalStorage } from '../lib/storage';
+import { Mail, Send, CheckCircle2, MessageSquare, ShieldCheck, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 
 interface ContactViewProps {
   onBack: () => void;
@@ -14,43 +13,15 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [category, setCategory] = useState('Feedback & General Comment');
+  const [category, setCategory] = useState('Feedback & General Inquiry');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Script URL priority: localStorage override > Vite env > default deployed script
-  const [scriptUrl, setScriptUrl] = useState<string>(() => {
-    return (
-      safeLocalStorage.getItem('codepackr_contact_script_url') ||
-      (import.meta.env.VITE_CONTACT_GOOGLE_SCRIPT_URL as string) ||
-      DEFAULT_SCRIPT_URL
-    );
-  });
-  const [showConfig, setShowConfig] = useState(false);
-  const [customUrlInput, setCustomUrlInput] = useState(scriptUrl);
+  const scriptUrl = (import.meta.env.VITE_CONTACT_GOOGLE_SCRIPT_URL as string) || DEFAULT_SCRIPT_URL;
   const hiddenFormRef = useRef<HTMLFormElement>(null);
-
-  const handleSaveUrl = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = customUrlInput.trim();
-    const finalUrl = trimmed || DEFAULT_SCRIPT_URL;
-    setScriptUrl(finalUrl);
-    setCustomUrlInput(finalUrl);
-    safeLocalStorage.setItem('codepackr_contact_script_url', finalUrl);
-    setShowConfig(false);
-    setError(null);
-  };
-
-  const handleResetUrl = () => {
-    setScriptUrl(DEFAULT_SCRIPT_URL);
-    setCustomUrlInput(DEFAULT_SCRIPT_URL);
-    safeLocalStorage.removeItem('codepackr_contact_script_url');
-    setShowConfig(false);
-    setError(null);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +29,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
 
     const trimmedEmail = email.trim();
     const trimmedMessage = message.trim();
-    const trimmedName = name.trim() || 'Anonymous Developer';
+    const trimmedName = name.trim() || 'Anonymous User';
 
     // Validate email according to Google Apps Script regex
     if (!trimmedEmail) {
@@ -72,7 +43,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
     }
 
     if (!trimmedMessage) {
-      setError('Please enter a message describing your feedback or request.');
+      setError('Please enter a message describing your inquiry or feedback.');
       return;
     }
 
@@ -147,7 +118,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
   };
 
   const mailtoFallback = `mailto:codepackr@gmail.com,tnavkum@gmail.com?subject=${encodeURIComponent(
-    subject.trim() ? `[${category}] ${subject.trim()}` : `[${category}] from ${name || 'Developer'}`
+    subject.trim() ? `[${category}] ${subject.trim()}` : `[${category}] from ${name || 'User'}`
   )}&body=${encodeURIComponent(
     `Name: ${name || 'Anonymous'}\nEmail: ${email || 'Not provided'}\nCategory: ${category}\n\nMessage:\n${message}`
   )}`;
@@ -182,7 +153,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
         style={{ color: 'var(--brand)' }}
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Developer Tools</span>
+        <span>Back to Calculators</span>
       </button>
 
       <div
@@ -201,75 +172,10 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
               </h1>
             </div>
             <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              Have a suggestion, found a bug, or want a new developer utility added to Codepackr? Send a message directly to our inbox!
+              Have a question about a calculation, feedback on formulas, a bug to report, or a new financial calculator suggestion? Reach out directly to our team!
             </p>
           </div>
-
-          <button
-            id="btn-toggle-script-config"
-            type="button"
-            onClick={() => setShowConfig(!showConfig)}
-            title="Google Apps Script Endpoint Settings"
-            className="p-2 rounded-xl border text-xs flex items-center gap-1.5 transition-colors shrink-0 cursor-pointer"
-            style={{
-              backgroundColor: showConfig ? 'var(--surface-3)' : 'var(--surface-2)',
-              borderColor: 'var(--line)',
-              color: 'var(--muted)',
-            }}
-          >
-            <Settings className="w-4 h-4" />
-            <span className="hidden sm:inline">Endpoint</span>
-          </button>
         </div>
-
-        {/* Endpoint Configuration Panel */}
-        {showConfig && (
-          <form
-            id="form-script-config"
-            onSubmit={handleSaveUrl}
-            className="p-4 rounded-2xl border space-y-3 text-xs"
-            style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-semibold flex items-center gap-1.5" style={{ color: 'var(--ink)' }}>
-                <Check className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Google Apps Script Web App Endpoint</span>
-              </span>
-              <button
-                type="button"
-                onClick={handleResetUrl}
-                className="text-[11px] flex items-center gap-1 text-sky-500 hover:underline cursor-pointer"
-              >
-                <RefreshCw className="w-3 h-3" />
-                <span>Reset to Default</span>
-              </button>
-            </div>
-            <p style={{ color: 'var(--muted)' }}>
-              Connected to deployed Google Apps Script. Submissions trigger automated HTML notification emails to{' '}
-              <strong style={{ color: 'var(--ink)' }}>codepackr@gmail.com</strong>.
-            </p>
-            <div className="flex gap-2">
-              <input
-                id="input-script-url"
-                type="url"
-                required
-                value={customUrlInput}
-                onChange={(e) => setCustomUrlInput(e.target.value)}
-                placeholder="https://script.google.com/macros/s/.../exec"
-                className="flex-1 p-2.5 rounded-xl border outline-none font-mono text-[11px]"
-                style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)', color: 'var(--ink)' }}
-              />
-              <button
-                id="btn-save-script-url"
-                type="submit"
-                className="px-4 py-2.5 rounded-xl font-semibold text-white whitespace-nowrap cursor-pointer"
-                style={{ backgroundColor: 'var(--brand)' }}
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        )}
 
         {error && (
           <div
@@ -307,7 +213,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                 Message Dispatched!
               </h3>
               <p className="text-xs max-w-md mx-auto leading-relaxed" style={{ color: 'var(--muted)' }}>
-                Your message has been delivered to <strong>codepackr@gmail.com</strong>. Thank you for helping make Codepackr better.
+                Your message has been delivered to <strong>codepackr@gmail.com</strong>. Thank you for helping make CodePackr Finance better.
               </p>
             </div>
             <div className="pt-2 flex justify-center gap-3">
@@ -329,12 +235,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                 className="px-5 py-2.5 text-xs font-semibold rounded-xl border cursor-pointer hover:bg-black/5 dark:hover:bg-white/5"
                 style={{ borderColor: 'var(--line)', color: 'var(--ink)' }}
               >
-                Back to Tools
+                Back to Calculators
               </button>
             </div>
           </div>
         ) : (
-          <form id="form-contact-developer" onSubmit={handleSubmit} className="space-y-4">
+          <form id="form-contact-finance" onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="contact-name" className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--muted)' }}>
@@ -365,7 +271,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                     setEmail(e.target.value);
                     if (error) setError(null);
                   }}
-                  placeholder="e.g. developer@example.com"
+                  placeholder="e.g. yourname@example.com"
                   disabled={isSubmitting}
                   className="w-full p-3 text-xs sm:text-sm rounded-xl border outline-none disabled:opacity-60"
                   style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)', color: 'var(--ink)' }}
@@ -386,11 +292,12 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                   className="w-full p-3 text-xs sm:text-sm rounded-xl border outline-none disabled:opacity-60"
                   style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)', color: 'var(--ink)' }}
                 >
-                  <option value="Feedback & General Comment">Feedback & General</option>
-                  <option value="Bug Report">Bug Report</option>
-                  <option value="New Tool Request">New Tool Request</option>
-                  <option value="Feature Improvement">Feature Improvement</option>
-                  <option value="Security or Privacy">Security or Privacy</option>
+                  <option value="Feedback & General Inquiry">Feedback & General Inquiry</option>
+                  <option value="Calculation or Formula Question">Calculation or Formula Question</option>
+                  <option value="Report Calculation Issue / Bug">Report Calculation Issue / Bug</option>
+                  <option value="New Financial Calculator Request">New Calculator Request</option>
+                  <option value="Methodology or Editorial Suggestion">Methodology or Editorial</option>
+                  <option value="Security or Privacy Inquiry">Security or Privacy Inquiry</option>
                 </select>
               </div>
 
@@ -403,7 +310,7 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="e.g. Suggestion for Regex Tester or JSON Formatter bug"
+                  placeholder="e.g. Question on SIP step-up or Home Loan EMI amortization"
                   disabled={isSubmitting}
                   className="w-full p-3 text-xs sm:text-sm rounded-xl border outline-none disabled:opacity-60"
                   style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)', color: 'var(--ink)' }}
@@ -424,17 +331,23 @@ export const ContactView: React.FC<ContactViewProps> = ({ onBack }) => {
                   setMessage(e.target.value);
                   if (error) setError(null);
                 }}
-                placeholder="Describe your suggestion, tool request, or bug details..."
+                placeholder="Describe your inquiry, calculator suggestion, or calculation details..."
                 disabled={isSubmitting}
                 className="w-full p-3 text-xs sm:text-sm rounded-xl border outline-none resize-y disabled:opacity-60"
                 style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)', color: 'var(--ink)' }}
               />
             </div>
 
+            <div className="p-3.5 rounded-xl border text-[11px] leading-relaxed flex items-start gap-2.5" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)', color: 'var(--muted)' }}>
+              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+              <span>
+                <strong>Privacy Guarantee:</strong> CodePackr Finance runs all calculations 100% locally in your browser. Never submit account numbers, passwords, or personal financial documents in contact inquiries.
+              </span>
+            </div>
+
             <div className="flex items-center justify-between gap-2 text-xs py-1" style={{ color: 'var(--muted)' }}>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Sends directly to codepackr@gmail.com via secure webhook.</span>
+                <span>Sends directly to <strong>codepackr@gmail.com</strong></span>
               </div>
               <a
                 href={mailtoFallback}

@@ -82,7 +82,7 @@ const aliasDefinitions = {
   'contact': {
     name: 'Contact & Feedback',
     category: 'general',
-    description: 'Get in touch with the CodePackr Finance team for bug reports, tool requests, and user feedback.'
+    description: 'Get in touch with the CodePackr Finance team for formula questions, bug reports, new calculator requests, and user feedback.'
   },
   'about': {
     name: 'About CodePackr Finance',

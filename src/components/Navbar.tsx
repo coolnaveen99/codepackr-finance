@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Moon, Sun, Star, Menu, Shield } from 'lucide-react';
+import { Search, Moon, Sun, Star, Menu, Shield, Mail } from 'lucide-react';
 import { CategoryFilter } from '../types';
 import { useBookmarks } from '../lib/bookmarks';
 
@@ -11,6 +11,7 @@ interface NavbarProps {
   onSelectCategory?: (cat: CategoryFilter) => void;
   onGoHome: () => void;
   onGoContact: () => void;
+  isContactActive?: boolean;
   onGoBookmarks?: () => void;
   onToggleSidebar?: () => void;
   isAdmin?: boolean;
@@ -24,6 +25,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   selectedCategory = 'all',
   onSelectCategory,
   onGoHome,
+  onGoContact,
+  isContactActive = false,
   onGoBookmarks,
   onToggleSidebar,
   isAdmin = false,
@@ -138,6 +141,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               )}
             </button>
+
+            {/* Contact */}
+            <a
+              href="/contact"
+              id="nav-contact-btn"
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && e.button === 0) {
+                  e.preventDefault();
+                  onGoContact();
+                }
+              }}
+              className={`px-3 py-1.5 text-sm font-medium rounded-xl border transition-all flex items-center gap-2 cursor-pointer shadow-sm ${
+                isContactActive
+                  ? 'bg-[color:var(--brand)] text-white border-[color:var(--brand)]'
+                  : 'bg-[color:var(--surface)] border-[color:var(--border)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:border-[color:var(--border-hover)]'
+              }`}
+              title="Contact & Feedback"
+            >
+              <Mail className="w-4 h-4" />
+              <span className="hidden md:inline">Contact</span>
+            </a>
 
             {isAdmin && onGoAdmin && (
               <button

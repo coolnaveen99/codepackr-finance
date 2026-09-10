@@ -371,6 +371,7 @@ export const App: React.FC = () => {
           onSelectCategory={handleSelectCategory}
           onGoHome={navigateToHome}
           onGoContact={navigateToContact}
+          isContactActive={activePage === 'contact'}
           onGoBookmarks={() => handleSelectCategory('bookmarks')}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
           isAdmin={isAuthenticated}
