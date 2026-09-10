@@ -1,4 +1,12 @@
-export type ToolCategory = 'calculators';
+export type ToolCategory =
+  | 'calculators'
+  | 'loans'
+  | 'investments'
+  | 'tax'
+  | 'salary'
+  | 'retirement'
+  | 'personal-finance'
+  | 'business-finance';
 
 export type CategoryFilter = ToolCategory | 'all' | 'bookmarks';
 

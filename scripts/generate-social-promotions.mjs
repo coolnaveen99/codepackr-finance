@@ -48,6 +48,108 @@ const toolsData = [
     name: 'Investment Calculator',
     desc: 'Calculate exponential investment growth, custom deposit frequencies, compound returns, and visual balance timelines',
     tags: ['#Finance', '#Investing', '#InvestmentCalculator', '#WealthBuilding', '#Calculators']
+  },
+  {
+    slug: 'simple-interest-calculator',
+    name: 'Simple Interest Calculator',
+    desc: 'Calculate non-compounding interest and maturity amounts on fixed deposits, personal loans, and private promissory notes',
+    tags: ['#Finance', '#SimpleInterest', '#InterestCalculator', '#Banking', '#FinancialLiteracy']
+  },
+  {
+    slug: 'cagr-calculator',
+    name: 'CAGR Calculator (Compound Annual Growth Rate)',
+    desc: 'Calculate compound annual growth rates, geometric mean returns, and capital multiples for portfolio evaluation',
+    tags: ['#Finance', '#CAGR', '#PortfolioManagement', '#StockMarket', '#Investing']
+  },
+  {
+    slug: 'inflation-calculator',
+    name: 'Inflation & Purchasing Power Calculator',
+    desc: 'Project future living expenses, purchasing power erosion, and rule-of-72 price doubling timelines',
+    tags: ['#Finance', '#Inflation', '#PurchasingPower', '#CostOfLiving', '#Economics']
+  },
+  {
+    slug: 'emergency-fund-calculator',
+    name: 'Emergency Fund Calculator',
+    desc: 'Determine your safety buffer based on essential monthly expenses, shortfall gaps, and time to full funding',
+    tags: ['#Finance', '#EmergencyFund', '#SafetyNet', '#PersonalFinance', '#Savings']
+  },
+  {
+    slug: 'net-worth-calculator',
+    name: 'Net Worth Calculator',
+    desc: 'Audit personal balance sheets across assets and liabilities with 100% client-side privacy and solvency scoring',
+    tags: ['#Finance', '#NetWorth', '#WealthAudit', '#BalanceSheet', '#PersonalFinance']
+  },
+  {
+    slug: 'roi-calculator',
+    name: 'ROI Calculator (Return on Investment)',
+    desc: 'Calculate net ROI, annualized holding period returns, and capital multiples after fees and initial outlays',
+    tags: ['#Finance', '#ROI', '#ReturnOnInvestment', '#BusinessFinance', '#Investing']
+  },
+  {
+    slug: 'fire-calculator',
+    name: 'FIRE Calculator (Financial Independence)',
+    desc: 'Compute Standard, Lean, Fat, and Coast FIRE targets, safe withdrawal rates, and your timeline to financial independence',
+    tags: ['#Finance', '#FIRE', '#FinancialIndependence', '#RetireEarly', '#Wealth']
+  },
+  {
+    slug: 'income-tax-calculator',
+    name: 'Income Tax Calculator',
+    desc: 'Compare New vs Old tax regimes with standard deduction, Section 87A rebate, and slab breakdowns',
+    tags: ['#Finance', '#IncomeTax', '#TaxPlanning', '#IndiaTax', '#TaxCalculator']
+  },
+  {
+    slug: 'ctc-to-in-hand-calculator',
+    name: 'CTC to In-Hand Salary Calculator',
+    desc: 'Convert annual CTC into monthly take-home pay, accounting for EPF, Gratuity, Professional Tax, and TDS',
+    tags: ['#Finance', '#SalaryCalculator', '#InHandSalary', '#CTCtoInHand', '#Career']
+  },
+  {
+    slug: 'debt-to-income-calculator',
+    name: 'Debt-to-Income (DTI) Calculator',
+    desc: 'Analyze front-end and back-end debt-to-income ratios with institutional lending thresholds and mortgage qualification buffers',
+    tags: ['#Finance', '#DTI', '#MortgageApproval', '#DebtManagement', '#CreditHealth']
+  },
+  {
+    slug: 'loan-prepayment-calculator',
+    name: 'Loan Prepayment & Early Payoff Calculator',
+    desc: 'Calculate interest saved and loan tenure reduced through extra monthly, annual, or one-time lump-sum prepayments',
+    tags: ['#Finance', '#LoanPrepayment', '#MortgagePayoff', '#DebtFree', '#InterestSavings']
+  },
+  {
+    slug: 'loan-amortization-calculator',
+    name: 'Loan Amortization Schedule Calculator',
+    desc: 'Generate annual and monthly principal-interest breakdown tables with cumulative debt tracking and CSV export',
+    tags: ['#Finance', '#Amortization', '#LoanSchedule', '#EMIBreakdown', '#Mortgage']
+  },
+  {
+    slug: 'lumpsum-calculator',
+    name: 'Lumpsum Investment Calculator',
+    desc: 'Estimate mutual fund wealth accumulation, compound returns, and inflation-adjusted real purchasing power',
+    tags: ['#Finance', '#Lumpsum', '#MutualFunds', '#CompoundInterest', '#Investing']
+  },
+  {
+    slug: 'future-value-calculator',
+    name: 'Future Value (TVM) Calculator',
+    desc: 'Model time value of money with periodic deposits, discrete compounding frequencies, and annuity growth projections',
+    tags: ['#Finance', '#FutureValue', '#TVM', '#CompoundInterest', '#WealthBuilding']
+  },
+  {
+    slug: 'savings-goal-calculator',
+    name: 'Savings Goal Calculator',
+    desc: 'Calculate required monthly savings to achieve target milestones, initial seed contributions, and compound interest boosts',
+    tags: ['#Finance', '#SavingsGoal', '#FinancialMilestones', '#MoneyGoals', '#Budgeting']
+  },
+  {
+    slug: 'salary-hike-calculator',
+    name: 'Salary Hike & Increment Calculator',
+    desc: 'Compute absolute pay raises, monthly take-home gains, inflation-adjusted real increments, and market appraisal ratings',
+    tags: ['#Finance', '#SalaryHike', '#Appraisal', '#Compensation', '#CareerGrowth']
+  },
+  {
+    slug: 'gratuity-calculator',
+    name: 'Gratuity Calculator (India 1972 Act)',
+    desc: 'Calculate statutory retirement gratuity, 15/26 days service formulas, and Section 10(10) ₹20 Lakh tax exemptions',
+    tags: ['#Finance', '#Gratuity', '#EmployeeBenefits', '#IndiaTax', '#RetirementPlanning']
   }
 ];
 

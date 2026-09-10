@@ -308,9 +308,9 @@ export const CURRENCIES: CurrencyDefinition[] = [
   },
 ];
 
-export const POPULAR_CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY'];
+export const POPULAR_CURRENCIES = ['INR', 'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY'];
 
-export const DEFAULT_CURRENCY_CODE = 'USD';
+export const DEFAULT_CURRENCY_CODE = 'INR';
 
 export function getCurrency(code: string): CurrencyDefinition {
   const found = CURRENCIES.find((c) => c.code.toUpperCase() === code.toUpperCase());

@@ -88,11 +88,11 @@ function drawIcon(x, y, w, h) {
     return [0, 0, 0, 0]; // Transparent outside rounded container
   }
 
-  // Brand gradient: #2563EB (37, 99, 235) to #0EA5E9 (14, 165, 233)
+  // Brand gradient: #5B52E8 (91, 82, 232) to #009F88 (0, 159, 136)
   const grad = Math.max(0, Math.min(1, (nx + ny) * 0.5));
-  let bgR = Math.round(37 * (1 - grad) + 14 * grad);
-  let bgG = Math.round(99 * (1 - grad) + 165 * grad);
-  let bgB = Math.round(235 * (1 - grad) + 233 * grad);
+  let bgR = Math.round(91 * (1 - grad) + 0 * grad);
+  let bgG = Math.round(82 * (1 - grad) + 159 * grad);
+  let bgB = Math.round(232 * (1 - grad) + 136 * grad);
 
   // Terminal prompt symbol:
   // Polyline: (0.24, 0.30) -> (0.44, 0.50) -> (0.24, 0.70)
@@ -197,10 +197,10 @@ function generateSvgFavicon() {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <!-- CodePackr Enterprise Gradient: Blue to Cyan -->
+    <!-- CodePackr Brand Gradient: Indigo Violet to Teal -->
     <linearGradient id="codepackr-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563eb" /> <!-- Tailwind Blue 600 -->
-      <stop offset="100%" stop-color="#0ea5e9" /> <!-- Tailwind Sky 500 -->
+      <stop offset="0%" stop-color="#5B52E8" />
+      <stop offset="100%" stop-color="#009F88" />
     </linearGradient>
     
     <!-- Subtle Inner Shadow -->

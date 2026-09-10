@@ -12,6 +12,22 @@ import { PrivacyPolicyView } from './components/PrivacyPolicyView';
 import { CalculatorsView } from './components/tools/CalculatorsView';
 import { SimpleInterestCalculatorView } from './components/tools/SimpleInterestCalculatorView';
 import { FinancialPlannerView } from './components/tools/FinancialPlannerView';
+import { CagrCalculatorView } from './components/tools/CagrCalculatorView';
+import { InflationCalculatorView } from './components/tools/InflationCalculatorView';
+import { EmergencyFundCalculatorView } from './components/tools/EmergencyFundCalculatorView';
+import { NetWorthCalculatorView } from './components/tools/NetWorthCalculatorView';
+import { RoiCalculatorView } from './components/tools/RoiCalculatorView';
+import { FireCalculatorView } from './components/tools/FireCalculatorView';
+import { IncomeTaxCalculatorView } from './components/tools/IncomeTaxCalculatorView';
+import { CtcToInHandCalculatorView } from './components/tools/CtcToInHandCalculatorView';
+import { DebtToIncomeCalculatorView } from './components/tools/DebtToIncomeCalculatorView';
+import { LoanPrepaymentCalculatorView } from './components/tools/LoanPrepaymentCalculatorView';
+import { LoanAmortizationCalculatorView } from './components/tools/LoanAmortizationCalculatorView';
+import { LumpsumCalculatorView } from './components/tools/LumpsumCalculatorView';
+import { FutureValueCalculatorView } from './components/tools/FutureValueCalculatorView';
+import { SavingsGoalCalculatorView } from './components/tools/SavingsGoalCalculatorView';
+import { SalaryHikeCalculatorView } from './components/tools/SalaryHikeCalculatorView';
+import { GratuityCalculatorView } from './components/tools/GratuityCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { GlobalBanner } from './components/GlobalBanner';
@@ -285,6 +301,38 @@ export const App: React.FC = () => {
       toolViewContent = <FinancialPlannerView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
     } else if (tool.id === 'simple-interest-calculator') {
       toolViewContent = <SimpleInterestCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'cagr-calculator') {
+      toolViewContent = <CagrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'inflation-calculator') {
+      toolViewContent = <InflationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'emergency-fund-calculator') {
+      toolViewContent = <EmergencyFundCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'net-worth-calculator') {
+      toolViewContent = <NetWorthCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'roi-calculator') {
+      toolViewContent = <RoiCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'fire-calculator') {
+      toolViewContent = <FireCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'income-tax-calculator') {
+      toolViewContent = <IncomeTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'ctc-to-in-hand-calculator') {
+      toolViewContent = <CtcToInHandCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'debt-to-income-calculator') {
+      toolViewContent = <DebtToIncomeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'loan-prepayment-calculator') {
+      toolViewContent = <LoanPrepaymentCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'loan-amortization-calculator') {
+      toolViewContent = <LoanAmortizationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'lumpsum-calculator') {
+      toolViewContent = <LumpsumCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'future-value-calculator') {
+      toolViewContent = <FutureValueCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'savings-goal-calculator') {
+      toolViewContent = <SavingsGoalCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'salary-hike-calculator') {
+      toolViewContent = <SalaryHikeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'gratuity-calculator') {
+      toolViewContent = <GratuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
     } else {
       toolViewContent = <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} initialInput={initialInputForTool} />;
     }

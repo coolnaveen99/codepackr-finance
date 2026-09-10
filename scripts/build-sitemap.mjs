@@ -29,6 +29,13 @@ while ((m = regex.exec(toolsSection)) !== null) {
 // 2. High-priority Category Hubs
 const categoryHubs = [
   { slug: 'calculators', name: 'Financial Calculators', priority: '0.9', changefreq: 'weekly', category: 'calculators' },
+  { slug: 'loans', name: 'Loans & Debt Calculators', priority: '0.9', changefreq: 'weekly', category: 'loans' },
+  { slug: 'investments', name: 'Investment & Return Calculators', priority: '0.9', changefreq: 'weekly', category: 'investments' },
+  { slug: 'tax', name: 'Tax Planning Calculators', priority: '0.9', changefreq: 'weekly', category: 'tax' },
+  { slug: 'salary', name: 'Salary & In-Hand Calculators', priority: '0.9', changefreq: 'weekly', category: 'salary' },
+  { slug: 'retirement', name: 'Retirement & FIRE Calculators', priority: '0.9', changefreq: 'weekly', category: 'retirement' },
+  { slug: 'personal-finance', name: 'Personal Finance Calculators', priority: '0.9', changefreq: 'weekly', category: 'personal-finance' },
+  { slug: 'business-finance', name: 'Business & Valuation Calculators', priority: '0.9', changefreq: 'weekly', category: 'business-finance' },
 ];
 
 // 3. Direct Sub-features and Specialized Aliases

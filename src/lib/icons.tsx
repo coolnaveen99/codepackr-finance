@@ -469,13 +469,26 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
     case 'target':
     case 'trendingup':
     case 'piggybank':
+    case 'barchart3':
+    case 'flame':
+    case 'award':
       return <ChartUpIcon {...props} />;
     case 'dollarsign':
     case 'calculator':
     case 'receipt':
+    case 'wallet':
+    case 'landmark':
+    case 'briefcasebusiness':
+    case 'scale':
       return <DollarIcon {...props} />;
     case 'percent':
       return <PercentIcon {...props} />;
+    case 'zap':
+      return <SparklesIcon {...props} />;
+    case 'table':
+      return <FileTextIcon {...props} />;
+    case 'alertcircle':
+      return <SecurityIcon {...props} />;
 
     // Utilities
     case 'fingerprint':

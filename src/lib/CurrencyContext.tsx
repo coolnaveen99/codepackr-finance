@@ -25,7 +25,7 @@ interface CurrencyContextType {
 
 const CurrencyContext = createContext<CurrencyContextType | null>(null);
 
-const STORAGE_KEY_CODE = 'codepackr_currency_code';
+const STORAGE_KEY_CODE = 'codepackr_currency_code_v2';
 const STORAGE_KEY_MODE = 'codepackr_currency_mode';
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

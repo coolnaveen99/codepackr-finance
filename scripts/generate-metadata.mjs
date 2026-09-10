@@ -44,6 +44,41 @@ const aliasDefinitions = {
     category: 'calculators',
     description: 'Calculate loans, monthly EMIs, amortization schedules, SIP returns, retirement corpus, and investment growth with multi-currency support.'
   },
+  'loans': {
+    name: 'Loans & Debt Calculators',
+    category: 'loans',
+    description: 'Free loan, mortgage, and EMI calculators with prepayment schedules, extra principal payoff, and interest breakdowns.'
+  },
+  'investments': {
+    name: 'Investment & Return Calculators',
+    category: 'investments',
+    description: 'Calculate compound interest, SIP wealth creation, CAGR growth rates, and simple interest maturities with transparent formulas.'
+  },
+  'tax': {
+    name: 'Tax Planning Calculators',
+    category: 'tax',
+    description: 'Estimate income tax liabilities, compare New vs Old tax regimes, and calculate standard deductions and 87A rebates.'
+  },
+  'salary': {
+    name: 'Salary & In-Hand Calculators',
+    category: 'salary',
+    description: 'Convert annual CTC to monthly in-hand take-home salary, accounting for EPF, Gratuity, Professional Tax, and TDS.'
+  },
+  'retirement': {
+    name: 'Retirement & FIRE Calculators',
+    category: 'retirement',
+    description: 'Model retirement corpus requirements, FIRE milestone timelines (Lean, Fat, Coast), and sustainable safe withdrawal rates.'
+  },
+  'personal-finance': {
+    name: 'Personal Finance Calculators',
+    category: 'personal-finance',
+    description: 'Emergency fund calculators, net worth audits, and inflation purchasing power erosion projections.'
+  },
+  'business-finance': {
+    name: 'Business & Valuation Calculators',
+    category: 'business-finance',
+    description: 'Calculate net ROI, annualized holding period returns, and capital multiples for business investments.'
+  },
   'contact': {
     name: 'Contact & Feedback',
     category: 'general',

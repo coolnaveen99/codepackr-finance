@@ -22,7 +22,13 @@ interface SidebarProps {
 }
 
 const FINANCE_NAV: Array<{ id: CategoryFilter; label: string; icon: React.ReactNode }> = [
-  { id: 'calculators' as CategoryFilter, label: 'Financial Calculators', icon: <Landmark className="w-4 h-4" /> },
+  { id: 'loans' as CategoryFilter, label: 'Loans & Debt', icon: <WalletCards className="w-4 h-4" /> },
+  { id: 'investments' as CategoryFilter, label: 'Investments', icon: <LineChart className="w-4 h-4" /> },
+  { id: 'tax' as CategoryFilter, label: 'Tax Planning', icon: <Landmark className="w-4 h-4" /> },
+  { id: 'salary' as CategoryFilter, label: 'Salary & In-Hand', icon: <BadgeIndianRupee className="w-4 h-4" /> },
+  { id: 'retirement' as CategoryFilter, label: 'Retirement & FIRE', icon: <PiggyBank className="w-4 h-4" /> },
+  { id: 'personal-finance' as CategoryFilter, label: 'Personal Finance', icon: <ShieldCheck className="w-4 h-4" /> },
+  { id: 'business-finance' as CategoryFilter, label: 'Business & Valuation', icon: <BriefcaseBusiness className="w-4 h-4" /> },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -157,22 +163,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 Plan &amp; Grow
               </span>
               <div className="grid grid-cols-2 gap-2 px-1">
-                <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3">
+                <button
+                  type="button"
+                  onClick={() => { onSelectCategory('loans'); onClose(); }}
+                  className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3 text-left transition hover:border-[color:var(--brand)] hover:bg-[color:var(--surface)] cursor-pointer"
+                >
                   <WalletCards className="w-4 h-4 text-[color:var(--brand)] mb-2" />
-                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight">Manage Money</span>
-                </div>
-                <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3">
+                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight block">Manage Money</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { onSelectCategory('investments'); onClose(); }}
+                  className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3 text-left transition hover:border-[color:var(--brand)] hover:bg-[color:var(--surface)] cursor-pointer"
+                >
                   <LineChart className="w-4 h-4 text-[color:var(--brand)] mb-2" />
-                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight">Grow Investments</span>
-                </div>
-                <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3">
+                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight block">Grow Investments</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { onSelectCategory('personal-finance'); onClose(); }}
+                  className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3 text-left transition hover:border-[color:var(--brand)] hover:bg-[color:var(--surface)] cursor-pointer"
+                >
                   <PiggyBank className="w-4 h-4 text-[color:var(--brand)] mb-2" />
-                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight">Build Savings</span>
-                </div>
-                <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3">
+                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight block">Build Savings</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { onSelectCategory('loans'); onClose(); }}
+                  className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] p-3 text-left transition hover:border-[color:var(--brand)] hover:bg-[color:var(--surface)] cursor-pointer"
+                >
                   <Home className="w-4 h-4 text-[color:var(--brand)] mb-2" />
-                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight">Plan a Home</span>
-                </div>
+                  <span className="text-[11px] font-semibold text-[color:var(--ink)] leading-tight block">Plan a Home</span>
+                </button>
               </div>
             </div>
           )}
