@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Moon, Sun, Terminal, Star, Menu, Shield } from 'lucide-react';
+import { Search, Moon, Sun, Star, Menu, Shield } from 'lucide-react';
 import { CategoryFilter } from '../types';
 import { useBookmarks } from '../lib/bookmarks';
 
@@ -74,15 +74,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className="flex items-center gap-3 group text-left cursor-pointer focus:outline-none"
             >
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white shadow-sm bg-[color:var(--brand)] transition-transform group-hover:scale-105">
-                <Terminal className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-sm transition-transform group-hover:scale-105 bg-[color:var(--surface-elevated)]">
+                <img
+                  src="/favicon.svg"
+                  alt="CodePackr Finance"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-lg leading-tight tracking-tight text-[color:var(--ink)]">
                   CodePackr Finance
                 </span>
                 <span className="text-[10px] font-mono font-medium tracking-wider text-[color:var(--ink-muted)] uppercase">
-                  Money Tools
+                  Wealth &amp; Goals
                 </span>
               </div>
             </a>
@@ -97,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Search className="w-4 h-4 group-hover:text-[color:var(--brand)] transition-colors shrink-0" />
-                <span className="truncate">Search tools, converters, formatters...</span>
+                <span className="truncate">Search financial calculators...</span>
               </div>
               <kbd className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono font-medium rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] shrink-0">
                 <span className="text-[10px]">{isMac ? '⌘' : 'Ctrl'}</span>K
@@ -110,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenSearch}
               className="sm:hidden p-2 rounded-xl border border-[color:var(--border)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:bg-[color:var(--surface-elevated)] transition-colors cursor-pointer"
-              aria-label="Search"
+              aria-label="Search financial calculators"
             >
               <Search className="w-5 h-5" />
             </button>
