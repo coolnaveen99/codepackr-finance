@@ -13,13 +13,73 @@
   <priority>0.9</priority>
 </url>
 <url>
-  <loc>https://finance.codepackr.com/financial-planner</loc>
+  <loc>https://finance.codepackr.com/loans</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/investments</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/tax</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/salary</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/retirement</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/personal-finance</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/business-finance</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/loan-calculator</loc>
   <lastmod>2026-09-10</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.8</priority>
 </url>
 <url>
-  <loc>https://finance.codepackr.com/loan-calculator</loc>
+  <loc>https://finance.codepackr.com/loan-amortization-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/loan-prepayment-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/debt-to-income-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/simple-interest-calculator</loc>
   <lastmod>2026-09-10</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.8</priority>
@@ -31,13 +91,91 @@
   <priority>0.8</priority>
 </url>
 <url>
+  <loc>https://finance.codepackr.com/lumpsum-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/cagr-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/roi-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
   <loc>https://finance.codepackr.com/investment-calculator</loc>
   <lastmod>2026-09-10</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.8</priority>
 </url>
 <url>
-  <loc>https://finance.codepackr.com/simple-interest-calculator</loc>
+  <loc>https://finance.codepackr.com/financial-planner</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/inflation-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/future-value-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/savings-goal-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/fire-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/ctc-to-in-hand-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/salary-hike-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/gratuity-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/emergency-fund-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/net-worth-calculator</loc>
+  <lastmod>2026-09-10</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://finance.codepackr.com/income-tax-calculator</loc>
   <lastmod>2026-09-10</lastmod>
   <changefreq>monthly</changefreq>
   <priority>0.8</priority>

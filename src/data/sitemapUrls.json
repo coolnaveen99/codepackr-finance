@@ -2,7 +2,7 @@
   "updatedAt": "2026-09-10",
   "host": "finance.codepackr.com",
   "baseUrl": "https://finance.codepackr.com",
-  "totalUrls": 10,
+  "totalUrls": 33,
   "urls": [
     {
       "loc": "https://finance.codepackr.com/",
@@ -21,36 +21,92 @@
       "category": "calculators"
     },
     {
-      "loc": "https://finance.codepackr.com/financial-planner",
-      "path": "/financial-planner",
-      "name": "Financial Planning & Retirement Calculator",
-      "priority": "0.8",
-      "changefreq": "monthly",
-      "category": "calculators"
+      "loc": "https://finance.codepackr.com/loans",
+      "path": "/loans",
+      "name": "Loans & Debt Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "loans"
+    },
+    {
+      "loc": "https://finance.codepackr.com/investments",
+      "path": "/investments",
+      "name": "Investment & Return Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/tax",
+      "path": "/tax",
+      "name": "Tax Planning Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "tax"
+    },
+    {
+      "loc": "https://finance.codepackr.com/salary",
+      "path": "/salary",
+      "name": "Salary & In-Hand Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "salary"
+    },
+    {
+      "loc": "https://finance.codepackr.com/retirement",
+      "path": "/retirement",
+      "name": "Retirement & FIRE Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/personal-finance",
+      "path": "/personal-finance",
+      "name": "Personal Finance Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "personal-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/business-finance",
+      "path": "/business-finance",
+      "name": "Business & Valuation Calculators",
+      "priority": "0.9",
+      "changefreq": "weekly",
+      "category": "business-finance"
     },
     {
       "loc": "https://finance.codepackr.com/loan-calculator",
       "path": "/loan-calculator",
-      "name": "Loan & EMI Calculator",
+      "name": "EMI Calculator",
       "priority": "0.8",
       "changefreq": "monthly",
-      "category": "calculators"
+      "category": "loans"
     },
     {
-      "loc": "https://finance.codepackr.com/sip-calculator",
-      "path": "/sip-calculator",
-      "name": "SIP Calculator",
+      "loc": "https://finance.codepackr.com/loan-amortization-calculator",
+      "path": "/loan-amortization-calculator",
+      "name": "Loan Amortization Calculator",
       "priority": "0.8",
       "changefreq": "monthly",
-      "category": "calculators"
+      "category": "loans"
     },
     {
-      "loc": "https://finance.codepackr.com/investment-calculator",
-      "path": "/investment-calculator",
-      "name": "Investment Calculator",
+      "loc": "https://finance.codepackr.com/loan-prepayment-calculator",
+      "path": "/loan-prepayment-calculator",
+      "name": "Loan Prepayment Calculator",
       "priority": "0.8",
       "changefreq": "monthly",
-      "category": "calculators"
+      "category": "loans"
+    },
+    {
+      "loc": "https://finance.codepackr.com/debt-to-income-calculator",
+      "path": "/debt-to-income-calculator",
+      "name": "Debt-to-Income (DTI) Ratio Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "loans"
     },
     {
       "loc": "https://finance.codepackr.com/simple-interest-calculator",
@@ -58,7 +114,135 @@
       "name": "Simple Interest Calculator",
       "priority": "0.8",
       "changefreq": "monthly",
-      "category": "calculators"
+      "category": "loans"
+    },
+    {
+      "loc": "https://finance.codepackr.com/sip-calculator",
+      "path": "/sip-calculator",
+      "name": "SIP Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/lumpsum-calculator",
+      "path": "/lumpsum-calculator",
+      "name": "Lumpsum Investment Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/cagr-calculator",
+      "path": "/cagr-calculator",
+      "name": "CAGR Calculator (Compound Annual Growth)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/roi-calculator",
+      "path": "/roi-calculator",
+      "name": "ROI Calculator (Return on Investment)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/investment-calculator",
+      "path": "/investment-calculator",
+      "name": "Compound Interest Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/financial-planner",
+      "path": "/financial-planner",
+      "name": "Retirement Corpus Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/inflation-calculator",
+      "path": "/inflation-calculator",
+      "name": "Inflation & Purchasing Power Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/future-value-calculator",
+      "path": "/future-value-calculator",
+      "name": "Future Value Calculator (TVM)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/savings-goal-calculator",
+      "path": "/savings-goal-calculator",
+      "name": "Savings Goal Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/fire-calculator",
+      "path": "/fire-calculator",
+      "name": "FIRE Calculator (Financial Independence)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/ctc-to-in-hand-calculator",
+      "path": "/ctc-to-in-hand-calculator",
+      "name": "CTC to In-Hand Salary Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "salary"
+    },
+    {
+      "loc": "https://finance.codepackr.com/salary-hike-calculator",
+      "path": "/salary-hike-calculator",
+      "name": "Salary Hike & Increment Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "salary"
+    },
+    {
+      "loc": "https://finance.codepackr.com/gratuity-calculator",
+      "path": "/gratuity-calculator",
+      "name": "Gratuity Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "salary"
+    },
+    {
+      "loc": "https://finance.codepackr.com/emergency-fund-calculator",
+      "path": "/emergency-fund-calculator",
+      "name": "Emergency Fund Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "personal-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/net-worth-calculator",
+      "path": "/net-worth-calculator",
+      "name": "Net Worth Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "personal-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/income-tax-calculator",
+      "path": "/income-tax-calculator",
+      "name": "Income Tax Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "tax"
     },
     {
       "loc": "https://finance.codepackr.com/contact",

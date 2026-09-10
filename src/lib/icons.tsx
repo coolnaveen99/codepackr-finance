@@ -431,7 +431,6 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
     case 'filecheck2':
       return <CheckCircleIcon {...props} />;
     case 'search':
-    case 'table':
     case 'slidershorizontal':
       return <CheckCircleIcon {...props} />;
 
