@@ -1106,6 +1106,44 @@
       }
     ]
   },
+  "about": {
+    "name": "About CodePackr Finance",
+    "title": "About CodePackr Finance - CodePackr Finance",
+    "description": "Learn about CodePackr Finance, its browser-first privacy philosophy, transparent calculations, and financial education mission.",
+    "canonicalPath": "/about",
+    "canonicalUrl": "https://finance.codepackr.com/about",
+    "category": "legal",
+    "features": [
+      "Fast, responsive browser calculator for About CodePackr Finance with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using About CodePackr Finance?",
+        "answer": "No. All operations in About CodePackr Finance execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use About CodePackr Finance offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using About CodePackr Finance offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does About CodePackr Finance handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
   "contact": {
     "name": "Contact & Feedback",
     "title": "Contact & Feedback - CodePackr Finance",
@@ -1140,6 +1178,158 @@
       },
       {
         "question": "How does Contact & Feedback handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "financial-disclaimer": {
+    "name": "Financial Disclaimer",
+    "title": "Financial Disclaimer - CodePackr Finance",
+    "description": "Review the assumptions, limitations, and educational purpose of CodePackr Finance financial calculator estimates.",
+    "canonicalPath": "/financial-disclaimer",
+    "canonicalUrl": "https://finance.codepackr.com/financial-disclaimer",
+    "category": "legal",
+    "features": [
+      "Fast, responsive browser calculator for Financial Disclaimer with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Financial Disclaimer?",
+        "answer": "No. All operations in Financial Disclaimer execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Financial Disclaimer offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Financial Disclaimer offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Financial Disclaimer handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "cookie-policy": {
+    "name": "Cookie Policy",
+    "title": "Cookie Policy - CodePackr Finance",
+    "description": "Learn how CodePackr Finance uses browser storage and why its calculators do not require tracking or profiling cookies.",
+    "canonicalPath": "/cookie-policy",
+    "canonicalUrl": "https://finance.codepackr.com/cookie-policy",
+    "category": "legal",
+    "features": [
+      "Fast, responsive browser calculator for Cookie Policy with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Cookie Policy?",
+        "answer": "No. All operations in Cookie Policy execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Cookie Policy offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Cookie Policy offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Cookie Policy handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "calculation-methodology": {
+    "name": "Calculation Methodology",
+    "title": "Calculation Methodology - CodePackr Finance",
+    "description": "Read how CodePackr Finance governs formulas, validates inputs, tests calculations, and applies rounding rules.",
+    "canonicalPath": "/calculation-methodology",
+    "canonicalUrl": "https://finance.codepackr.com/calculation-methodology",
+    "category": "legal",
+    "features": [
+      "Fast, responsive browser calculator for Calculation Methodology with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Calculation Methodology?",
+        "answer": "No. All operations in Calculation Methodology execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Calculation Methodology offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Calculation Methodology offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Calculation Methodology handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
+  "editorial-policy": {
+    "name": "Editorial Policy",
+    "title": "Editorial Policy - CodePackr Finance",
+    "description": "Learn how CodePackr Finance researches, reviews, updates, and corrects financial explanations and rules.",
+    "canonicalPath": "/editorial-policy",
+    "canonicalUrl": "https://finance.codepackr.com/editorial-policy",
+    "category": "legal",
+    "features": [
+      "Fast, responsive browser calculator for Editorial Policy with intuitive controls.",
+      "Modern UI optimized for dark and light themes.",
+      "Runs offline and locally without sending telemetry on your inputs.",
+      "Instant results with convenient one-click copying.",
+      "Multi-currency support for global users."
+    ],
+    "howToUse": [
+      "Enter or adjust the input parameters in the tool control panel.",
+      "View real-time updates and calculation results instantly.",
+      "Copy the result to your clipboard or customize settings as needed."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Editorial Policy?",
+        "answer": "No. All operations in Editorial Policy execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Editorial Policy offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Editorial Policy offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Editorial Policy handle large files or sensitive data?",
         "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
       }
     ]
