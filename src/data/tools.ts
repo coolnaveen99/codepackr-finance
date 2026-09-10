@@ -44,4 +44,13 @@ export const TOOLS: ToolDef[] = [
     icon: 'PiggyBank',
     popular: true,
   },
+  {
+    id: 'simple-interest-calculator',
+    name: 'Simple Interest Calculator',
+    category: 'calculators',
+    description: 'Calculate simple (non-compounding) interest and maturity amount on a fixed principal, with a yearly breakdown.',
+    keywords: ['simple interest', 'interest calculator', 'principal', 'maturity amount', 'loan', 'deposit', 'finance', 'calculator'],
+    icon: 'Percent',
+    isNew: true,
+  },
 ];

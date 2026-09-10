@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-09-09",
+  "updatedAt": "2026-09-10",
   "host": "finance.codepackr.com",
   "baseUrl": "https://finance.codepackr.com",
-  "totalUrls": 9,
+  "totalUrls": 10,
   "urls": [
     {
       "loc": "https://finance.codepackr.com/",
@@ -48,6 +48,14 @@
       "loc": "https://finance.codepackr.com/investment-calculator",
       "path": "/investment-calculator",
       "name": "Investment Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "calculators"
+    },
+    {
+      "loc": "https://finance.codepackr.com/simple-interest-calculator",
+      "path": "/simple-interest-calculator",
+      "name": "Simple Interest Calculator",
       "priority": "0.8",
       "changefreq": "monthly",
       "category": "calculators"

@@ -194,6 +194,45 @@
       }
     ]
   },
+  "simple-interest-calculator": {
+    "name": "Simple Interest Calculator",
+    "title": "Simple Interest Calculator - CodePackr Finance",
+    "description": "Calculate simple (non-compounding) interest and maturity amount on a fixed principal, with a yearly breakdown.",
+    "canonicalPath": "/simple-interest-calculator",
+    "canonicalUrl": "https://finance.codepackr.com/simple-interest-calculator",
+    "category": "calculators",
+    "features": [
+      "Accurate mathematical calculations with instant reactive updates for Simple Interest Calculator.",
+      "Detailed breakdown tables with visual graphs and itemized summaries.",
+      "Customizable interest rates, compounding frequencies, and terms.",
+      "Completely private: financial figures and inputs remain on your device.",
+      "Export calculation reports and shareable configurations."
+    ],
+    "howToUse": [
+      "Enter your financial inputs (amount, rate, tenure, or contribution) for Simple Interest Calculator.",
+      "View real-time calculated results, breakdown tables, and growth charts.",
+      "Adjust assumptions to compare different scenarios instantly.",
+      "Export or copy your calculation summary for future reference."
+    ],
+    "faqs": [
+      {
+        "question": "Is my data or code sent to an external server when using Simple Interest Calculator?",
+        "answer": "No. All operations in Simple Interest Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+      },
+      {
+        "question": "Can I use Simple Interest Calculator offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Simple Interest Calculator offline."
+      },
+      {
+        "question": "Are there any usage limits, fees, or account registrations required?",
+        "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
+      },
+      {
+        "question": "How does Simple Interest Calculator handle large files or sensitive data?",
+        "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
+      }
+    ]
+  },
   "contact": {
     "name": "Contact & Feedback",
     "title": "Contact & Feedback - CodePackr Finance",

@@ -10,6 +10,7 @@ import { SitemapModal } from './components/SitemapModal';
 import { ContactView } from './components/ContactView';
 import { PrivacyPolicyView } from './components/PrivacyPolicyView';
 import { CalculatorsView } from './components/tools/CalculatorsView';
+import { SimpleInterestCalculatorView } from './components/tools/SimpleInterestCalculatorView';
 import { FinancialPlannerView } from './components/tools/FinancialPlannerView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
@@ -282,6 +283,8 @@ export const App: React.FC = () => {
     let toolViewContent: React.ReactNode = null;
     if (tool.id === 'financial-planner') {
       toolViewContent = <FinancialPlannerView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'simple-interest-calculator') {
+      toolViewContent = <SimpleInterestCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
     } else {
       toolViewContent = <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} initialInput={initialInputForTool} />;
     }

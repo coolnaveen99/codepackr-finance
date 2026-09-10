@@ -17,6 +17,8 @@ export const SLUG_TO_TOOL_ID: Record<string, string> = {
   'loan-calculator': 'loan-calculator',
   'emi-calculator': 'loan-calculator',
   'mortgage-calculator': 'loan-calculator',
+  'simple-interest-calculator': 'simple-interest-calculator',
+  'simple-interest': 'simple-interest-calculator',
 };
 
 /**
@@ -27,6 +29,7 @@ export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
   'loan-calculator': 'loan-calculator',
   'sip-calculator': 'sip-calculator',
   'investment-calculator': 'investment-calculator',
+  'simple-interest-calculator': 'simple-interest-calculator',
 };
 
 /**
