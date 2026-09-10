@@ -50,9 +50,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  // Aspect-ratio responsive logos:
-  // - Web Browser / Desktop (>= 640px): Full horizontal banner logo (3.3:1 aspect ratio)
-  // - Android Phone / Mobile (< 640px): Square app icon badge (1:1 aspect ratio) so it does NOT shrink into micro-text
+  // Prefer high-fidelity PNG if present, otherwise fall back to the exact SVG design.
+  // Desktop uses the full horizontal logo. Mobile uses square icon + text for readability.
   const desktopLogoSrc = darkMode
     ? '/codepackr-finance-logo-dark.svg'
     : '/codepackr-finance-logo.svg';
@@ -89,28 +88,32 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 sm:gap-3 cursor-pointer focus:outline-none rounded-xl transition-opacity hover:opacity-90 shrink-0"
               aria-label="CodePackr Finance home"
             >
-              <picture className="flex items-center shrink-0">
-                {/* Mobile devices & Android phones (< 640px): Pick square 1:1 app icon badge */}
-                <source media="(max-width: 639px)" srcSet={mobileIconSrc} />
-                {/* Desktop & Web browsers (>= 640px): Pick full horizontal banner */}
-                <source media="(min-width: 640px)" srcSet={desktopLogoSrc} />
-                <img
-                  src={desktopLogoSrc}
-                  alt="CodePackr Finance — Calculate, Plan, Grow"
-                  className="h-10 w-10 sm:h-11 sm:w-auto object-contain"
-                  width="1274"
-                  height="384"
-                />
-              </picture>
+              {/* Desktop (>=640px): full horizontal logo */}
+              <img
+                src={desktopLogoSrc}
+                alt="CodePackr Finance — Calculate, Plan, Grow"
+                className="hidden sm:block h-11 w-auto max-w-[260px] object-contain"
+                width="1274"
+                height="384"
+              />
 
-              {/* On mobile screens (<640px), show clean readable brand typography alongside the square app icon */}
-              <div className="flex flex-col sm:hidden justify-center min-w-0">
-                <span className="font-extrabold text-base leading-none tracking-tight text-[color:var(--ink)]">
-                  Code<span className="text-[#0797ED] dark:text-[#4DB8FF]">packr</span>
-                </span>
-                <span className="text-[9px] font-bold tracking-widest text-[#14B83D] dark:text-[#48D95B] uppercase leading-none mt-1">
-                  FINANCE
-                </span>
+              {/* Mobile (<640px): square icon + readable text */}
+              <div className="flex sm:hidden items-center gap-2.5">
+                <img
+                  src={mobileIconSrc}
+                  alt=""
+                  className="h-9 w-9 object-contain rounded-lg"
+                  width="64"
+                  height="64"
+                />
+                <div className="flex flex-col justify-center min-w-0">
+                  <span className="font-extrabold text-base leading-none tracking-tight text-[color:var(--ink)]">
+                    Code<span className="text-[#0797ED] dark:text-[#4DB8FF]">packr</span>
+                  </span>
+                  <span className="text-[9px] font-bold tracking-widest text-[#14B83D] dark:text-[#48D95B] uppercase leading-none mt-1">
+                    FINANCE
+                  </span>
+                </div>
               </div>
             </a>
           </div>
