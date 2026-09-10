@@ -84,23 +84,23 @@ The core MVP application engine, UX, calculations, and SEO prerendering are func
   4. **`/calculation-methodology`**: A dedicated page presenting the Formula Governance rules, source citations, calculation standards, and rounding rules.
   5. **`/editorial-policy`**: A dedicated page describing how financial rules are researched, reviewed, and updated, along with the corrections policy.
 
-### Category 2: URL Routing Consistency for Category-Prefixed Paths (Section # CALCULATOR URL RULE, Lines 5845–5876)
-* **What is done:** Direct canonical slugs (e.g., `/emi-calculator`, `/sip-calculator`, `/loan-calculator`) and category hubs (e.g., `/loans`, `/investments`).
-* **What is pending:**
-  * Add route mapping support in `src/lib/urls.ts` for category-prefixed paths (e.g., `/loans/emi-calculator`, `/investments/sip-calculator`, `/salary/ctc-to-in-hand-salary-calculator`) as fallback aliases so direct links with category prefixes resolve cleanly to the target calculator.
-
-### Category 3: Scenario Analysis Expansion (Section # SCENARIO ANALYSIS, Lines 6101–6122)
+### Category 2: Scenario Analysis Expansion (Section # SCENARIO ANALYSIS, Lines 6101–6122)
 * **What is done:** Multi-scenario analysis (Base vs Prepayment / Hike / Inflation) is implemented on Loan Prepayment, CTC to In-Hand, Salary Hike, and Financial Planner.
 * **What is pending:**
   * Add interactive Scenario comparison ("Base Case vs Scenario A") toggle to the SIP Calculator and EMI Calculator (e.g., "What if interest rate rises by 1%?", "What if monthly SIP increases by ₹2,000?").
 
-### Category 4: Operational & Pre-Launch Post-Deployment Tasks (External to Codebase)
+### Category 3: Operational & Pre-Launch Post-Deployment Tasks (External to Codebase)
 * **What is done:** Sitemaps auto-generated, IndexNow ping script prepared, robots.txt configured.
 * **What is pending (Requires manual/domain administrative execution outside the sandbox):**
   1. Verify domain ownership on Google Search Console for `finance.codepackr.com`.
   2. Verify Bing Webmaster Tools & IndexNow API key verification in production DNS.
   3. Professional legal/CA review of tax and statutory references before commercial scaling.
   4. Google AdSense application (explicitly deferred to Phase 2 per line 6544).
+
+### Completed in this assessment
+* **Category-prefixed calculator URL aliases:** Implemented in `src/lib/urls.ts`. Two-segment paths whose first segment is a recognized category now resolve the second segment through the existing slug/alias map. Added the explicit `ctc-to-in-hand-salary-calculator` alias requested by the URL specification.
+* **Examples now supported:** `/loans/emi-calculator`, `/investments/sip-calculator`, `/salary/ctc-to-in-hand-salary-calculator`, plus equivalent recognized category prefixes for the current calculator slug set.
+* **Canonical behavior preserved:** Existing direct calculator URLs remain canonical; category-prefixed paths are fallback aliases and do not change `getToolPath()` canonical output.
 
 ---
 
@@ -132,9 +132,10 @@ The core MVP application engine, UX, calculations, and SEO prerendering are func
 [x] IndexNow automated submission script active in build
 [x] Social media promotion dataset generator active
 [x] Client-side data privacy verified (zero financial transmission)
+[x] Category-prefixed calculator URL alias resolution (/loans/emi-calculator, etc.)
 [ ] 5 remaining trust & legal views (/about, /financial-disclaimer, /cookie-policy, /calculation-methodology, /editorial-policy)
-[ ] Category-prefixed URL alias resolution (/loans/emi-calculator, etc.)
+[ ] Interactive scenario comparison for SIP and EMI calculators
 [ ] Search Console domain ownership verification on finance.codepackr.com
 ```
 
-*File generated for traceability and continuous alignment with `CodePackr_Finance_Final_MVP_Build_Instruction.md`.*
+*File updated for traceability and continuous alignment with `CodePackr_Finance_Final_MVP_Build_Instruction.md`.*
