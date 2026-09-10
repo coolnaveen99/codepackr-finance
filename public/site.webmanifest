@@ -1,11 +1,11 @@
 {
-  "name": "Codepackr - Free Online Developer Tools",
-  "short_name": "Codepackr",
-  "description": "Free online developer tools for formatting, validating, encoding, converting, and inspecting data locally in your browser.",
+  "name": "CodePackr Finance",
+  "short_name": "Finance",
+  "description": "Free online financial calculators for planning, loans, SIPs, and investments.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0B0F19",
-  "theme_color": "#5B52E8",
+  "theme_color": "#2563EB",
   "icons": [
     {
       "src": "/favicon.svg",
