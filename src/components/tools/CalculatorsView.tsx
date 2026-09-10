@@ -41,6 +41,8 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
   const [tenureUnit, setTenureUnit] = useState<'years' | 'months'>('years');
   const [showAmortization, setShowAmortization] = useState(false);
   const [amortizationMode, setAmortizationMode] = useState<'annual' | 'monthly'>('annual');
+  const [showLoanScenario, setShowLoanScenario] = useState(false);
+  const [loanRateDeltaStr, setLoanRateDeltaStr] = useState('1');
 
   // SIP Calculator State
   const [sipMonthlyStr, setSipMonthlyStr] = useState('10000');
@@ -52,6 +54,8 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
   const [sipInflationStr, setSipInflationStr] = useState('0');
   const [showSipSchedule, setShowSipSchedule] = useState(false);
   const [sipScheduleMode, setSipScheduleMode] = useState<'annual' | 'monthly'>('annual');
+  const [showSipScenario, setShowSipScenario] = useState(false);
+  const [sipMonthlyDeltaStr, setSipMonthlyDeltaStr] = useState('2000');
 
   // Compound Investment Calculator State
   const [compPrincipalStr, setCompPrincipalStr] = useState('10000');
@@ -106,6 +110,15 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
       : 0;
   const totalPayment = emi * totalMonths;
   const totalInterest = Math.max(0, totalPayment - loanPrincipal);
+  const loanRateDelta = Math.max(0, parseFloat(loanRateDeltaStr) || 0);
+  const scenarioLoanRate = loanRate + loanRateDelta;
+  const scenarioMonthlyRate = scenarioLoanRate > 0 ? scenarioLoanRate / 12 / 100 : 0;
+  const scenarioEmi = scenarioMonthlyRate > 0 && totalMonths > 0
+    ? (loanPrincipal * scenarioMonthlyRate * Math.pow(1 + scenarioMonthlyRate, totalMonths)) /
+      (Math.pow(1 + scenarioMonthlyRate, totalMonths) - 1)
+    : totalMonths > 0 ? loanPrincipal / totalMonths : 0;
+  const scenarioTotalPayment = scenarioEmi * totalMonths;
+  const scenarioTotalInterest = Math.max(0, scenarioTotalPayment - loanPrincipal);
 
   // Switching Tenure Unit (Years <-> Months)
   const handleTenureUnitChange = (newUnit: 'years' | 'months') => {
@@ -251,6 +264,22 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
 
   const sipInvestedPercent = sipMaturity > 0 ? (sipInvested / sipMaturity) * 100 : 100;
   const sipGainPercent = sipMaturity > 0 ? (sipWealthGain / sipMaturity) * 100 : 0;
+  const sipMonthlyDelta = Math.max(0, parseFloat(sipMonthlyDeltaStr) || 0);
+  const scenarioSipMonthly = sipMonthly + sipMonthlyDelta;
+  let scenarioSipBalance = 0;
+  let scenarioSipInvested = 0;
+  for (let m = 1; m <= totalSipMonths; m++) {
+    const yearIdx = Math.floor((m - 1) / 12);
+    let monthlyDeposit = scenarioSipMonthly;
+    if (yearIdx > 0 && sipStepUp > 0) {
+      monthlyDeposit = sipStepUpType === 'percent'
+        ? scenarioSipMonthly * Math.pow(1 + sipStepUp / 100, yearIdx)
+        : Math.max(0, scenarioSipMonthly + (sipStepUp * yearIdx));
+    }
+    scenarioSipInvested += monthlyDeposit;
+    scenarioSipBalance = (scenarioSipBalance + monthlyDeposit) * (1 + sipMonthlyRate);
+  }
+  const scenarioSipGain = Math.max(0, scenarioSipBalance - scenarioSipInvested);
   const sipInvestedDash = (sipInvestedPercent / 100) * circumference;
   const sipGainDash = (sipGainPercent / 100) * circumference;
 
@@ -517,6 +546,48 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
                 {formatAmount(totalPayment)}
               </span>
             </div>
+          </div>
+
+          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">Scenario comparison</h3>
+                <p className="text-[11px] text-[var(--muted)]">Compare the base SIP with a higher monthly contribution.</p>
+              </div>
+              <button type="button" onClick={() => setShowSipScenario((visible) => !visible)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--brand)] text-white cursor-pointer">
+                {showSipScenario ? 'Hide' : 'Compare'}
+              </button>
+            </div>
+            {showSipScenario && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <label className="text-[11px] text-[var(--muted)]">Monthly increase ({currency.symbol.trim()})
+                  <input type="text" inputMode="decimal" value={sipMonthlyDeltaStr} onChange={(e) => handleCleanInput(e.target.value, setSipMonthlyDeltaStr)} className="w-full mt-1 p-2 rounded-lg border font-mono text-xs text-[var(--ink)]" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }} />
+                </label>
+                <div className="text-xs text-[var(--muted)]">Scenario maturity<strong className="block text-sm text-[var(--ink)]">{formatAmount(scenarioSipBalance)}</strong></div>
+                <div className="text-xs text-[var(--muted)]">Difference<strong className="block text-sm text-emerald-500">+{formatAmount(Math.max(0, scenarioSipBalance - sipMaturity))}</strong></div>
+              </div>
+            )}
+          </div>
+
+          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">Scenario comparison</h3>
+                <p className="text-[11px] text-[var(--muted)]">See how a higher interest rate changes the repayment.</p>
+              </div>
+              <button type="button" onClick={() => setShowLoanScenario((visible) => !visible)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--brand)] text-white cursor-pointer">
+                {showLoanScenario ? 'Hide' : 'Compare'}
+              </button>
+            </div>
+            {showLoanScenario && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <label className="text-[11px] text-[var(--muted)]">Rate increase (% points)
+                  <input type="text" inputMode="decimal" value={loanRateDeltaStr} onChange={(e) => handleCleanInput(e.target.value, setLoanRateDeltaStr)} className="w-full mt-1 p-2 rounded-lg border font-mono text-xs text-[var(--ink)]" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }} />
+                </label>
+                <div className="text-xs text-[var(--muted)]">Scenario EMI<strong className="block text-sm text-[var(--ink)]">{formatAmount(scenarioEmi)}</strong></div>
+                <div className="text-xs text-[var(--muted)]">Extra interest<strong className="block text-sm text-rose-500">+{formatAmount(Math.max(0, scenarioTotalInterest - totalInterest))}</strong></div>
+              </div>
+            )}
           </div>
 
           {/* Circular Graph Chart (Donut Chart) & Visual Breakdown */}
