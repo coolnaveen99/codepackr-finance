@@ -2,7 +2,7 @@
   "updatedAt": "2026-09-10",
   "host": "finance.codepackr.com",
   "baseUrl": "https://finance.codepackr.com",
-  "totalUrls": 33,
+  "totalUrls": 38,
   "urls": [
     {
       "loc": "https://finance.codepackr.com/",
@@ -245,10 +245,50 @@
       "category": "tax"
     },
     {
+      "loc": "https://finance.codepackr.com/about",
+      "path": "/about",
+      "name": "About CodePackr Finance",
+      "priority": "0.7",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
       "loc": "https://finance.codepackr.com/contact",
       "path": "/contact",
       "name": "Contact & Support",
       "priority": "0.7",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/financial-disclaimer",
+      "path": "/financial-disclaimer",
+      "name": "Financial Disclaimer",
+      "priority": "0.6",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/cookie-policy",
+      "path": "/cookie-policy",
+      "name": "Cookie Policy",
+      "priority": "0.6",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/calculation-methodology",
+      "path": "/calculation-methodology",
+      "name": "Calculation Methodology",
+      "priority": "0.6",
+      "changefreq": "monthly",
+      "category": "legal"
+    },
+    {
+      "loc": "https://finance.codepackr.com/editorial-policy",
+      "path": "/editorial-policy",
+      "name": "Editorial Policy",
+      "priority": "0.6",
       "changefreq": "monthly",
       "category": "legal"
     },

@@ -28,6 +28,11 @@ function htmlFallbackPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [htmlFallbackPlugin(), react(), tailwindcss()],
+  resolve: {
+    alias: {
+      'lucide-react': 'lucide-react/dist/cjs/lucide-react.js',
+    },
+  },
   server: {
     host: '0.0.0.0',
     port: 3000,

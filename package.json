@@ -26,6 +26,7 @@
     "@codemirror/lang-xml": "^6.1.0",
     "@types/diff": "^8.0.0",
     "@uiw/react-codemirror": "^4.25.11",
+    "core-js": "^3.50.0",
     "diff": "^9.0.0",
     "firebase": "^12.18.0",
     "html2canvas": "^1.4.1",

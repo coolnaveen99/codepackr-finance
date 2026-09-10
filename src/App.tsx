@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { SitemapModal } from './components/SitemapModal';
 import { ContactView } from './components/ContactView';
 import { PrivacyPolicyView } from './components/PrivacyPolicyView';
+import { TrustPageView, TrustPageKey } from './components/TrustPageView';
 import { CalculatorsView } from './components/tools/CalculatorsView';
 import { SimpleInterestCalculatorView } from './components/tools/SimpleInterestCalculatorView';
 import { FinancialPlannerView } from './components/tools/FinancialPlannerView';
@@ -33,7 +34,7 @@ import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { GlobalBanner } from './components/GlobalBanner';
 import { useToolGovernance } from './lib/useToolGovernance';
 import { useAdminAuth } from './lib/useAdminAuth';
-import { resolveCurrentRoute, getToolPath } from './lib/urls';
+import { resolveCurrentRoute, getToolPath, SpecialPage } from './lib/urls';
 import { updateDocumentMetadata } from './lib/seo';
 import { CurrencyProvider } from './lib/CurrencyContext';
 import { safeLocalStorage } from './lib/storage';
@@ -58,7 +59,7 @@ export const App: React.FC = () => {
   // Navigation state initialized synchronously from current URL
   const [initialRoute] = useState(() => resolveCurrentRoute());
   const [activeTool, setActiveTool] = useState<ToolDef | null>(() => initialRoute.tool);
-  const [activePage, setActivePage] = useState<'home' | 'contact' | 'privacy' | 'admin'>(() => initialRoute.page);
+  const [activePage, setActivePage] = useState<SpecialPage>(() => initialRoute.page);
   const [legalTab, setLegalTab] = useState<'privacy' | 'terms'>(() => {
     if (initialRoute.category === 'terms') return 'terms';
     if (typeof window !== 'undefined' && window.location.pathname.includes('terms')) return 'terms';
@@ -97,6 +98,8 @@ export const App: React.FC = () => {
       routeKey = 'contact';
     } else if (activePage === 'privacy') {
       routeKey = legalTab === 'terms' ? 'terms' : 'privacy';
+    } else if (activePage !== 'home' && activePage !== 'admin') {
+      routeKey = activePage;
     } else if (rawSlug && rawSlug !== 'index') {
       routeKey = rawSlug;
     } else if (activeTool) {
@@ -129,6 +132,9 @@ export const App: React.FC = () => {
         } else {
           setLegalTab('privacy');
         }
+      } else if (route.page !== 'home') {
+        setActivePage(route.page);
+        setActiveTool(null);
       } else if (route.tool) {
         setActiveTool(route.tool);
         setActivePage('home');
@@ -194,6 +200,13 @@ export const App: React.FC = () => {
     setActivePage('privacy');
     const path = tab === 'terms' ? '/terms' : '/privacy';
     window.history.pushState({}, '', path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToTrustPage = (page: TrustPageKey) => {
+    setActiveTool(null);
+    setActivePage(page);
+    window.history.pushState({}, '', `/${page}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -405,6 +418,8 @@ export const App: React.FC = () => {
                 onContactClick={navigateToContact}
                 initialTab={legalTab}
               />
+            ) : activePage !== 'home' ? (
+              <TrustPageView page={activePage as TrustPageKey} onBack={navigateToHome} />
             ) : activeTool ? (
               <div className="max-w-6xl mx-auto animate-fade-in">{renderTool(activeTool)}</div>
             ) : (
@@ -423,6 +438,7 @@ export const App: React.FC = () => {
           onGoHome={navigateToHome}
           onGoContact={navigateToContact}
           onGoPrivacy={navigateToPrivacy}
+          onGoTrustPage={navigateToTrustPage}
           onOpenSitemap={() => setIsSitemapModalOpen(true)}
           onOpenAdminLogin={() => {
             if (isAuthenticated) {

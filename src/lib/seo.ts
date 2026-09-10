@@ -85,7 +85,19 @@ export function updateDocumentMetadata(routeKey: string): void {
     document.head.appendChild(routeJsonLdEl);
   }
 
-  if (routeKey !== 'home' && routeKey !== 'contact' && routeKey !== 'privacy') {
+  const nonToolPages = new Set([
+    'home',
+    'contact',
+    'privacy',
+    'terms',
+    'about',
+    'financial-disclaimer',
+    'cookie-policy',
+    'calculation-methodology',
+    'editorial-policy',
+  ]);
+
+  if (!nonToolPages.has(routeKey)) {
     const softwareAppSchema = {
       '@context': 'https://schema.org',
       '@type': 'SoftwareApplication',
