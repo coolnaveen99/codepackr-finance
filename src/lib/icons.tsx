@@ -494,11 +494,8 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
       return <FileTextIcon {...props} />;
     case 'alertcircle':
       return <SecurityIcon {...props} />;
-    case 'clock':
     case 'calendar':
       return <ClockIcon {...props} />;
-    case 'gitcompare':
-      return <CompareIcon {...props} />;
 
     // Utilities
     case 'fingerprint':
