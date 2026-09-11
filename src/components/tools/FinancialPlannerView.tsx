@@ -24,6 +24,7 @@ import { ToolDef } from '../../types';
 import { ToolHeader } from '../ToolHeader';
 import { useCurrency } from '../../lib/CurrencyContext';
 import { CurrencySelector } from '../CurrencySelector';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 import {
   calculateFinancialPlan,
   DEFAULT_FINANCIAL_INPUTS,
@@ -261,6 +262,35 @@ export const FinancialPlannerView: React.FC<FinancialPlannerViewProps> = ({
     ...plan.retirement.map((r) => ({ age: r.age, value: r.closingCorpus })),
   ];
 
+  const plannerChartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: `Age ${inputs.currentAge}`,
+        year: 0,
+        series1: Math.round(inputs.currentCorpus),
+        series2: Math.round(inputs.currentCorpus),
+      },
+    ];
+
+    let runningContributions = inputs.currentCorpus;
+    plan.accumulation.forEach((r) => {
+      runningContributions += r.annualContribution;
+      points.push({
+        label: `Age ${r.age}`,
+        year: r.year,
+        series1: Math.round(r.closingCorpus),
+        series2: Math.round(runningContributions),
+      });
+    });
+
+    return points;
+  }, [inputs.currentAge, inputs.currentCorpus, plan.accumulation]);
+
+  const totalContributionsWithSeed = plan.totalContributions + inputs.currentCorpus;
+  const totalCorpusSum = totalContributionsWithSeed + plan.totalGrowth;
+  const contribPct = totalCorpusSum > 0 ? (totalContributionsWithSeed / totalCorpusSum) * 100 : 0;
+  const growthPct = totalCorpusSum > 0 ? (plan.totalGrowth / totalCorpusSum) * 100 : 0;
+
   return (
     <div className="space-y-6 pb-10">
       {/* Dedicated Executive PDF Report (Print-only) */}
@@ -449,15 +479,45 @@ export const FinancialPlannerView: React.FC<FinancialPlannerViewProps> = ({
             )}
           </div>
 
-          {/* Charts */}
+          {/* Primary Interactive Financial Chart (Investor.gov Line Chart as default, with Donut, Area, and Bar options) */}
+          <FinancialInteractiveChart
+            id="financial-planner-interactive-chart"
+            title="Accumulation Portfolio Growth & Corpus Trajectory"
+            subtitle={`Trajectory from Age ${inputs.currentAge} to Retirement Age ${inputs.retirementAge} with ${currency.code} ${inputs.currentCorpus.toLocaleString()} initial corpus`}
+            series1Name="Projected Corpus"
+            series2Name="Cumulative Contributions"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={plannerChartData}
+            donutSegments={[
+              {
+                label: 'Contributions',
+                value: totalContributionsWithSeed,
+                color: 'var(--brand)',
+                percentage: contribPct,
+                sublabel: 'Initial corpus + periodic savings',
+              },
+              {
+                label: 'Investment Growth',
+                value: plan.totalGrowth,
+                color: '#10b981',
+                percentage: growthPct,
+                sublabel: 'Compounded investment gains',
+              },
+            ]}
+            centerLabel="Projected Corpus"
+            centerValue={fmt(plan.projectedCorpus)}
+            centerSub={`Status: ${plan.sustainabilityStatus}`}
+            yAxisLabel="Portfolio Capital"
+            defaultChartType="line"
+          />
+
+          {/* Secondary Analytical Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ChartCard title="Investment Corpus Growth">
-              <LineChart series={[{ points: corpusSeries, color: 'var(--brand)' }]} formatY={(v) => fmt(v)} xLabel="Age" />
-            </ChartCard>
             <ChartCard title="Retirement Corpus Sustainability">
               <LineChart series={[{ points: retirementSeries, color: statusColor }]} formatY={(v) => fmt(v)} xLabel="Age" />
             </ChartCard>
-            <ChartCard title="Income vs Expenses">
+            <ChartCard title="Income vs Expenses (Pre-Retirement)">
               <LineChart
                 series={[
                   { points: plan.accumulation.map((r) => ({ age: r.age, value: r.income })), color: '#16a34a' },
@@ -466,15 +526,6 @@ export const FinancialPlannerView: React.FC<FinancialPlannerViewProps> = ({
                 formatY={(v) => fmt(v)}
                 xLabel="Age"
                 legend={['Income', 'Expenses']}
-              />
-            </ChartCard>
-            <ChartCard title="Contributions vs Investment Growth">
-              <DonutChart
-                segments={[
-                  { label: 'Contributions', value: plan.totalContributions + inputs.currentCorpus, color: '#6366f1' },
-                  { label: 'Growth', value: plan.totalGrowth, color: '#22c55e' },
-                ]}
-                formatValue={(v) => fmt(v)}
               />
             </ChartCard>
           </div>

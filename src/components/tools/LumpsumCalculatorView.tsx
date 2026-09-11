@@ -4,6 +4,7 @@ import { calculateLumpsum, LumpsumInput } from '../../lib/financial/lumpsum';
 import { getFormulaDefinition } from '../../lib/financial/formulaRegistry';
 import { ToolDef } from '../../types';
 import { ToolHeader } from '../ToolHeader';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 import { 
   RotateCcw, 
   Copy, 
@@ -84,6 +85,28 @@ export const LumpsumCalculatorView: React.FC<LumpsumCalculatorViewProps> = ({
     link.click();
     document.body.removeChild(link);
   };
+
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: Math.round(inputs.totalInvestment),
+        series2: Math.round(inputs.totalInvestment),
+      },
+    ];
+
+    result.yearlyBreakdown.forEach((row) => {
+      points.push({
+        label: `Year ${row.year}`,
+        year: row.year,
+        series1: Math.round(row.totalValue),
+        series2: Math.round(row.investedAmount),
+      });
+    });
+
+    return points;
+  }, [inputs.totalInvestment, result.yearlyBreakdown]);
 
   return (
     <div id="lumpsum-calculator-view" className="w-full max-w-6xl mx-auto space-y-6">
@@ -269,6 +292,39 @@ export const LumpsumCalculatorView: React.FC<LumpsumCalculatorViewProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Multi-View Interactive Chart (Investor.gov Line Chart as default, with Donut, Area, and Bar options) */}
+          <FinancialInteractiveChart
+            id="lumpsum-interactive-chart"
+            title="Lumpsum Compound Growth & Wealth Accumulation"
+            subtitle={`Initial investment of ${formatAmount(inputs.totalInvestment)} compounded over ${inputs.timeHorizonYears} years at ${inputs.expectedAnnualReturnRate}% p.a.`}
+            series1Name="Total Portfolio Value"
+            series2Name="Principal Invested"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={chartData}
+            donutSegments={[
+              {
+                label: 'Invested Capital',
+                value: result.totalInvested,
+                color: 'var(--brand)',
+                percentage: result.totalMaturityValue > 0 ? (result.totalInvested / result.totalMaturityValue) * 100 : 0,
+                sublabel: 'Initial one-time outlay',
+              },
+              {
+                label: 'Estimated Returns',
+                value: result.estimatedReturns,
+                color: '#10b981',
+                percentage: result.totalMaturityValue > 0 ? (result.estimatedReturns / result.totalMaturityValue) * 100 : 0,
+                sublabel: 'Compounded capital gain',
+              },
+            ]}
+            centerLabel="Maturity Value"
+            centerValue={formatAmount(result.totalMaturityValue)}
+            centerSub={`${result.wealthMultiple}x Capital Gain`}
+            yAxisLabel="Portfolio Value"
+            defaultChartType="line"
+          />
 
           {/* Timeline Table */}
           <div className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--line)] space-y-3">

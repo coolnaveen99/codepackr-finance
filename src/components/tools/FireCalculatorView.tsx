@@ -6,6 +6,7 @@ import { useCurrency } from '../../lib/CurrencyContext';
 import { CurrencySelector } from '../CurrencySelector';
 import { calculateFire, FIRE_ENGINE_VERSION } from '../../lib/financial/fire';
 import { getFormulaDefinition } from '../../lib/financial/formulaRegistry';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 
 interface FireCalculatorViewProps {
   tool: ToolDef;
@@ -81,6 +82,15 @@ export const FireCalculatorView: React.FC<FireCalculatorViewProps> = ({
     setCopiedCsv(true);
     setTimeout(() => setCopiedCsv(false), 2500);
   };
+
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    return result.trajectory.map((t) => ({
+      label: `Age ${t.age}`,
+      year: t.year,
+      series1: Math.round(t.corpus),
+      series2: Math.round(t.fireTarget),
+    }));
+  }, [result.trajectory]);
 
   return (
     <div>
@@ -293,6 +303,39 @@ export const FireCalculatorView: React.FC<FireCalculatorViewProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Multi-View Interactive Chart (Investor.gov Line Chart as default, with Donut, Area, and Bar options) */}
+        <FinancialInteractiveChart
+          id="fire-interactive-chart"
+          title="Financial Independence Trajectory & Milestone Crossover"
+          subtitle={`Trajectory from Age ${currentAge} with ${formatAmount(annualSavings)} annual savings and ${expectedAnnualReturn}% return vs inflation-adjusted FIRE target`}
+          series1Name="Projected Net Worth"
+          series2Name="Standard FIRE Target"
+          series1Color="#B83A24"
+          series2Color="#388E8E"
+          data={chartData}
+          donutSegments={[
+            {
+              label: 'Current Net Worth',
+              value: currentNetWorth,
+              color: '#10b981',
+              percentage: result.standardFireNumber > 0 ? Math.min(100, (currentNetWorth / result.standardFireNumber) * 100) : 0,
+              sublabel: 'Accumulated wealth today',
+            },
+            {
+              label: 'Corpus Gap to Standard FI',
+              value: Math.max(0, result.standardFireNumber - currentNetWorth),
+              color: 'var(--brand)',
+              percentage: result.standardFireNumber > 0 ? Math.max(0, 100 - Math.min(100, (currentNetWorth / result.standardFireNumber) * 100)) : 0,
+              sublabel: 'Remaining accumulation needed',
+            },
+          ]}
+          centerLabel="Target FI Corpus"
+          centerValue={formatAmount(result.standardFireNumber)}
+          centerSub={result.yearsToFire !== null ? `${result.yearsToFire} yrs to FI (Age ${result.ageAtFire})` : 'Target unreachable'}
+          yAxisLabel="Portfolio Capital"
+          defaultChartType="line"
+        />
 
         {/* Trajectory Table */}
         <div className="space-y-3">

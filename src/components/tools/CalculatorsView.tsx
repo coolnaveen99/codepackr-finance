@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Calculator as CalcIcon,
   Percent,
@@ -20,6 +20,7 @@ import { ToolDef } from '../../types';
 import { ToolHeader } from '../ToolHeader';
 import { useCurrency } from '../../lib/CurrencyContext';
 import { CurrencySelector } from '../CurrencySelector';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 
 interface CalculatorsViewProps {
   tool: ToolDef;
@@ -191,6 +192,46 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
   const principalDash = (principalPercent / 100) * circumference;
   const interestDash = (interestPercent / 100) * circumference;
 
+  // Loan Interactive Chart Data (Year 0 to Maturity)
+  const loanChartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: 0,
+        series2: 0,
+      },
+    ];
+
+    let runningBalance = loanPrincipal;
+    let runningPrincipalPaid = 0;
+    let runningTotalPaid = 0;
+    const roundedYears = Math.ceil(totalMonths / 12);
+
+    for (let y = 1; y <= roundedYears; y++) {
+      let principalYear = 0;
+      for (let m = 0; m < 12; m++) {
+        if (runningBalance <= 0) break;
+        const monthlyInt = runningBalance * monthlyRate;
+        const monthlyPrin = Math.min(runningBalance, emi - monthlyInt);
+        principalYear += monthlyPrin;
+        runningBalance -= monthlyPrin;
+      }
+      runningPrincipalPaid += principalYear;
+      runningTotalPaid += emi * Math.min(12, totalMonths - (y - 1) * 12);
+
+      points.push({
+        label: `Year ${y}`,
+        year: y,
+        series1: Math.round(runningTotalPaid),
+        series2: Math.round(runningPrincipalPaid),
+      });
+      if (runningBalance <= 0) break;
+    }
+
+    return points;
+  }, [loanPrincipal, totalMonths, monthlyRate, emi]);
+
   // -------------------------------------------------------------
   // SIP Calculator Calculations
   // -------------------------------------------------------------
@@ -282,6 +323,31 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
   const scenarioSipGain = Math.max(0, scenarioSipBalance - scenarioSipInvested);
   const sipInvestedDash = (sipInvestedPercent / 100) * circumference;
   const sipGainDash = (sipGainPercent / 100) * circumference;
+
+  // SIP Interactive Chart Data (Year 0 to Maturity)
+  const sipChartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: 0,
+        series2: 0,
+      },
+    ];
+
+    let runningDeposit = 0;
+    sipYearlyBreakdown.forEach((yr) => {
+      runningDeposit += yr.deposit;
+      points.push({
+        label: `Year ${yr.year}`,
+        year: yr.year,
+        series1: Math.round(yr.closing),
+        series2: Math.round(runningDeposit),
+      });
+    });
+
+    return points;
+  }, [sipYearlyBreakdown]);
 
   const downloadSipCSV = () => {
     let csv = '';
@@ -391,6 +457,31 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
   const compPrincipalDash = (compPrincipalPercent / 100) * circumference;
   const compDepositsDash = (compDepositsPercent / 100) * circumference;
   const compInterestDash = (compInterestPercent / 100) * circumference;
+
+  // Investment / Compound Interest Interactive Chart Data
+  const compChartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: Math.round(compPrincipal),
+        series2: Math.round(compPrincipal),
+      },
+    ];
+
+    let runningDeposit = compPrincipal;
+    compYearlyBreakdown.forEach((yr) => {
+      runningDeposit += yr.deposit;
+      points.push({
+        label: `Year ${yr.year}`,
+        year: yr.year,
+        series1: Math.round(yr.closing),
+        series2: Math.round(runningDeposit),
+      });
+    });
+
+    return points;
+  }, [compPrincipal, compYearlyBreakdown]);
 
   const downloadCompCSV = () => {
     let csv = '';
@@ -590,138 +681,38 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
             )}
           </div>
 
-          {/* Circular Graph Chart (Donut Chart) & Visual Breakdown */}
-          <div className="p-5 rounded-2xl border space-y-4"
-            style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 text-[var(--ink)]">
-                <PieChart className="w-4 h-4 text-[var(--brand)]" />
-                <span>Loan Breakdown (Circular Chart)</span>
-              </h3>
-              <span className="text-xs font-mono text-[var(--muted)]">
-                {currency.code}
-              </span>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center justify-around gap-6 pt-2">
-              {/* SVG Circular Donut Chart */}
-              <div className="relative flex items-center justify-center">
-                <svg
-                  width="190"
-                  height="190"
-                  viewBox="0 0 190 190"
-                  className="transform -rotate-90"
-                >
-                  {/* Background Track */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--line)"
-                    strokeWidth={strokeWidth}
-                  />
-
-                  {/* Principal Arc */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--brand)"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={`${principalDash} ${circumference}`}
-                    strokeDashoffset={0}
-                    strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
-                  />
-
-                  {/* Interest Arc */}
-                  {totalInterest > 0 && (
-                    <circle
-                      cx="95"
-                      cy="95"
-                      r={chartRadius}
-                      fill="transparent"
-                      stroke="#f43f5e"
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${interestDash} ${circumference}`}
-                      strokeDashoffset={-principalDash}
-                      strokeLinecap="round"
-                      className="transition-all duration-500 ease-out"
-                    />
-                  )}
-                </svg>
-
-                {/* Center Content Inside Donut */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Total Payable
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold font-mono text-[var(--ink)] leading-tight">
-                    {formatAmount(totalPayment)}
-                  </span>
-                  <span className="text-[10px] font-mono font-medium text-[var(--brand)] mt-0.5">
-                    EMI: {formatAmount(emi)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Legend & Details Column */}
-              <div className="flex-1 w-full max-w-sm space-y-3">
-                {/* Principal Indicator */}
-                <div className="p-3 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-3 h-3 rounded-full bg-[var(--brand)] flex-shrink-0" />
-                    <div>
-                      <span className="text-xs font-semibold block text-[var(--ink)]">Principal Loan Amount</span>
-                      <span className="text-[11px] text-[var(--muted)]">
-                        {principalPercent.toFixed(1)}% of total repayment
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-sm font-bold font-mono text-[var(--brand)]">
-                    {formatAmount(loanPrincipal)}
-                  </span>
-                </div>
-
-                {/* Interest Indicator */}
-                <div className="p-3 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-3 h-3 rounded-full bg-rose-500 flex-shrink-0" />
-                    <div>
-                      <span className="text-xs font-semibold block text-[var(--ink)]">Total Interest Payable</span>
-                      <span className="text-[11px] text-[var(--muted)]">
-                        {interestPercent.toFixed(1)}% of total repayment
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-sm font-bold font-mono text-rose-500">
-                    {formatAmount(totalInterest)}
-                  </span>
-                </div>
-
-                {/* Quick Ratio Bar */}
-                <div className="w-full h-2 rounded-full overflow-hidden flex bg-gray-200 dark:bg-gray-800">
-                  <div
-                    className="h-full bg-[var(--brand)] transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, principalPercent))}%` }}
-                    title={`Principal: ${formatAmount(loanPrincipal)}`}
-                  />
-                  <div
-                    className="h-full bg-rose-500 transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, interestPercent))}%` }}
-                    title={`Interest: ${formatAmount(totalInterest)}`}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Interactive Multi-View Financial Chart (Default: Line Chart like Investor.gov, with dropdown for Donut, Area, and Bar) */}
+          <FinancialInteractiveChart
+            id="loan-financial-chart"
+            title="Total Loan Repayment & Principal Breakdown"
+            subtitle={`Amortization across ${totalMonths} months (${totalYears} years) at ${loanRate}% interest`}
+            series1Name="Total Cumulative Paid"
+            series2Name="Principal Repaid"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={loanChartData}
+            donutSegments={[
+              {
+                label: 'Principal Loan Amount',
+                value: loanPrincipal,
+                color: 'var(--brand)',
+                percentage: principalPercent,
+                sublabel: 'Base borrowed principal',
+              },
+              {
+                label: 'Total Interest Payable',
+                value: totalInterest,
+                color: '#f43f5e',
+                percentage: interestPercent,
+                sublabel: 'Borrowing cost over tenure',
+              },
+            ]}
+            centerLabel="Total Payable"
+            centerValue={formatAmount(totalPayment)}
+            centerSub={`EMI: ${formatAmount(emi)}`}
+            yAxisLabel={`Amount (${currency.code})`}
+            defaultChartType="line"
+          />
 
           {/* Toggle Amortization Schedule (Annual & Monthly) */}
           <div className="pt-2 border-t" style={{ borderColor: 'var(--line)' }}>
@@ -1114,180 +1105,38 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
             </div>
           </div>
 
-          {/* Circular Donut Graph & Visual Breakdown */}
-          <div className="p-5 rounded-2xl border space-y-4"
-            style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 text-[var(--ink)]">
-                <PieChart className="w-4 h-4 text-[var(--brand)]" />
-                <span>SIP Wealth Breakdown (Circular Chart)</span>
-              </h3>
-              <span className="text-xs font-mono text-[var(--muted)]">
-                {currency.code}
-              </span>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center justify-around gap-6 pt-2">
-              {/* SVG Circular Donut Chart */}
-              <div className="relative flex items-center justify-center">
-                <svg
-                  width="190"
-                  height="190"
-                  viewBox="0 0 190 190"
-                  className="transform -rotate-90"
-                >
-                  {/* Background Track */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--line)"
-                    strokeWidth={strokeWidth}
-                  />
-
-                  {/* Invested Arc */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--brand)"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={`${sipInvestedDash} ${circumference}`}
-                    strokeDashoffset={0}
-                    strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
-                  />
-
-                  {/* Wealth Gain Arc */}
-                  {sipWealthGain > 0 && (
-                    <circle
-                      cx="95"
-                      cy="95"
-                      r={chartRadius}
-                      fill="transparent"
-                      stroke="#10b981"
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${sipGainDash} ${circumference}`}
-                      strokeDashoffset={-sipInvestedDash}
-                      strokeLinecap="round"
-                      className="transition-all duration-500 ease-out"
-                    />
-                  )}
-                </svg>
-
-                {/* Center Content Inside Donut */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Total Value
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold font-mono text-[var(--ink)] leading-tight">
-                    {formatAmount(sipMaturity)}
-                  </span>
-                  <span className="text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    +{sipGainPercent.toFixed(1)}% Gain
-                  </span>
-                </div>
-              </div>
-
-              {/* Legend & Details Column */}
-              <div className="flex-1 w-full max-w-sm space-y-3">
-                {/* Invested Indicator */}
-                <div className="p-3 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-3 h-3 rounded-full bg-[var(--brand)] flex-shrink-0" />
-                    <div>
-                      <span className="text-xs font-semibold block text-[var(--ink)]">Total Principal Invested</span>
-                      <span className="text-[11px] text-[var(--muted)]">
-                        {sipInvestedPercent.toFixed(1)}% of maturity corpus
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-sm font-bold font-mono text-[var(--brand)]">
-                    {formatAmount(sipInvested)}
-                  </span>
-                </div>
-
-                {/* Wealth Gain Indicator */}
-                <div className="p-3 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
-                    <div>
-                      <span className="text-xs font-semibold block text-[var(--ink)]">Estimated Wealth Gain</span>
-                      <span className="text-[11px] text-[var(--muted)]">
-                        {sipGainPercent.toFixed(1)}% of maturity corpus
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400">
-                    +{formatAmount(sipWealthGain)}
-                  </span>
-                </div>
-
-                {/* Ratio Bar */}
-                <div className="w-full h-2 rounded-full overflow-hidden flex bg-gray-200 dark:bg-gray-800">
-                  <div
-                    className="h-full bg-[var(--brand)] transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, sipInvestedPercent))}%` }}
-                    title={`Invested: ${formatAmount(sipInvested)}`}
-                  />
-                  <div
-                    className="h-full bg-emerald-500 transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, sipGainPercent))}%` }}
-                    title={`Wealth Gain: ${formatAmount(sipWealthGain)}`}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Growth Timeline Visualizer (Bar Progression) */}
-          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 text-[var(--ink)]">
-                <BarChart3 className="w-4 h-4 text-[var(--brand)]" />
-                <span>Annual Growth Timeline</span>
-              </h4>
-              <span className="text-[11px] text-[var(--muted)] font-mono">
-                {sipYearlyBreakdown.length} Years Horizon
-              </span>
-            </div>
-
-            <div className="space-y-2 pt-1">
-              {sipYearlyBreakdown.slice(0, 10).map((yr) => {
-                const maxVal = sipYearlyBreakdown[sipYearlyBreakdown.length - 1]?.closing || 1;
-                const depWidth = (yr.deposit / maxVal) * 100;
-                const totalWidth = (yr.closing / maxVal) * 100;
-
-                return (
-                  <div key={yr.year} className="flex items-center gap-2 text-xs font-mono">
-                    <span className="w-12 text-[var(--muted)] font-bold">Yr {yr.year}</span>
-                    <div className="flex-1 h-4 bg-gray-200 dark:bg-gray-800 rounded-md overflow-hidden flex relative">
-                      <div
-                        className="h-full bg-[var(--brand)] opacity-90 transition-all"
-                        style={{ width: `${Math.min(100, depWidth)}%` }}
-                        title={`Cumulative Deposits: ${formatAmount(yr.deposit)}`}
-                      />
-                      <div
-                        className="h-full bg-emerald-500 transition-all"
-                        style={{ width: `${Math.min(100, Math.max(0, totalWidth - depWidth))}%` }}
-                        title={`Maturity Value: ${formatAmount(yr.closing)}`}
-                      />
-                    </div>
-                    <span className="w-24 text-right font-bold text-[var(--ink)] truncate">
-                      {formatAmount(yr.closing)}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          {/* Interactive Multi-View Financial Chart (Default: Line Chart like Investor.gov, with dropdown for Donut, Area, and Bar) */}
+          <FinancialInteractiveChart
+            id="sip-financial-chart"
+            title="Total Future Value & Contributions Trend"
+            subtitle={`Systematic investment of ${formatAmount(sipMonthly)}/mo over ${totalSipYears} years at ${sipRate}% expected return`}
+            series1Name={`Future Value (${sipRate}%)`}
+            series2Name="Total Contributions"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={sipChartData}
+            donutSegments={[
+              {
+                label: 'Total Principal Invested',
+                value: sipInvested,
+                color: 'var(--brand)',
+                percentage: sipInvestedPercent,
+                sublabel: 'Cumulative contributions across tenure',
+              },
+              {
+                label: 'Estimated Wealth Gain',
+                value: sipWealthGain,
+                color: '#10b981',
+                percentage: sipGainPercent,
+                sublabel: 'Compounded capital returns',
+              },
+            ]}
+            centerLabel="Total Value"
+            centerValue={formatAmount(sipMaturity)}
+            centerSub={`+${sipGainPercent.toFixed(1)}% Gain`}
+            yAxisLabel={`Amount (${currency.code})`}
+            defaultChartType="line"
+          />
 
           {/* Toggle SIP Schedule (Annual & Monthly) */}
           <div className="pt-2 border-t" style={{ borderColor: 'var(--line)' }}>
@@ -1677,204 +1526,45 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
             </div>
           </div>
 
-          {/* Circular Donut Graph & Visual Breakdown (3 Segments) */}
-          <div className="p-5 rounded-2xl border space-y-4"
-            style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 text-[var(--ink)]">
-                <PieChart className="w-4 h-4 text-[var(--brand)]" />
-                <span>Portfolio Growth Breakdown (Circular Chart)</span>
-              </h3>
-              <span className="text-xs font-mono text-[var(--muted)]">
-                {currency.code}
-              </span>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center justify-around gap-6 pt-2">
-              {/* SVG Circular Donut Chart */}
-              <div className="relative flex items-center justify-center">
-                <svg
-                  width="190"
-                  height="190"
-                  viewBox="0 0 190 190"
-                  className="transform -rotate-90"
-                >
-                  {/* Background Track */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--line)"
-                    strokeWidth={strokeWidth}
-                  />
-
-                  {/* Segment 1: Initial Principal (Brand) */}
-                  <circle
-                    cx="95"
-                    cy="95"
-                    r={chartRadius}
-                    fill="transparent"
-                    stroke="var(--brand)"
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={`${compPrincipalDash} ${circumference}`}
-                    strokeDashoffset={0}
-                    strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
-                  />
-
-                  {/* Segment 2: Additional Deposits (Cyan) */}
-                  {totalCompDeposits > 0 && (
-                    <circle
-                      cx="95"
-                      cy="95"
-                      r={chartRadius}
-                      fill="transparent"
-                      stroke="#06b6d4"
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${compDepositsDash} ${circumference}`}
-                      strokeDashoffset={-compPrincipalDash}
-                      strokeLinecap="round"
-                      className="transition-all duration-500 ease-out"
-                    />
-                  )}
-
-                  {/* Segment 3: Compound Interest (Emerald) */}
-                  {compTotalInterest > 0 && (
-                    <circle
-                      cx="95"
-                      cy="95"
-                      r={chartRadius}
-                      fill="transparent"
-                      stroke="#10b981"
-                      strokeWidth={strokeWidth}
-                      strokeDasharray={`${compInterestDash} ${circumference}`}
-                      strokeDashoffset={-(compPrincipalDash + compDepositsDash)}
-                      strokeLinecap="round"
-                      className="transition-all duration-500 ease-out"
-                    />
-                  )}
-                </svg>
-
-                {/* Center Content Inside Donut */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-                    Maturity Balance
-                  </span>
-                  <span className="text-sm sm:text-base font-extrabold font-mono text-[var(--ink)] leading-tight">
-                    {formatAmount(compFutureValue)}
-                  </span>
-                  <span className="text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    +{compInterestPercent.toFixed(1)}% Interest
-                  </span>
-                </div>
-              </div>
-
-              {/* Legend & Details Column */}
-              <div className="flex-1 w-full max-w-sm space-y-2.5">
-                {/* Initial Principal */}
-                <div className="p-2.5 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[var(--brand)] flex-shrink-0" />
-                    <span className="text-xs font-semibold text-[var(--ink)]">Starting Principal</span>
-                  </div>
-                  <span className="text-xs font-bold font-mono text-[var(--brand)]">
-                    {formatAmount(compPrincipal)} ({compPrincipalPercent.toFixed(1)}%)
-                  </span>
-                </div>
-
-                {/* Additional Deposits */}
-                <div className="p-2.5 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-cyan-500 flex-shrink-0" />
-                    <span className="text-xs font-semibold text-[var(--ink)]">Additional Deposits</span>
-                  </div>
-                  <span className="text-xs font-bold font-mono text-cyan-600 dark:text-cyan-400">
-                    {formatAmount(totalCompDeposits)} ({compDepositsPercent.toFixed(1)}%)
-                  </span>
-                </div>
-
-                {/* Compound Interest */}
-                <div className="p-2.5 rounded-xl border flex items-center justify-between"
-                  style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
-                    <span className="text-xs font-semibold text-[var(--ink)]">Compound Interest</span>
-                  </div>
-                  <span className="text-xs font-bold font-mono text-emerald-600 dark:text-emerald-400">
-                    +{formatAmount(compTotalInterest)} ({compInterestPercent.toFixed(1)}%)
-                  </span>
-                </div>
-
-                {/* Ratio Bar */}
-                <div className="w-full h-2 rounded-full overflow-hidden flex bg-gray-200 dark:bg-gray-800">
-                  <div
-                    className="h-full bg-[var(--brand)] transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, compPrincipalPercent))}%` }}
-                    title={`Principal: ${formatAmount(compPrincipal)}`}
-                  />
-                  <div
-                    className="h-full bg-cyan-500 transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, compDepositsPercent))}%` }}
-                    title={`Deposits: ${formatAmount(totalCompDeposits)}`}
-                  />
-                  <div
-                    className="h-full bg-emerald-500 transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(0, compInterestPercent))}%` }}
-                    title={`Interest: ${formatAmount(compTotalInterest)}`}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Investment Growth Timeline Progression */}
-          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 text-[var(--ink)]">
-                <BarChart3 className="w-4 h-4 text-[var(--brand)]" />
-                <span>Investment Growth Timeline</span>
-              </h4>
-              <span className="text-[11px] text-[var(--muted)] font-mono">
-                {compYearlyBreakdown.length} Years Horizon
-              </span>
-            </div>
-
-            <div className="space-y-2 pt-1">
-              {compYearlyBreakdown.slice(0, 10).map((yr) => {
-                const maxVal = compYearlyBreakdown[compYearlyBreakdown.length - 1]?.closing || 1;
-                const prinWidth = (compPrincipal / maxVal) * 100;
-                const totalWidth = (yr.closing / maxVal) * 100;
-
-                return (
-                  <div key={yr.year} className="flex items-center gap-2 text-xs font-mono">
-                    <span className="w-12 text-[var(--muted)] font-bold">Yr {yr.year}</span>
-                    <div className="flex-1 h-4 bg-gray-200 dark:bg-gray-800 rounded-md overflow-hidden flex relative">
-                      <div
-                        className="h-full bg-[var(--brand)] opacity-80"
-                        style={{ width: `${Math.min(100, prinWidth)}%` }}
-                        title={`Initial Principal: ${formatAmount(compPrincipal)}`}
-                      />
-                      <div
-                        className="h-full bg-emerald-500"
-                        style={{ width: `${Math.min(100, Math.max(0, totalWidth - prinWidth))}%` }}
-                        title={`Closing Balance: ${formatAmount(yr.closing)}`}
-                      />
-                    </div>
-                    <span className="w-24 text-right font-bold text-[var(--ink)] truncate">
-                      {formatAmount(yr.closing)}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          {/* Interactive Multi-View Financial Chart (Default: Line Chart like Investor.gov, with dropdown for Donut, Area, and Bar) */}
+          <FinancialInteractiveChart
+            id="compound-interest-financial-chart"
+            title="Total Future Value & Portfolio Growth"
+            subtitle={`Initial deposit of ${formatAmount(compPrincipal)} with regular deposits over ${compYears.toFixed(1)} years at ${compRate}% p.a.`}
+            series1Name={`Future Value (${compRate}%)`}
+            series2Name="Total Principal Contributed"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={compChartData}
+            donutSegments={[
+              {
+                label: 'Starting Principal',
+                value: compPrincipal,
+                color: 'var(--brand)',
+                percentage: compPrincipalPercent,
+                sublabel: 'Initial starting sum',
+              },
+              {
+                label: 'Additional Deposits',
+                value: totalCompDeposits,
+                color: '#06b6d4',
+                percentage: compDepositsPercent,
+                sublabel: 'Periodic recurring additions',
+              },
+              {
+                label: 'Compound Interest',
+                value: compTotalInterest,
+                color: '#10b981',
+                percentage: compInterestPercent,
+                sublabel: 'Compounded accrued interest',
+              },
+            ]}
+            centerLabel="Maturity Balance"
+            centerValue={formatAmount(compFutureValue)}
+            centerSub={`+${compInterestPercent.toFixed(1)}% Interest`}
+            yAxisLabel={`Amount (${currency.code})`}
+            defaultChartType="line"
+          />
 
           {/* Toggle Investment Schedule */}
           <div className="pt-2 border-t" style={{ borderColor: 'var(--line)' }}>

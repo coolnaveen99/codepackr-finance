@@ -8,8 +8,9 @@ This skill specifies the standard operating procedure (SOP) and mandatory file s
 
 1. **100% Client-Side Execution**: All processing must run locally in the browser via JavaScript/Web Workers. Zero user payloads leave the client.
 2. **Ephemeral & Stateless**: No automatic saving of user inputs to remote databases or local storage without explicit user request.
-3. **Four-Layer Metadata Synchronization**: Whenever a tool is created or updated, its metadata must be updated in `tools.ts`, `seo.ts`, `generate-metadata.mjs`, and `sitemap.xml`.
-4. **URL Backward Compatibility**: All tools receive a clean canonical slug and retain legacy aliases to prevent 404 errors on search engine indexes.
+3. **Privacy-Preserving Telemetry**: Global site metrics are tracked via Google Analytics 4 (Measurement ID: `G-P9G4YRH6J4`) and Microsoft Clarity (`ya1n0vs9s5`) solely for anonymous traffic and performance. Calculator inputs, form fields, and financial figures must NEVER be dispatched to analytics events.
+4. **Four-Layer Metadata Synchronization**: Whenever a tool is created or updated, its metadata must be updated in `tools.ts`, `seo.ts`, `generate-metadata.mjs`, and `sitemap.xml`.
+5. **URL Backward Compatibility**: All tools receive a clean canonical slug and retain legacy aliases to prevent 404 errors on search engine indexes.
 
 ---
 
@@ -37,7 +38,8 @@ This skill specifies the standard operating procedure (SOP) and mandatory file s
   - Text: `text-[color:var(--ink)]` and `text-[color:var(--ink-muted)]`
   - Interactive inputs/buttons: `rounded-xl`
   - For code editing: use `<CodeEditor value={val} onChange={setVal} language="json" />`
-  - For currency formatting: use `const { formatAmount } = useCurrency();`
+  - For currency formatting: use `const { formatAmount, currency } = useCurrency();`
+  - For financial visualizations: use `<FinancialInteractiveChart ... />` (`src/components/charts/FinancialInteractiveChart.tsx`) with the Investor.gov Line Chart as the default, accompanied by a dropdown to switch to Area, Circular Donut, or Bar chart modes.
   - Sample/Demo button, Reset/Clear button, and Copy-to-Clipboard with visual feedback.
 
 ### Step 3: Wire into Category View & Routing

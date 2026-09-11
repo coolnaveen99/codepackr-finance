@@ -4,6 +4,7 @@ import { calculateLoanAmortization, LoanAmortizationInput } from '../../lib/fina
 import { getFormulaDefinition } from '../../lib/financial/formulaRegistry';
 import { ToolDef } from '../../types';
 import { ToolHeader } from '../ToolHeader';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 import { 
   Table, 
   RotateCcw, 
@@ -102,6 +103,33 @@ export const LoanAmortizationCalculatorView: React.FC<LoanAmortizationCalculator
     link.click();
     document.body.removeChild(link);
   };
+
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: 0,
+        series2: 0,
+      },
+    ];
+
+    let runningPaid = 0;
+    let runningPrincipal = 0;
+
+    result.yearlySchedule.forEach((y) => {
+      runningPaid += y.totalEmiPaid;
+      runningPrincipal += y.principalPaid;
+      points.push({
+        label: `Year ${y.year}`,
+        year: y.year,
+        series1: Math.round(runningPaid),
+        series2: Math.round(runningPrincipal),
+      });
+    });
+
+    return points;
+  }, [result.yearlySchedule]);
 
   return (
     <div id="loan-amortization-view" className="w-full max-w-6xl mx-auto space-y-6">
@@ -243,6 +271,39 @@ export const LoanAmortizationCalculatorView: React.FC<LoanAmortizationCalculator
           </div>
         </div>
       </div>
+
+      {/* Multi-View Interactive Chart (Investor.gov Line Chart as default, with Donut, Area, and Bar options) */}
+      <FinancialInteractiveChart
+        id="amortization-interactive-chart"
+        title="Amortization Cumulative Repayment & Interest Accrual"
+        subtitle={`Total repayment profile across ${result.totalMonths} monthly installments for loan of ${formatAmount(inputs.loanAmount)}`}
+        series1Name="Total Cumulative Paid"
+        series2Name="Principal Repaid"
+        series1Color="#B83A24"
+        series2Color="#388E8E"
+        data={chartData}
+        donutSegments={[
+          {
+            label: 'Principal Loan',
+            value: inputs.loanAmount,
+            color: 'var(--brand)',
+            percentage: result.principalToInterestRatio,
+            sublabel: 'Borrowed initial amount',
+          },
+          {
+            label: 'Total Interest',
+            value: result.totalInterest,
+            color: '#f59e0b',
+            percentage: result.interestToPrincipalRatio,
+            sublabel: 'Total borrowing cost',
+          },
+        ]}
+        centerLabel="Total Outlay"
+        centerValue={formatAmount(result.totalPayment)}
+        centerSub={`${result.interestToPrincipalRatio}% Interest`}
+        yAxisLabel="Cumulative Amount"
+        defaultChartType="line"
+      />
 
       {/* Schedule Table Section */}
       <div className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--line)] space-y-4">

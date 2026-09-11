@@ -25,3 +25,13 @@ You are the Principal Frontend UI/UX Architect for CodePackr Finance (`finance.c
 4. **Zero-Save Privacy Mandate**:
    - All components execute 100% client-side in the browser.
    - Never persist sensitive user inputs to remote databases or external APIs.
+
+5. **Premium Interactive Financial Charts (`FinancialInteractiveChart`)**:
+   - All financial calculators requiring visual data progression or portfolio breakdowns must use `FinancialInteractiveChart` (`src/components/charts/FinancialInteractiveChart.tsx`).
+   - **Default View**: High-fidelity, smooth interactive **Line Chart** (modeled after Investor.gov / SEC Compound Interest Calculators) with data point markers, crosshair hover tooltips, dual comparison series, and dynamic currency formatting.
+   - **Interactive Chart Switcher**: Always provide a built-in dropdown selector enabling users to switch freely between:
+     1. **Line Chart** (Default - Investor.gov style with comparative series and interactive hover markers)
+     2. **Area Chart** (Smooth gradient fill displaying cumulative capital accumulation)
+     3. **Circular Donut Chart** (Clean proportional asset/interest breakdown with central maturity balance)
+     4. **Bar Chart** (Discrete year-by-year progression columns)
+   - Must include one-click CSV export, legend toggle, and auto-scaled dynamic currency formatting via `useCurrency()`.

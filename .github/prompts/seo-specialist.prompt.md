@@ -20,3 +20,9 @@ You are the Lead SEO, Content & Metadata Specialist for CodePackr Finance (`fina
 2. **URL Integrity**:
    - Never break canonical URL slugs or delete legacy URL aliases in `src/lib/urls.ts`.
    - Preserve clean static prerendered HTML output at top-level paths.
+
+3. **Analytics & Performance Tracking Standards**:
+   - **Google Analytics 4**: Active Measurement ID is `G-P9G4YRH6J4` (`gtag.js` in `index.html`).
+   - **Purpose & Justification**: Measures aggregate visitor footfall, page traffic, device distribution, and calculator interaction diagnostics.
+   - **Strict Privacy Mandate**: Never attach event tracking to sensitive financial figures (salaries, net worths, loan balances, retirement targets). All calculator compute runs 100% client-side in the browser.
+   - **Complementary Services**: Microsoft Clarity (`ya1n0vs9s5`) for UX rendering diagnostics and Google AdSense (`ca-pub-7526363571565796`) via `ads.txt`.

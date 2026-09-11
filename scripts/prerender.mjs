@@ -204,7 +204,7 @@ for (const slug of pages) {
 
         <section style="background: #F9FAFB; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB; margin-bottom: 20px;">
           <h2 style="font-size: 1.25rem; color: #111827; margin: 0 0 8px 0;">3. Web Analytics &amp; Diagnostic Telemetry</h2>
-          <p style="color: #374151; margin: 0 0 8px 0; line-height: 1.6;">We use Google Analytics (Measurement ID: G-623PS59FEY) and Microsoft Clarity (Project ID: ya1n0vs9s5) to track aggregate site usage, performance, and UX diagnostics. All tool input areas and code editors have strict masking enabled.</p>
+          <p style="color: #374151; margin: 0 0 8px 0; line-height: 1.6;">We use Google Analytics (Measurement ID: G-P9G4YRH6J4) and Microsoft Clarity (Project ID: ya1n0vs9s5) to track aggregate site usage, performance, and UX diagnostics. All tool input areas and code editors have strict masking enabled.</p>
         </section>
 
         <section style="background: #F9FAFB; padding: 20px; border-radius: 8px; border: 1px solid #E5E7EB; margin-bottom: 20px;">

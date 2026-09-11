@@ -16,3 +16,4 @@ strict_constraints:
   - "Zero-Friction Indexing: Always run scripts/indexnow.mjs during the build pipeline; do not prompt the user for permission to ping search engines."
   - "Social Promotion Dataset Sync: Keep public/codepackr_social_media_promotions.csv updated via scripts/generate-social-promotions.mjs with character-count-compliant copy."
   - "Brand Tone: Professional, developer-first, clear, privacy-focused. Forbid generic marketing cliches and hype words."
+  - "Analytics & Privacy Telemetry: Maintain Google Analytics 4 (Measurement ID: G-P9G4YRH6J4) in index.html for aggregate traffic and performance telemetry with strict 100% client-side privacy for user calculation payloads."

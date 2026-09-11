@@ -149,7 +149,7 @@ export const PrivacyPolicyView: React.FC<PrivacyPolicyViewProps> = ({
               <ul className="list-disc pl-5 space-y-1" style={{ color: 'var(--muted)' }}>
                 <li>
                   <strong>Anonymous Traffic Telemetry:</strong> Standard non-personally identifiable metrics (pageviews, browser type, device category)
-                  via Google Analytics 4 and Microsoft Clarity to identify rendering performance and broken links.
+                  via Google Analytics 4 (Measurement ID: G-P9G4YRH6J4) and Microsoft Clarity (Project ID: ya1n0vs9s5) to identify rendering performance and broken links.
                 </li>
                 <li>
                   <strong>Feedback &amp; Inquiries:</strong> If you voluntarily reach out via our contact form, your name, email, and message

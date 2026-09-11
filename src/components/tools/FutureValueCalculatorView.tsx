@@ -4,6 +4,7 @@ import { calculateFutureValue, FutureValueInput, CompoundingFrequency, DepositTi
 import { getFormulaDefinition } from '../../lib/financial/formulaRegistry';
 import { ToolDef } from '../../types';
 import { ToolHeader } from '../ToolHeader';
+import { FinancialInteractiveChart, ChartDataPoint } from '../charts/FinancialInteractiveChart';
 import { 
   RotateCcw, 
   Copy, 
@@ -93,6 +94,28 @@ export const FutureValueCalculatorView: React.FC<FutureValueCalculatorViewProps>
     link.click();
     document.body.removeChild(link);
   };
+
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    const points: ChartDataPoint[] = [
+      {
+        label: 'Year 0',
+        year: 0,
+        series1: Math.round(inputs.presentValue),
+        series2: Math.round(inputs.presentValue),
+      },
+    ];
+
+    result.yearlySchedule.forEach((row) => {
+      points.push({
+        label: `Year ${row.year}`,
+        year: row.year,
+        series1: Math.round(row.balance),
+        series2: Math.round(inputs.presentValue + row.totalDeposited),
+      });
+    });
+
+    return points;
+  }, [inputs.presentValue, result.yearlySchedule]);
 
   return (
     <div id="future-value-view" className="w-full max-w-6xl mx-auto space-y-6">
@@ -306,6 +329,39 @@ export const FutureValueCalculatorView: React.FC<FutureValueCalculatorViewProps>
               </div>
             </div>
           </div>
+
+          {/* Multi-View Interactive Chart (Investor.gov Line Chart as default, with Donut, Area, and Bar options) */}
+          <FinancialInteractiveChart
+            id="future-value-interactive-chart"
+            title="Future Value Growth Projection & Capital Formation"
+            subtitle={`Initial ${formatAmount(inputs.presentValue)} plus ${formatAmount(inputs.periodicDeposit)}/${inputs.depositFrequency} over ${inputs.timeHorizonYears} years at ${inputs.annualInterestRate}% p.a.`}
+            series1Name="Future Value (Maturity Corpus)"
+            series2Name="Total Out-of-Pocket Contributed"
+            series1Color="#B83A24"
+            series2Color="#388E8E"
+            data={chartData}
+            donutSegments={[
+              {
+                label: 'Principal Contributed',
+                value: result.totalPrincipalContributed,
+                color: 'var(--brand)',
+                percentage: result.futureValue > 0 ? (result.totalPrincipalContributed / result.futureValue) * 100 : 0,
+                sublabel: 'PV + total periodic deposits',
+              },
+              {
+                label: 'Compound Interest',
+                value: result.totalInterestEarned,
+                color: '#10b981',
+                percentage: result.futureValue > 0 ? (result.totalInterestEarned / result.futureValue) * 100 : 0,
+                sublabel: 'Compounded returns earned',
+              },
+            ]}
+            centerLabel="Maturity Corpus"
+            centerValue={formatAmount(result.futureValue)}
+            centerSub={`${result.wealthMultiple}x Wealth Multiple`}
+            yAxisLabel="Portfolio Balance"
+            defaultChartType="line"
+          />
 
           {/* Schedule Preview */}
           <div className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--line)] space-y-3">
