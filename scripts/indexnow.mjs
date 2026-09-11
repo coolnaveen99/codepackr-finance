@@ -108,6 +108,26 @@ async function submitToIndexNow() {
     }
   }
 
+  // 2. Direct Sitemap Pings (Bing & Google discovery)
+  console.log(`\n2. Sending Sitemap Pings for instant crawler notification:`);
+  const sitemapPings = [
+    { name: 'Bing Sitemap Ping', url: `https://www.bing.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
+    { name: 'Google Sitemap Ping', url: `https://www.google.com/ping?sitemap=${encodeURIComponent(SITEMAP_URL)}` },
+  ];
+
+  for (const { name, url } of sitemapPings) {
+    try {
+      console.log(`   -> Pinging ${name}...`);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(url, { method: 'GET', signal: controller.signal });
+      clearTimeout(timer);
+      console.log(`      [PING COMPLETED] ${name} responded with HTTP ${res.status}`);
+    } catch (err) {
+      console.log(`      [INFO] ${name} ping skipped: ${err.message}`);
+    }
+  }
+
   // Summary
   console.log(`\n======================================================`);
   console.log(` IndexNow Submission Summary:`);
