@@ -75,7 +75,7 @@ const aliasDefinitions = {
     description: 'Emergency fund calculators, net worth audits, and inflation purchasing power erosion projections.'
   },
   'business-finance': {
-    name: 'Business & Valuation Calculators',
+    name: 'Business Finance Calculators',
     category: 'business-finance',
     description: 'Calculate net ROI, annualized holding period returns, and capital multiples for business investments.'
   },

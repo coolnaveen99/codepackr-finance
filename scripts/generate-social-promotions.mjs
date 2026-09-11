@@ -150,6 +150,114 @@ const toolsData = [
     name: 'Gratuity Calculator (India 1972 Act)',
     desc: 'Calculate statutory retirement gratuity, 15/26 days service formulas, and Section 10(10) ₹20 Lakh tax exemptions',
     tags: ['#Finance', '#Gratuity', '#EmployeeBenefits', '#IndiaTax', '#RetirementPlanning']
+  },
+  {
+    slug: 'npv-calculator',
+    name: 'Net Present Value (NPV) Calculator',
+    desc: 'Calculate Net Present Value, Profitability Index, and discounted cash flow paybacks for capital budgeting investments',
+    tags: ['#NPV', '#CorporateFinance', '#CapitalBudgeting', '#Valuation', '#CashFlow']
+  },
+  {
+    slug: 'irr-calculator',
+    name: 'Internal Rate of Return (IRR) Calculator',
+    desc: 'Compute Internal Rate of Return, hurdle rate spreads, and NPV sensitivity curves for multi-year cash flows',
+    tags: ['#IRR', '#RateOfReturn', '#InvestmentBanking', '#CapitalBudgeting', '#Finance']
+  },
+  {
+    slug: 'break-even-calculator',
+    name: 'Break-Even Analysis Calculator',
+    desc: 'Determine unit and revenue break-even thresholds, contribution margin ratios, and margin of safety buffers',
+    tags: ['#BreakEven', '#BusinessFinance', '#CostAccounting', '#PricingStrategy', '#Startups']
+  },
+  {
+    slug: 'business-valuation-calculator',
+    name: 'Business Valuation Calculator (Multiples)',
+    desc: 'Estimate enterprise and equity fair market values across conservative, base, and optimistic multiples for Revenue, EBITDA, and SDE',
+    tags: ['#BusinessValuation', '#EBITDA', '#MandA', '#EnterpriseValue', '#PrivateEquity']
+  },
+  {
+    slug: 'dcf-calculator',
+    name: 'Discounted Cash Flow (DCF) Valuation Calculator',
+    desc: 'Model discounted cash flows, forecast free cash flows to firm, terminal values, and intrinsic equity share value',
+    tags: ['#DCF', '#Valuation', '#FinancialModeling', '#IntrinsicValue', '#StockAnalysis']
+  },
+  {
+    slug: 'wacc-calculator',
+    name: 'WACC Calculator (Weighted Average Cost of Capital)',
+    desc: 'Calculate weighted average cost of capital, CAPM cost of equity, after-tax cost of debt, and interest tax shields',
+    tags: ['#WACC', '#CorporateFinance', '#CostOfCapital', '#CAPM', '#CapitalStructure']
+  },
+  {
+    slug: 'mortgage-affordability-calculator',
+    name: 'Mortgage Affordability Calculator',
+    desc: 'Determine maximum home purchasing budget based on gross income, monthly debts, and 28/36 Fannie Mae DTI rules',
+    tags: ['#Mortgage', '#HomeAffordability', '#RealEstate', '#HomeBuying', '#PersonalFinance']
+  },
+  {
+    slug: 'credit-card-payoff-calculator',
+    name: 'Credit Card Payoff & Interest Calculator',
+    desc: 'Calculate interest savings and months shaved off debt freedom by escaping the minimum payment trap',
+    tags: ['#CreditCards', '#DebtFree', '#DebtPayoff', '#FinancialFreedom', '#InterestTrap']
+  },
+  {
+    slug: 'gst-calculator',
+    name: 'GST Calculator (Goods & Services Tax)',
+    desc: 'Calculate GST inclusive and exclusive invoice amounts with statutory slab breakdowns and CGST/SGST/IGST splits',
+    tags: ['#GST', '#GSTCalculator', '#Taxation', '#Invoicing', '#SmallBusiness']
+  },
+  {
+    slug: 'capital-gains-tax-calculator',
+    name: 'Capital Gains Tax Calculator (LTCG & STCG)',
+    desc: 'Calculate Short-Term and Long-Term capital gains taxes on equity, real estate, and debt under post-Budget 2024 tax rules',
+    tags: ['#CapitalGains', '#LTCG', '#STCG', '#TaxPlanning', '#Investing']
+  },
+  {
+    slug: 'hra-calculator',
+    name: 'HRA Exemption Calculator (House Rent Allowance)',
+    desc: 'Compute tax-exempt House Rent Allowance under Section 10(13A) Rule 2A and compare metro vs non-metro limits',
+    tags: ['#HRA', '#TaxSavings', '#IncomeTax', '#SalarySlip', '#Section10']
+  },
+  {
+    slug: 'startup-valuation-calculator',
+    name: 'Startup Valuation Calculator (Berkus & Scorecard)',
+    desc: 'Triangulate pre-revenue and seed-stage startup valuations using Dave Berkus, Payne Scorecard, and VC methods',
+    tags: ['#Startups', '#AngelInvesting', '#VentureCapital', '#StartupValuation', '#SeedRound']
+  },
+  {
+    slug: 'burn-rate-calculator',
+    name: 'Burn Rate & Runway Calculator',
+    desc: 'Calculate gross burn, net burn, cash runway in months, zero cash dates, and Paul Graham Default Alive status',
+    tags: ['#Startups', '#BurnRate', '#Runway', '#Founders', '#DefaultAlive']
+  },
+  {
+    slug: 'epf-calculator',
+    name: 'EPF Calculator (Employee Provident Fund)',
+    desc: 'Project retirement EPF corpus accumulation, 8.25% EPFO interest compounding, and salary increment trajectories',
+    tags: ['#EPF', '#ProvidentFund', '#EPFO', '#RetirementCorpus', '#Salary']
+  },
+  {
+    slug: 'rent-vs-buy-calculator',
+    name: 'Rent vs. Buy Calculator',
+    desc: 'Compare 30-year long-term net wealth outcomes of buying a home vs. renting and investing in stock markets',
+    tags: ['#RentVsBuy', '#RealEstate', '#Homeownership', '#OpportunityCost', '#WealthBuilding']
+  },
+  {
+    slug: 'rule-of-72-calculator',
+    name: 'Rule of 72 Calculator (Compounding & Inflation)',
+    desc: 'Calculate investment doubling time, inflation purchasing power halving, and required compound interest rates',
+    tags: ['#RuleOf72', '#Compounding', '#InvestingBasics', '#Inflation', '#FinancialLiteracy']
+  },
+  {
+    slug: 'annuity-calculator',
+    name: 'Annuity Calculator (Immediate & Deferred)',
+    desc: 'Calculate guaranteed lifetime monthly pension payouts and future accumulated value for ordinary and due annuities',
+    tags: ['#Annuity', '#RetirementIncome', '#Pension', '#FixedIncome', '#LongevityPlanning']
+  },
+  {
+    slug: 'dividend-yield-calculator',
+    name: 'Dividend Yield & DRIP Compounding Calculator',
+    desc: 'Calculate forward dividend yield, yield on cost (YOC), and multi-year DRIP compounding wealth projections',
+    tags: ['#Dividends', '#DRIP', '#PassiveIncome', '#DividendAristocrats', '#StockMarket']
   }
 ];
 

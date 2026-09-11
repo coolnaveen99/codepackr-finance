@@ -35,7 +35,7 @@ const categoryHubs = [
   { slug: 'salary', name: 'Salary & In-Hand Calculators', priority: '0.9', changefreq: 'weekly', category: 'salary' },
   { slug: 'retirement', name: 'Retirement & FIRE Calculators', priority: '0.9', changefreq: 'weekly', category: 'retirement' },
   { slug: 'personal-finance', name: 'Personal Finance Calculators', priority: '0.9', changefreq: 'weekly', category: 'personal-finance' },
-  { slug: 'business-finance', name: 'Business & Valuation Calculators', priority: '0.9', changefreq: 'weekly', category: 'business-finance' },
+  { slug: 'business-finance', name: 'Business Finance Calculators', priority: '0.9', changefreq: 'weekly', category: 'business-finance' },
 ];
 
 // 3. Direct Sub-features and Specialized Aliases

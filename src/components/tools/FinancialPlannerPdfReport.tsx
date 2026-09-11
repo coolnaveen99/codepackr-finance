@@ -129,20 +129,19 @@ export const FinancialPlannerPdfReport: React.FC<FinancialPlannerPdfReportProps>
       }
       style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}
     >
-      {/* Subtle Security Watermark */}
+      {/* Subtle Security Watermark - Repeated diagonal pattern behind content */}
       <div
-        className="pointer-events-none fixed inset-0 flex items-center justify-center overflow-hidden z-0 select-none"
+        className="pointer-events-none fixed inset-0 overflow-hidden z-0 select-none opacity-[0.03] flex flex-wrap content-start -rotate-[35deg] scale-125"
         aria-hidden="true"
       >
-        <span
-          className="text-slate-900 font-black tracking-widest uppercase opacity-[0.03] text-7xl md:text-8xl select-none"
-          style={{
-            transform: 'rotate(-35deg)',
-            letterSpacing: '0.15em',
-          }}
-        >
-          codepackr.com
-        </span>
+        {Array.from({ length: 48 }).map((_, i) => (
+          <div
+            key={i}
+            className="w-48 py-3 text-center text-xs font-bold uppercase tracking-widest text-slate-900 select-none whitespace-nowrap"
+          >
+            codepackr finance
+          </div>
+        ))}
       </div>
 
       <div className="relative z-10 space-y-6">
@@ -158,9 +157,14 @@ export const FinancialPlannerPdfReport: React.FC<FinancialPlannerPdfReportProps>
               FINANCIAL PLANNING &amp; ACTUARIAL ADVISORY SUITE
             </div>
           </div>
-          <div className="bg-blue-600 hover:bg-blue-500 transition-colors px-3.5 py-1.5 rounded-lg text-xs font-black tracking-wide text-white border border-blue-400 shadow-xs flex items-center gap-1.5">
-            <span>www.codepackr.com</span>
-          </div>
+          <a
+            href="https://finance.codepackr.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-600 hover:bg-blue-500 transition-colors px-3.5 py-1.5 rounded-lg text-xs font-black tracking-wide text-white border border-blue-400 shadow-xs flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>finance.codepackr.com</span>
+          </a>
         </div>
 
         {/* Title and Metadata */}
@@ -679,7 +683,14 @@ export const FinancialPlannerPdfReport: React.FC<FinancialPlannerPdfReportProps>
               <Lock className="w-3 h-3 text-emerald-600" />
               <span>100% Client-Side Privacy: No financial data was transmitted to remote servers.</span>
             </div>
-            <span className="text-blue-700 font-bold">www.codepackr.com</span>
+            <a
+              href="https://finance.codepackr.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-700 font-bold hover:underline"
+            >
+              https://finance.codepackr.com/
+            </a>
           </div>
 
           <p className="leading-normal text-slate-400">
@@ -689,7 +700,13 @@ export const FinancialPlannerPdfReport: React.FC<FinancialPlannerPdfReportProps>
           <div className="flex items-center justify-between text-[9px] text-slate-400 pt-1 border-t border-slate-200">
             <span>Client: {clientName}</span>
             <span>Document Ref: CPK-FP-{Math.abs(Math.round(plan.requiredCorpus)).toString(36).toUpperCase()}-{Date.now().toString(36).toUpperCase()}</span>
-            <span>Generated via CodePackr Client Engine (www.codepackr.com)</span>
+            <span>
+              Generated via CodePackr Finance (
+              <a href="https://finance.codepackr.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                https://finance.codepackr.com/
+              </a>
+              )
+            </span>
           </div>
         </footer>
       </div>

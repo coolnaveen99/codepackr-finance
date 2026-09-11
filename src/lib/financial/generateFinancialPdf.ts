@@ -108,11 +108,38 @@ export function generateFinancialAdvisoryPdf({
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8.5);
     doc.text('finance.codepackr.com', pillX + pillW / 2, pillY + 5.5, { align: 'center' });
+
+    // Interactive clickable hyperlink to official web suite
+    doc.link(pillX, pillY, pillW, pillH, { url: 'https://finance.codepackr.com/' });
+  };
+
+  // ---------------------------------------------------------------------------
+  // Backside Repeated Diagonal Security Watermark (Rendered FIRST on EVERY Page)
+  // ---------------------------------------------------------------------------
+  const drawBackgroundWatermark = () => {
+    doc.saveGraphicsState();
+    doc.setTextColor(244, 246, 250); // extremely subtle, faint slate-blue that sits behind content
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5); // reduced small size matching client sample
+
+    const text = 'codepackr finance';
+    const angle = -35;
+    const stepX = 58; // mm spacing between horizontal repeats
+    const stepY = 28; // mm spacing between diagonal rows
+
+    // Draw grid of repeated diagonal watermark lines across the full page background
+    for (let wy = -40; wy <= pageHeight + 60; wy += stepY) {
+      for (let wx = -60; wx <= pageWidth + 60; wx += stepX) {
+        doc.text(text, wx, wy, { angle });
+      }
+    }
+    doc.restoreGraphicsState();
   };
 
   // ===========================================================================
   // PAGE 1: Executive Summary, Key Metrics, Assumptions & Stress Testing
   // ===========================================================================
+  drawBackgroundWatermark();
   drawBrandHeader();
 
   let y = 28;
@@ -398,6 +425,7 @@ export function generateFinancialAdvisoryPdf({
   // PAGE 2: Visual Portfolio Analytics & 4 Vector Charts
   // ===========================================================================
   doc.addPage('a4', 'portrait');
+  drawBackgroundWatermark();
   drawBrandHeader();
 
   y = 28;
@@ -870,6 +898,7 @@ export function generateFinancialAdvisoryPdf({
   };
 
   doc.addPage('a4', 'portrait');
+  drawBackgroundWatermark();
   drawBrandHeader();
 
   y = 28;
@@ -889,7 +918,8 @@ export function generateFinancialAdvisoryPdf({
 
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(37, 99, 235);
-  doc.text('www.codepackr.com', margin + contentWidth, y + 4.5, { align: 'right' });
+  doc.text('finance.codepackr.com', margin + contentWidth, y + 4.5, { align: 'right' });
+  doc.link(margin + contentWidth - 42, y + 1, 42, 5, { url: 'https://finance.codepackr.com/' });
 
   y += 8;
   doc.setDrawColor(226, 232, 240);
@@ -906,6 +936,7 @@ export function generateFinancialAdvisoryPdf({
     // If approaching page footer, start a new page
     if (y + rowH > pageHeight - 24) {
       doc.addPage('a4', 'portrait');
+      drawBackgroundWatermark();
       drawBrandHeader();
       y = 28;
 
@@ -973,6 +1004,7 @@ export function generateFinancialAdvisoryPdf({
   const noticeBoxH = 22;
   if (y + noticeBoxH > pageHeight - 16) {
     doc.addPage('a4', 'portrait');
+    drawBackgroundWatermark();
     drawBrandHeader();
     y = 28;
   }
@@ -984,34 +1016,25 @@ export function generateFinancialAdvisoryPdf({
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7);
   doc.setTextColor(15, 23, 42);
-  doc.text('AUDIT ATTESTATION & FIDUCIARY NOTICE · WWW.CODEPACKR.COM', margin + 4, y + 4.5);
+  doc.text('AUDIT ATTESTATION & FIDUCIARY NOTICE · https://finance.codepackr.com/', margin + 4, y + 4.5);
+  doc.link(margin + 4, y + 2, 90, 4, { url: 'https://finance.codepackr.com/' });
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.2);
   doc.setTextColor(100, 116, 139);
   const disclaimerText =
-    '100% Client-Side Privacy Guarantee: This report was computed exclusively in the user\'s local web browser at www.codepackr.com. No financial balances, income figures, personal identifiers, or portfolio models were transmitted or stored on remote servers.\n\nFiduciary Disclaimer: This document is prepared for informational, analytical, and strategic wealth modeling purposes only. It does not constitute formal licensed investment, legal, or tax advice. Projected compounding values reflect mathematical simulation and do not guarantee future market returns.';
+    '100% Client-Side Privacy Guarantee: This report was computed exclusively in the user\'s local web browser at https://finance.codepackr.com/. No financial balances, income figures, personal identifiers, or portfolio models were transmitted or stored on remote servers.\n\nFiduciary Disclaimer: This document is prepared for informational, analytical, and strategic wealth modeling purposes only. It does not constitute formal licensed investment, legal, or tax advice. Projected compounding values reflect mathematical simulation and do not guarantee future market returns.';
   const splitDisc = doc.splitTextToSize(disclaimerText, contentWidth - 8);
   doc.text(splitDisc, margin + 4, y + 8.5);
 
   // ===========================================================================
-  // FINAL PASS: Subtle Diagonal Watermark & Standardized Footers across ALL pages
+  // FINAL PASS: Standardized Interactive Footers across ALL pages
+  // (Watermark was already drawn on the backside of each page upon creation)
   // ===========================================================================
   const totalPages = doc.getNumberOfPages();
 
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
-
-    // Subtle diagonal security watermark
-    doc.saveGraphicsState();
-    doc.setTextColor(242, 245, 250);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(48);
-    doc.text('codepackr.com', pageWidth / 2, pageHeight / 2, {
-      align: 'center',
-      angle: 35,
-    });
-    doc.restoreGraphicsState();
 
     // Bottom Footer Bar (always exactly at pageHeight - 7mm)
     doc.setFont('helvetica', 'normal');
@@ -1019,10 +1042,13 @@ export function generateFinancialAdvisoryPdf({
     doc.setTextColor(148, 163, 184); // slate-400
 
     doc.text(
-      `CodePackr Wealth Report · www.codepackr.com · ${clientName} · ${currentDate} ${timestamp}`,
+      `CodePackr Finance · https://finance.codepackr.com/ · ${clientName} · ${currentDate} ${timestamp}`,
       margin,
       pageHeight - 7
     );
+
+    // Interactive clickable hyperlink on the footer website URL
+    doc.link(margin, pageHeight - 10, 85, 5, { url: 'https://finance.codepackr.com/' });
 
     doc.setFont('helvetica', 'bold');
     doc.text(`Page ${p} of ${totalPages}`, margin + contentWidth, pageHeight - 7, {

@@ -1,350 +1,360 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import zlib from 'node:zlib';
+import { Resvg } from '@resvg/resvg-js';
 
-function crc32(buf) {
-  let crc = 0 ^ -1;
-  for (let i = 0; i < buf.length; i++) crc = (crc >>> 8) ^ table[(crc ^ buf[i]) & 0xff];
-  return (crc ^ -1) >>> 0;
+function getMarkDefs(idSuffix = '') {
+  return `
+    <linearGradient id="cf-blue-c${idSuffix}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00C8FF" />
+      <stop offset="35%" stop-color="#0080FF" />
+      <stop offset="70%" stop-color="#0055E5" />
+      <stop offset="100%" stop-color="#0038B8" />
+    </linearGradient>
+    <linearGradient id="cf-blue-facet${idSuffix}" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#002D96" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#007BFF" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="cf-green-bar${idSuffix}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ADE80" />
+      <stop offset="55%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#15803D" />
+    </linearGradient>
+    <linearGradient id="cf-green-arrow${idSuffix}" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6EE7B7" />
+      <stop offset="45%" stop-color="#22C55E" />
+      <stop offset="100%" stop-color="#15803D" />
+    </linearGradient>
+    <linearGradient id="cf-packr-blue${idSuffix}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00B4D8" />
+      <stop offset="100%" stop-color="#0066FF" />
+    </linearGradient>
+    <filter id="cf-drop-shadow${idSuffix}" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#070D1B" flood-opacity="0.2" />
+    </filter>
+  `;
 }
 
-const table = new Uint32Array(256);
-for (let i = 0; i < 256; i++) {
-  let c = i;
-  for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
-  table[i] = c;
-}
+function getMarkPaths(idSuffix = '', isDark = false) {
+  return `
+    <g id="brand-mark-group${idSuffix}">
+      <!-- Outer Blue C ribbon -->
+      <path fill="url(#cf-blue-c${idSuffix})" d="
+        M 372 76
+        C 242 42, 138 72, 86 142
+        C 40 204, 40 308, 86 370
+        C 138 440, 242 470, 352 436
+        C 372 430, 376 412, 362 398
+        L 318 350
+        C 310 342, 298 340, 288 344
+        C 230 368, 184 350, 152 312
+        C 124 278, 124 234, 152 200
+        C 184 162, 230 144, 288 168
+        C 298 172, 310 170, 318 162
+        L 362 114
+        C 376 100, 372 82, 372 76
+        Z
+      " />
 
-function makeChunk(type, data) {
-  const len = Buffer.alloc(4); len.writeUInt32BE(data.length, 0);
-  const typeBuf = Buffer.from(type, 'ascii');
-  const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(Buffer.concat([typeBuf, data])), 0);
-  return Buffer.concat([len, typeBuf, data, crc]);
-}
+      <!-- Top Arm Depth Facet -->
+      <path fill="url(#cf-blue-facet${idSuffix})" d="
+        M 288 168
+        C 298 172, 310 170, 318 162
+        L 362 114
+        C 372 104, 370 90, 356 84
+        C 285 76, 218 114, 182 160
+        C 218 144, 255 154, 288 168
+        Z
+      " />
 
-function createPng(width, height, drawFn) {
-  const header = Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]);
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4);
-  ihdr.writeUInt8(8, 8); ihdr.writeUInt8(6, 9);
-  const raw = Buffer.alloc(height * (1 + width * 4));
-  let offset = 0;
-  for (let y = 0; y < height; y++) {
-    raw[offset++] = 0;
-    for (let x = 0; x < width; x++) {
-      const [r,g,b,a] = drawFn(x,y,width,height);
-      raw[offset++] = r; raw[offset++] = g; raw[offset++] = b; raw[offset++] = a;
-    }
-  }
-  return Buffer.concat([header, makeChunk('IHDR', ihdr), makeChunk('IDAT', zlib.deflateSync(raw)), makeChunk('IEND', Buffer.alloc(0))]);
-}
+      <!-- 3 Ascending Green Financial Bars -->
+      <rect x="175" y="270" width="38" height="78" rx="8" fill="url(#cf-green-bar${idSuffix})" />
+      <rect x="230" y="208" width="38" height="140" rx="8" fill="url(#cf-green-bar${idSuffix})" />
+      <rect x="285" y="144" width="38" height="204" rx="8" fill="url(#cf-green-bar${idSuffix})" />
 
-function distToSegment(px, py, x1, y1, x2, y2) {
-  const l2 = (x2-x1)**2 + (y2-y1)**2;
-  if (!l2) return Math.hypot(px-x1, py-y1);
-  const t = Math.max(0, Math.min(1, ((px-x1)*(x2-x1)+(py-y1)*(y2-y1))/l2));
-  return Math.hypot(px-(x1+t*(x2-x1)), py-(y1+t*(y2-y1)));
-}
-
-// CodePackr Finance mark from the approved HD brand artwork:
-// blue C/ribbon + green ascending bars and growth arrow.
-function drawIcon(x, y, w, h) {
-  const nx = (x + 0.5) / w;
-  const ny = (y + 0.5) / h;
-  const r = Math.max(0, Math.abs(nx-.5)-.42);
-  const s = Math.max(0, Math.abs(ny-.5)-.42);
-  if (Math.hypot(r,s) > .08) return [0,0,0,0];
-
-  const blue = (t) => [
-    Math.round(19*(1-t)+7*t), Math.round(181*(1-t)+92*t), Math.round(244*(1-t)+234*t)
-  ];
-  const green = (t) => [Math.round(145*(1-t)+20*t), Math.round(238*(1-t)+184*t), Math.round(99*(1-t)+61*t)];
-
-  // Large blue C/ribbon silhouette, approximated from the supplied master artwork.
-  const topC = ny >= .10 && ny <= .34 && nx >= .11 && nx <= .82 && nx <= (.72 + (ny-.10)*1.1);
-  const leftC = nx >= .08 && nx <= .36 && ny >= .10 && ny <= .82;
-  const bottomC = ny >= .66 && ny <= .90 && nx >= .10 && nx <= .67 && nx >= (.12 + (ny-.66)*.12);
-  const innerCut = nx >= .18 && nx <= .66 && ny >= .25 && ny <= .70;
-  if ((topC || leftC || bottomC) && !innerCut) {
-    const t = Math.max(0, Math.min(1, (nx+ny)/1.5));
-    return [...blue(t),255];
-  }
-
-  // Green bars.
-  const bars = [
-    {x:.225,y:.56,w:.115,h:.19},
-    {x:.405,y:.42,w:.115,h:.33},
-    {x:.585,y:.25,w:.115,h:.50}
-  ];
-  for (const b of bars) if (nx>=b.x && nx<=b.x+b.w && ny>=b.y && ny<=b.y+b.h) {
-    return [...green(Math.max(0,Math.min(1,(nx+ny)/1.5))),255];
-  }
-
-  // Green growth curve and arrow head.
-  const segs = [
-    [.16,.69,.34,.76],[.34,.76,.53,.70],[.53,.70,.67,.57],[.67,.57,.76,.39]
-  ];
-  let d = Infinity;
-  for (const s2 of segs) d = Math.min(d, distToSegment(nx,ny,...s2));
-  if (d < .035) return [...green(Math.max(0,Math.min(1,(nx+ny)/1.5))),255];
-  if (nx>=.70 && nx<=.88 && ny>=.25 && ny<=.47) {
-    const ax = nx-.79, ay = ny-.36;
-    if (Math.abs(ay) < .11 && ax > -.05) return [...green(.45),255];
-  }
-
-  // Transparent outside the mark; subtle dark anti-aliasing is intentionally avoided.
-  return [0,0,0,0];
-}
-
-function createIcoFile(sizes) {
-  const header = Buffer.alloc(6); header.writeUInt16LE(0,0); header.writeUInt16LE(1,2); header.writeUInt16LE(sizes.length,4);
-  const entries = []; const images = []; let offset = 6 + sizes.length*16;
-  for (const size of sizes) {
-    const bih = Buffer.alloc(40);
-    bih.writeUInt32LE(40,0); bih.writeInt32LE(size,4); bih.writeInt32LE(size*2,8);
-    bih.writeUInt16LE(1,12); bih.writeUInt16LE(32,14); bih.writeUInt32LE(0,16);
-    bih.writeUInt32LE(size*size*4,20);
-    const pixels = Buffer.alloc(size*size*4); let p=0;
-    for (let y=size-1;y>=0;y--) for (let x=0;x<size;x++) {
-      const [r,g,b,a]=drawIcon(x,y,size,size);
-      pixels[p++]=b; pixels[p++]=g; pixels[p++]=r; pixels[p++]=a;
-    }
-    const rowBytes=Math.ceil(size/32)*4;
-    const mask=Buffer.alloc(rowBytes*size,0);
-    const image=Buffer.concat([bih,pixels,mask]); images.push(image);
-    const entry=Buffer.alloc(16);
-    entry.writeUInt8(size>=256?0:size,0); entry.writeUInt8(size>=256?0:size,1);
-    entry.writeUInt16LE(1,4); entry.writeUInt16LE(32,6); entry.writeUInt32LE(image.length,8); entry.writeUInt32LE(offset,12);
-    entries.push(entry); offset += image.length;
-  }
-  return Buffer.concat([header,...entries,...images]);
+      <!-- Upward Growth Arrow and Curve -->
+      <path fill="url(#cf-green-arrow${idSuffix})" stroke="${isDark ? '#0B1220' : '#FFFFFF'}" stroke-width="2.5" stroke-linejoin="round" d="
+        M 120 362
+        C 165 400, 235 390, 295 320
+        C 330 280, 360 225, 385 170
+        L 355 165
+        L 426 134
+        L 416 208
+        L 390 192
+        C 368 238, 338 288, 305 326
+        C 246 392, 175 402, 126 370
+        Z
+      " />
+    </g>
+  `;
 }
 
 function generateSvgFavicon() {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-<title id="title">CodePackr Finance</title><desc id="desc">Blue CodePackr finance mark with green growth bars and arrow</desc>
-<defs><linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#13B5F4"/><stop offset=".55" stop-color="#087CFF"/><stop offset="1" stop-color="#075BEA"/></linearGradient><linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#91EE63"/><stop offset="1" stop-color="#14B83D"/></linearGradient></defs>
-<path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-<path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-<path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-<rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/><rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/><rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
-</svg>`;
-}
-
-function generateLightLogoSvg() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1274 384" role="img" aria-labelledby="title desc">
-  <title id="title">CodePackr Finance</title>
-  <desc id="desc">CodePackr Finance logo with blue growth mark, Codepackr wordmark, green Finance and Calculate Plan Grow tagline</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="fav-title fav-desc">
+  <title id="fav-title">CodePackr Finance</title>
+  <desc id="fav-desc">Blue CodePackr ribbon mark with green ascending financial bars and growth arrow</desc>
   <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#13B5F4"/>
-      <stop offset=".55" stop-color="#087CFF"/>
-      <stop offset="1" stop-color="#075BEA"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#91EE63"/>
-      <stop offset="1" stop-color="#14B83D"/>
-    </linearGradient>
+    ${getMarkDefs('-fav')}
   </defs>
-  <g transform="translate(24 36) scale(.66)">
-    <path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-    <path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-    <path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-    <rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/>
-    <rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/>
-    <rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
-  </g>
-  <g font-family="Arial, Helvetica, sans-serif" font-weight="800">
-    <text x="420" y="184" font-size="126" fill="#0B1220" letter-spacing="-6">Code</text>
-    <text x="700" y="184" font-size="126" fill="#0797ED" letter-spacing="-6">packr</text>
-  </g>
-  <text x="600" y="270" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="25" fill="#14B83D">FINANCE</text>
-  <text x="390" y="332" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="500" letter-spacing="9" fill="#64748B">CALCULATE  •  PLAN  •  GROW</text>
-</svg>`;
-}
-
-function generateDarkLogoSvg() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1274 384" role="img" aria-labelledby="title desc">
-  <title id="title">CodePackr Finance</title>
-  <desc id="desc">CodePackr Finance logo (dark theme) with blue growth mark and light text</desc>
-  <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#13B5F4"/>
-      <stop offset=".55" stop-color="#087CFF"/>
-      <stop offset="1" stop-color="#075BEA"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#91EE63"/>
-      <stop offset="1" stop-color="#14B83D"/>
-    </linearGradient>
-  </defs>
-  <g transform="translate(24 36) scale(.66)">
-    <path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-    <path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-    <path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-    <rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/>
-    <rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/>
-    <rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
-  </g>
-  <g font-family="Arial, Helvetica, sans-serif" font-weight="800">
-    <text x="420" y="184" font-size="126" fill="#FFFFFF" letter-spacing="-6">Code</text>
-    <text x="700" y="184" font-size="126" fill="#4DB8FF" letter-spacing="-6">packr</text>
-  </g>
-  <text x="600" y="270" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="25" fill="#48D95B">FINANCE</text>
-  <text x="390" y="332" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="500" letter-spacing="9" fill="#94A3B8">CALCULATE  •  PLAN  •  GROW</text>
-</svg>`;
-}
-
-function generateLightIconSvg() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">CodePackr Finance</title>
-  <desc id="desc">CodePackr Finance app icon badge with blue growth mark and green financial bars</desc>
-  <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#13B5F4"/>
-      <stop offset=".55" stop-color="#087CFF"/>
-      <stop offset="1" stop-color="#075BEA"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#91EE63"/>
-      <stop offset="1" stop-color="#14B83D"/>
-    </linearGradient>
-    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.08" />
-    </filter>
-  </defs>
-  <rect x="20" y="20" width="472" height="472" rx="104" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="4" filter="url(#card-shadow)" />
-  <g transform="translate(56 46) scale(0.80)">
-    <path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-    <path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-    <path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-    <rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/>
-    <rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/>
-    <rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
-  </g>
-</svg>`;
-}
-
-function generateDarkIconSvg() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">CodePackr Finance</title>
-  <desc id="desc">CodePackr Finance app icon badge (dark theme) with blue growth mark and green financial bars</desc>
-  <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#13B5F4"/>
-      <stop offset=".55" stop-color="#087CFF"/>
-      <stop offset="1" stop-color="#075BEA"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#91EE63"/>
-      <stop offset="1" stop-color="#14B83D"/>
-    </linearGradient>
-  </defs>
-  <rect x="20" y="20" width="472" height="472" rx="104" fill="#0B1220" stroke="#1E293B" stroke-width="4" />
-  <g transform="translate(56 46) scale(0.80)">
-    <path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-    <path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-    <path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-    <rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/>
-    <rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/>
-    <rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
+  <g transform="translate(26, 26) scale(0.90)">
+    ${getMarkPaths('-fav', false)}
   </g>
 </svg>`;
 }
 
 function generateMarkSvg() {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">CodePackr Finance Mark</title>
-  <desc id="desc">CodePackr Finance brand symbol with blue ribbon and green financial growth bars</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="mark-title mark-desc">
+  <title id="mark-title">CodePackr Finance Mark</title>
+  <desc id="mark-desc">CodePackr brand emblem with blue ribbon and ascending financial bars</desc>
   <defs>
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#13B5F4"/>
-      <stop offset=".55" stop-color="#087CFF"/>
-      <stop offset="1" stop-color="#075BEA"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#91EE63"/>
-      <stop offset="1" stop-color="#14B83D"/>
-    </linearGradient>
+    ${getMarkDefs('-standalone')}
   </defs>
-  <g transform="translate(56 46) scale(0.80)">
-    <path fill="url(#blue)" d="M55 165C80 92 145 52 229 52h170c22 0 34 25 20 42l-42 51c-8 10-20 16-33 16H226c-53 0-93 22-119 56 27-20 63-31 104-31h94l-44 56H192c-58 0-105 26-130 66-16-29-19-69-7-107Z"/>
-    <path fill="url(#blue)" d="M51 346c25 53 77 92 141 99h115c17 0 27-19 18-33l-34-50c-7-10-18-16-30-16h-82c-45 0-84-20-109-53-16 16-27 34-29 53-2 1-2 1-2 0-3 0-5 0-8 0Z"/>
-    <path fill="url(#green)" d="M82 351c55 48 138 56 209 8 36-24 64-55 86-91l-30-16 86-42-6 95-29-18c-27 48-62 87-107 117-69 46-153 42-214 8l5-61Z"/>
-    <rect x="111" y="277" width="45" height="75" rx="5" fill="url(#green)"/>
-    <rect x="174" y="222" width="45" height="130" rx="5" fill="url(#green)"/>
-    <rect x="237" y="154" width="45" height="198" rx="5" fill="url(#green)"/>
+  <g transform="translate(26, 26) scale(0.90)">
+    ${getMarkPaths('-standalone', false)}
   </g>
 </svg>`;
 }
 
-function drawOgBanner(x,y,w,h) {
-  const nx=x/w, ny=y/h;
-  const bgR=Math.round(11+nx*14+ny*6), bgG=Math.round(15+nx*18+ny*8), bgB=Math.round(25+nx*28+ny*12);
-  if (ny<.015) return [Math.round(91*(1-nx)),Math.round(82*(1-nx)+159*nx),Math.round(232*(1-nx)+136*nx),255];
-  return [bgR,bgG,bgB,255];
+function generateLightIconSvg() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="icon-light-title icon-light-desc">
+  <title id="icon-light-title">CodePackr Finance</title>
+  <desc id="icon-light-desc">CodePackr Finance app icon badge with blue growth mark and green financial bars</desc>
+  <defs>
+    ${getMarkDefs('-icon-light')}
+    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.08" />
+    </filter>
+  </defs>
+  <rect x="20" y="20" width="472" height="472" rx="104" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="4" filter="url(#card-shadow)" />
+  <g transform="translate(56, 56) scale(0.78)">
+    ${getMarkPaths('-icon-light', false)}
+  </g>
+</svg>`;
 }
 
-const publicDir=path.resolve('public');
-const distDir=path.resolve('dist');
-const ogDir=path.join(publicDir,'assets','og');
-fs.mkdirSync(ogDir,{recursive:true});
-
-const sizes=[16,32,48,64,96,128,180,192,256,384,512];
-for (const size of sizes) {
-  const png=createPng(size,size,drawIcon);
-  fs.writeFileSync(path.join(publicDir,`favicon-${size}x${size}.png`),png);
-  if (fs.existsSync(distDir)) fs.writeFileSync(path.join(distDir,`favicon-${size}x${size}.png`),png);
-}
-fs.writeFileSync(path.join(publicDir,'apple-touch-icon.png'),createPng(180,180,drawIcon));
-fs.writeFileSync(path.join(publicDir,'android-chrome-192x192.png'),createPng(192,192,drawIcon));
-fs.writeFileSync(path.join(publicDir,'android-chrome-512x512.png'),createPng(512,512,drawIcon));
-
-const svgFavicon = generateSvgFavicon();
-const lightLogoSvg = generateLightLogoSvg();
-const darkLogoSvg = generateDarkLogoSvg();
-const lightIconSvg = generateLightIconSvg();
-const darkIconSvg = generateDarkIconSvg();
-const markSvg = generateMarkSvg();
-
-// Write SVG assets
-fs.writeFileSync(path.join(publicDir, 'favicon.svg'), svgFavicon, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo.svg'), lightLogoSvg, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo-dark.svg'), darkLogoSvg, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon.svg'), lightIconSvg, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon-dark.svg'), darkIconSvg, 'utf8');
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-mark.svg'), markSvg, 'utf8');
-
-// Also write 512x512 app icon PNG for Android launcher / PWA
-const appIconPng = createPng(512, 512, drawIcon);
-fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon.png'), appIconPng);
-
-if (fs.existsSync(distDir)) {
-  fs.writeFileSync(path.join(distDir, 'favicon.svg'), svgFavicon, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-logo.svg'), lightLogoSvg, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-logo-dark.svg'), darkLogoSvg, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-icon.svg'), lightIconSvg, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-icon-dark.svg'), darkIconSvg, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-mark.svg'), markSvg, 'utf8');
-  fs.writeFileSync(path.join(distDir, 'codepackr-finance-icon.png'), appIconPng);
+function generateDarkIconSvg() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="icon-dark-title icon-dark-desc">
+  <title id="icon-dark-title">CodePackr Finance</title>
+  <desc id="icon-dark-desc">CodePackr Finance app icon badge (dark theme) with blue growth mark and green financial bars</desc>
+  <defs>
+    ${getMarkDefs('-icon-dark')}
+  </defs>
+  <rect x="20" y="20" width="472" height="472" rx="104" fill="#0B1220" stroke="#1E293B" stroke-width="4" />
+  <g transform="translate(56, 56) scale(0.78)">
+    ${getMarkPaths('-icon-dark', true)}
+  </g>
+</svg>`;
 }
 
-const ico = createIcoFile([16, 32, 48, 64, 128, 256]);
-fs.writeFileSync(path.join(publicDir, 'favicon.ico'), ico);
-if (fs.existsSync(distDir)) fs.writeFileSync(path.join(distDir, 'favicon.ico'), ico);
+function generateHorizontalLogoSvg(isDark = false) {
+  const suffix = isDark ? '-dark' : '-light';
+  const textColor = isDark ? '#FFFFFF' : '#0B1220';
+  const taglineColor = isDark ? '#94A3B8' : '#64748B';
+  const financeColor = isDark ? '#10B981' : '#14B83D';
 
-const ogPng = createPng(1200, 630, drawOgBanner);
-fs.writeFileSync(path.join(ogDir, 'default.png'), ogPng);
-if (fs.existsSync(distDir)) {
-  const distOgDir = path.join(distDir, 'assets', 'og');
-  fs.mkdirSync(distOgDir, { recursive: true });
-  fs.writeFileSync(path.join(distOgDir, 'default.png'), ogPng);
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1274 384" width="1274" height="384" role="img" aria-label="CodePackr Finance Logo">
+  <title>CodePackr Finance</title>
+  <desc>CodePackr Finance logo with blue growth mark, Codepackr wordmark, green Finance label, and tagline</desc>
+  <defs>
+    ${getMarkDefs(suffix)}
+  </defs>
+  <!-- Mark on Left -->
+  <g transform="translate(44, 28) scale(0.64)">
+    ${getMarkPaths(suffix, isDark)}
+  </g>
+  <!-- Brand Wordmark -->
+  <text x="420" y="182" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="124" letter-spacing="-3">
+    <tspan fill="${textColor}">Code</tspan><tspan fill="url(#cf-packr-blue${suffix})">packr</tspan>
+  </text>
+  <!-- FINANCE label -->
+  <text x="425" y="266" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="54" fill="${financeColor}" letter-spacing="22">FINANCE</text>
+  <!-- CALCULATE • PLAN • GROW tagline -->
+  <text x="425" y="328" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="28" fill="${taglineColor}" letter-spacing="10">CALCULATE  •  PLAN  •  GROW</text>
+</svg>`;
 }
 
-console.log(`Generated CodePackr Finance branding assets: ${sizes.length} PNG sizes + ICO + aspect-responsive SVGs & PNGs.`);
+function generateOgBannerSvg() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="CodePackr Finance Social Preview">
+  <defs>
+    <linearGradient id="og-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1220" />
+      <stop offset="50%" stop-color="#080F1D" />
+      <stop offset="100%" stop-color="#050914" />
+    </linearGradient>
+    <linearGradient id="og-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00C8FF" />
+      <stop offset="50%" stop-color="#0066FF" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    ${getMarkDefs('-og')}
+  </defs>
+  <rect width="1200" height="630" fill="url(#og-bg)" />
+  <!-- Top glow accent line -->
+  <rect x="0" y="0" width="1200" height="6" fill="url(#og-accent)" />
+
+  <!-- Logo Mark on Left -->
+  <g transform="translate(100, 115) scale(0.80)">
+    ${getMarkPaths('-og', true)}
+  </g>
+
+  <!-- Typography on Right -->
+  <text x="560" y="240" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="108" letter-spacing="-2">
+    <tspan fill="#FFFFFF">Code</tspan><tspan fill="url(#cf-packr-blue-og)">packr</tspan>
+  </text>
+  <text x="565" y="320" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="44" fill="#10B981" letter-spacing="20">FINANCE</text>
+  <text x="565" y="380" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="24" fill="#94A3B8" letter-spacing="8">CALCULATE  •  PLAN  •  GROW</text>
+  <text x="565" y="440" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="22" fill="#64748B">100% Client-Side Private Financial Calculators</text>
+</svg>`;
+}
+
+function createIcoFile(pngBuffers) {
+  // pngBuffers: array of { size, pngBuffer }
+  const count = pngBuffers.length;
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(count, 4);
+
+  const entries = [];
+  const buffers = [];
+  let offset = 6 + count * 16;
+
+  for (const { size, pngBuffer } of pngBuffers) {
+    const entry = Buffer.alloc(16);
+    entry.writeUInt8(size >= 256 ? 0 : size, 0);
+    entry.writeUInt8(size >= 256 ? 0 : size, 1);
+    entry.writeUInt8(0, 2);
+    entry.writeUInt8(0, 3);
+    entry.writeUInt16LE(1, 4);
+    entry.writeUInt16LE(32, 6);
+    entry.writeUInt32LE(pngBuffer.length, 8);
+    entry.writeUInt32LE(offset, 12);
+    entries.push(entry);
+    buffers.push(pngBuffer);
+    offset += pngBuffer.length;
+  }
+
+  return Buffer.concat([header, ...entries, ...buffers]);
+}
+
+function renderPng(svgString, width) {
+  const resvg = new Resvg(svgString, { fitTo: { mode: 'width', value: width } });
+  return resvg.render().asPng();
+}
+
+function main() {
+  const publicDir = path.resolve('public');
+  const distDir = path.resolve('dist');
+  const ogDir = path.join(publicDir, 'assets', 'og');
+  fs.mkdirSync(ogDir, { recursive: true });
+
+  console.log('Generating CodePackr Finance brand and favicon vector assets...');
+
+  const svgFavicon = generateSvgFavicon();
+  const markSvg = generateMarkSvg();
+  const lightIconSvg = generateLightIconSvg();
+  const darkIconSvg = generateDarkIconSvg();
+  const lightLogoSvg = generateHorizontalLogoSvg(false);
+  const darkLogoSvg = generateHorizontalLogoSvg(true);
+  const ogBannerSvg = generateOgBannerSvg();
+
+  // 1. Write SVGs to public/
+  fs.writeFileSync(path.join(publicDir, 'favicon.svg'), svgFavicon, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-mark.svg'), markSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon.svg'), lightIconSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon-dark.svg'), darkIconSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo.svg'), lightLogoSvg, 'utf8');
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo-dark.svg'), darkLogoSvg, 'utf8');
+
+  // 2. Generate Favicon PNGs across all sizes
+  const sizes = [16, 32, 48, 64, 96, 128, 180, 192, 256, 384, 512];
+  const icoSizes = [16, 32, 48, 64, 128, 256];
+  const icoBuffers = [];
+
+  for (const size of sizes) {
+    const png = renderPng(svgFavicon, size, size);
+    fs.writeFileSync(path.join(publicDir, `favicon-${size}x${size}.png`), png);
+    if (icoSizes.includes(size)) {
+      icoBuffers.push({ size, pngBuffer: png });
+    }
+  }
+
+  // Also write quality variants for 512 requested by user
+  for (const q of [32, 64, 128, 256]) {
+    const pngQ = renderPng(svgFavicon, 512, 512);
+    fs.writeFileSync(path.join(publicDir, `favicon-512-q${q}.png`), pngQ);
+  }
+
+  // Apple Touch Icon (180x180) & Android Chrome Icons
+  const appleTouchPng = renderPng(lightIconSvg, 180, 180);
+  fs.writeFileSync(path.join(publicDir, 'apple-touch-icon.png'), appleTouchPng);
+
+  const android192 = renderPng(lightIconSvg, 192, 192);
+  fs.writeFileSync(path.join(publicDir, 'android-chrome-192x192.png'), android192);
+
+  const android512 = renderPng(lightIconSvg, 512, 512);
+  fs.writeFileSync(path.join(publicDir, 'android-chrome-512x512.png'), android512);
+
+  const appIcon512 = renderPng(lightIconSvg, 512, 512);
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-icon.png'), appIcon512);
+
+  // 3. Multi-resolution Favicon ICO
+  const icoData = createIcoFile(icoBuffers);
+  fs.writeFileSync(path.join(publicDir, 'favicon.ico'), icoData);
+
+  // 4. Horizontal Logo PNGs (Standard, @2x, and Dark)
+  const lightLogoPng = renderPng(lightLogoSvg, 1274, 384);
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo.png'), lightLogoPng);
+
+  const lightLogo2xPng = renderPng(lightLogoSvg, 2548, 768);
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo@2x.png'), lightLogo2xPng);
+
+  const darkLogoPng = renderPng(darkLogoSvg, 1274, 384);
+  fs.writeFileSync(path.join(publicDir, 'codepackr-finance-logo-dark.png'), darkLogoPng);
+
+  // 5. OpenGraph Social Card PNG
+  const ogPng = renderPng(ogBannerSvg, 1200, 630);
+  fs.writeFileSync(path.join(ogDir, 'default.png'), ogPng);
+
+  // 6. Mirror to dist/ if present
+  if (fs.existsSync(distDir)) {
+    const filesToMirror = [
+      'favicon.svg',
+      'codepackr-finance-mark.svg',
+      'codepackr-finance-icon.svg',
+      'codepackr-finance-icon-dark.svg',
+      'codepackr-finance-logo.svg',
+      'codepackr-finance-logo-dark.svg',
+      'codepackr-finance-logo.png',
+      'codepackr-finance-logo@2x.png',
+      'codepackr-finance-logo-dark.png',
+      'codepackr-finance-icon.png',
+      'apple-touch-icon.png',
+      'android-chrome-192x192.png',
+      'android-chrome-512x512.png',
+      'favicon.ico',
+      ...sizes.map(s => `favicon-${s}x${s}.png`),
+      ...[32, 64, 128, 256].map(q => `favicon-512-q${q}.png`)
+    ];
+
+    for (const f of filesToMirror) {
+      const srcPath = path.join(publicDir, f);
+      if (fs.existsSync(srcPath)) {
+        fs.copyFileSync(srcPath, path.join(distDir, f));
+      }
+    }
+
+    const distOgDir = path.join(distDir, 'assets', 'og');
+    fs.mkdirSync(distOgDir, { recursive: true });
+    fs.writeFileSync(path.join(distOgDir, 'default.png'), ogPng);
+  }
+
+  console.log(`Successfully generated all CodePackr Finance brand assets (${sizes.length} favicon PNGs, @2x logos, dark/light SVG & PNG logos, and ICO).`);
+}
+
+main();

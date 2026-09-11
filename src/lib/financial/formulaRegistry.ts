@@ -562,6 +562,132 @@ export const FORMULA_REGISTRY: Record<string, FormulaDefinition> = {
     reviewedBy: 'CodePackr Financial Engineering Working Group',
     reviewStatus: 'verified',
   },
+
+  'npv': {
+    id: 'npv',
+    name: 'Net Present Value (NPV) Formula',
+    category: 'business-finance',
+    formulaLatex: 'NPV = -I_0 + \\sum_{t=1}^{n} \\frac{CF_t}{(1 + r)^t}',
+    formulaText: 'NPV = -InitialInvestment + Sum(CF_t / (1 + r)^t) for t = 1 to n',
+    description: 'Measures the excess or shortfall of cash inflows, in present value terms, over the initial capital outlay required to fund an investment.',
+    variables: [
+      { symbol: 'I_0', name: 'Initial Investment', description: 'Upfront cash outlay at t=0', unit: 'currency' },
+      { symbol: 'CF_t', name: 'Cash Flow at Year t', description: 'Net cash inflow or outflow generated in period t', unit: 'currency' },
+      { symbol: 'r', name: 'Discount Rate', description: 'Weighted Average Cost of Capital (WACC) or required rate of return', unit: '%' },
+      { symbol: 't', name: 'Time Period', description: 'Time horizon in discrete years', unit: 'years' },
+    ],
+    assumptions: [
+      'Cash flows occur discretely at the end of each annual period.',
+      'Cash inflows can be reinvested continuously at the specified discount rate (cost of capital).',
+      'The discount rate remains uniform throughout the project lifecycle.',
+    ],
+    limitations: [
+      'Relies heavily on accurate long-term cash flow forecasting and discount rate precision.',
+      'Does not inherently account for non-financial project synergies or managerial real options.',
+    ],
+    sources: [
+      { title: 'Principles of Corporate Finance', publisher: 'Brealey, Myers, Allen (McGraw-Hill)' },
+      { title: 'Corporate Finance: Theory and Practice', publisher: 'Aswath Damodaran (John Wiley & Sons)' },
+    ],
+    version: '1.0.0',
+    lastReviewed: '2026-09-11',
+    reviewedBy: 'CodePackr Financial Engineering Working Group',
+    reviewStatus: 'verified',
+  },
+
+  'irr': {
+    id: 'irr',
+    name: 'Internal Rate of Return (IRR) Formula',
+    category: 'business-finance',
+    formulaLatex: '0 = -I_0 + \\sum_{t=1}^{n} \\frac{CF_t}{(1 + IRR)^t}',
+    formulaText: 'Solve for IRR where NPV(IRR) = 0: 0 = -InitialInvestment + Sum(CF_t / (1 + IRR)^t)',
+    description: 'The annualized effective compounded discount rate that equates the Net Present Value of all future cash flows from an investment to zero.',
+    variables: [
+      { symbol: 'IRR', name: 'Internal Rate of Return', description: 'The breakeven rate of return of the capital project', unit: '%' },
+      { symbol: 'I_0', name: 'Initial Investment', description: 'Upfront cash outlay at t=0', unit: 'currency' },
+      { symbol: 'CF_t', name: 'Cash Flow at Year t', description: 'Net periodic cash inflow at year t', unit: 'currency' },
+    ],
+    assumptions: [
+      'Cash inflows generated over the life of the project are reinvested at the IRR itself (which can be optimistic vs WACC).',
+      'Conventional cash flow stream (one net outflow followed by net positive inflows).',
+    ],
+    limitations: [
+      'Unconventional cash flows with multiple sign switches can yield multiple mathematical IRRs or no real solution.',
+      'Does not account for project scale when comparing mutually exclusive capital investments.',
+    ],
+    sources: [
+      { title: 'Valuation: Measuring and Managing the Value of Companies', publisher: 'McKinsey & Company (Wiley)' },
+      { title: 'Financial Management: Theory & Practice', publisher: 'Eugene F. Brigham & Michael C. Ehrhardt' },
+    ],
+    version: '1.0.0',
+    lastReviewed: '2026-09-11',
+    reviewedBy: 'CodePackr Financial Engineering Working Group',
+    reviewStatus: 'verified',
+  },
+
+  'break-even': {
+    id: 'break-even',
+    name: 'Break-Even Analysis & Contribution Margin Formula',
+    category: 'business-finance',
+    formulaLatex: 'Q_{BE} = \\frac{FC}{P - VC}, \\quad CM\\% = \\frac{P - VC}{P} \\times 100',
+    formulaText: 'Break-Even Units = Fixed Costs / (Selling Price - Variable Cost per Unit)',
+    description: 'Calculates the sales volume in units or currency required to cover total operational fixed and variable costs with zero net profit or loss.',
+    variables: [
+      { symbol: 'FC', name: 'Fixed Costs', description: 'Overhead costs that remain unchanged regardless of output volume (rent, salaries, licenses)', unit: 'currency' },
+      { symbol: 'VC', name: 'Variable Cost per Unit', description: 'Direct costs incurred per additional unit produced or sold (materials, shipping, commissions)', unit: 'currency/unit' },
+      { symbol: 'P', name: 'Selling Price per Unit', description: 'Gross sale price charged to customers per unit', unit: 'currency/unit' },
+      { symbol: 'Q_BE', name: 'Break-Even Quantity', description: 'Minimum number of units to sell to achieve net zero operating profit', unit: 'units' },
+    ],
+    assumptions: [
+      'Selling price and variable cost per unit remain linear across all production volumes.',
+      'All output produced within the accounting period is sold (no fluctuating inventory stockpile).',
+      'Fixed costs remain static within the relevant operational range.',
+    ],
+    limitations: [
+      'Does not account for economies of scale, quantity discounts, or stepped fixed overheads.',
+      'Assumes a single-product model unless an aggregated weighted average contribution margin is used.',
+    ],
+    sources: [
+      { title: 'Managerial Accounting: Creating Value in a Dynamic Business Environment', publisher: 'Ronald W. Hilton (McGraw-Hill)' },
+      { title: 'Cost Accounting: A Managerial Emphasis', publisher: 'Horngren, Datar, Rajan (Pearson)' },
+    ],
+    version: '1.0.0',
+    lastReviewed: '2026-09-11',
+    reviewedBy: 'CodePackr Financial Engineering Working Group',
+    reviewStatus: 'verified',
+  },
+
+  'business-valuation': {
+    id: 'business-valuation',
+    name: 'Business Valuation Multiples Formula',
+    category: 'business-finance',
+    formulaLatex: 'EV = Metric \\times Multiple, \\quad EquityValue = EV - NetDebt',
+    formulaText: 'Enterprise Value = Financial Metric (Revenue / EBITDA / SDE) * Multiple; Equity Value = Enterprise Value - Net Debt',
+    description: 'Estimates enterprise and equity fair market value using market-comparable transaction multiples applied to normalized operational metrics.',
+    variables: [
+      { symbol: 'Metric', name: 'Operational Metric', description: 'Normalized Revenue, EBITDA, or Seller Discretionary Earnings (SDE)', unit: 'currency' },
+      { symbol: 'Multiple', name: 'Valuation Multiple', description: 'Market transaction multiple benchmark based on industry, margin, and growth profile', unit: 'multiple (x)' },
+      { symbol: 'EV', name: 'Enterprise Value', description: 'Total operating economic value of the business enterprise', unit: 'currency' },
+      { symbol: 'NetDebt', name: 'Net Debt', description: 'Total interest-bearing debt minus available cash and liquid equivalents', unit: 'currency' },
+      { symbol: 'EquityValue', name: 'Equity Value', description: 'Net residual economic value attributable to equity shareholders/owners', unit: 'currency' },
+    ],
+    assumptions: [
+      'Financial metrics reflect normalized, recurring operational earnings without non-recurring owner perks or one-time windfalls.',
+      'Comparable peer multiple ranges reflect current prevailing M&A transaction benchmarks.',
+    ],
+    limitations: [
+      'Multiples method does not capture long-term company-specific competitive moats or structural capital expenditure requirements.',
+      'Market multiples fluctuate across macroeconomic interest rate cycles.',
+    ],
+    sources: [
+      { title: 'Damodaran on Valuation: Security Analysis for Investment and Corporate Finance', publisher: 'Aswath Damodaran (John Wiley & Sons)' },
+      { title: 'Middle Market M&A: Handbook for Investment Banking and Business Consulting', publisher: 'Marks, Sleight, Robbins (Wiley)' },
+    ],
+    version: '1.0.0',
+    lastReviewed: '2026-09-11',
+    reviewedBy: 'CodePackr Financial Engineering Working Group',
+    reviewStatus: 'verified',
+  },
 };
 
 /**

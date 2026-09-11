@@ -8,13 +8,16 @@ import { getIcon } from '../lib/icons';
 interface ToolHeaderProps {
   tool: ToolDef;
   onBackToHome?: () => void;
+  onBack?: () => void;
   onSelectRelated?: (t: ToolDef) => void;
+  actions?: React.ReactNode;
 }
 
-export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onSelectRelated }) => {
+export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onBack, onSelectRelated, actions }) => {
   const [copiedLink, setCopiedLink] = useState(false);
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(tool.id);
+  const handleBack = onBack || onBackToHome;
 
   const handleShare = async () => {
     const success = await shareToolUrl(tool.id, tool.name, tool.description);
@@ -30,9 +33,9 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onSe
     <div className="mb-8 animate-fade-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div className="flex items-start gap-4">
-          {onBackToHome && (
+          {handleBack && (
             <button
-              onClick={onBackToHome}
+              onClick={handleBack}
               className="p-2.5 mt-1 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-colors shadow-sm cursor-pointer"
               title="Back to all tools"
             >
@@ -60,6 +63,7 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onSe
         </div>
 
         <div className="flex items-center gap-3 shrink-0 self-start md:self-auto mt-2 md:mt-0">
+          {actions}
           <button
             onClick={() => toggleBookmark(tool.id)}
             className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border transition-all shadow-sm cursor-pointer ${

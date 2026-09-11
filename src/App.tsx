@@ -29,6 +29,24 @@ import { FutureValueCalculatorView } from './components/tools/FutureValueCalcula
 import { SavingsGoalCalculatorView } from './components/tools/SavingsGoalCalculatorView';
 import { SalaryHikeCalculatorView } from './components/tools/SalaryHikeCalculatorView';
 import { GratuityCalculatorView } from './components/tools/GratuityCalculatorView';
+import { NpvCalculatorView } from './components/tools/NpvCalculatorView';
+import { IrrCalculatorView } from './components/tools/IrrCalculatorView';
+import { BreakEvenCalculatorView } from './components/tools/BreakEvenCalculatorView';
+import { BusinessValuationCalculatorView } from './components/tools/BusinessValuationCalculatorView';
+import { DcfCalculatorView } from './components/tools/DcfCalculatorView';
+import { WaccCalculatorView } from './components/tools/WaccCalculatorView';
+import { MortgageAffordabilityCalculatorView } from './components/tools/MortgageAffordabilityCalculatorView';
+import { CreditCardPayoffCalculatorView } from './components/tools/CreditCardPayoffCalculatorView';
+import { GstCalculatorView } from './components/tools/GstCalculatorView';
+import { CapitalGainsTaxCalculatorView } from './components/tools/CapitalGainsTaxCalculatorView';
+import { HraCalculatorView } from './components/tools/HraCalculatorView';
+import { StartupValuationCalculatorView } from './components/tools/StartupValuationCalculatorView';
+import { BurnRateCalculatorView } from './components/tools/BurnRateCalculatorView';
+import { EpfCalculatorView } from './components/tools/EpfCalculatorView';
+import { RentVsBuyCalculatorView } from './components/tools/RentVsBuyCalculatorView';
+import { RuleOf72CalculatorView } from './components/tools/RuleOf72CalculatorView';
+import { AnnuityCalculatorView } from './components/tools/AnnuityCalculatorView';
+import { DividendYieldCalculatorView } from './components/tools/DividendYieldCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { GlobalBanner } from './components/GlobalBanner';
@@ -346,6 +364,42 @@ export const App: React.FC = () => {
       toolViewContent = <SalaryHikeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
     } else if (tool.id === 'gratuity-calculator') {
       toolViewContent = <GratuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'npv-calculator') {
+      toolViewContent = <NpvCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'irr-calculator') {
+      toolViewContent = <IrrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'break-even-calculator') {
+      toolViewContent = <BreakEvenCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'business-valuation-calculator') {
+      toolViewContent = <BusinessValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'dcf-calculator') {
+      toolViewContent = <DcfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'wacc-calculator') {
+      toolViewContent = <WaccCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'mortgage-affordability-calculator') {
+      toolViewContent = <MortgageAffordabilityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'credit-card-payoff-calculator') {
+      toolViewContent = <CreditCardPayoffCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'gst-calculator') {
+      toolViewContent = <GstCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'capital-gains-tax-calculator') {
+      toolViewContent = <CapitalGainsTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'hra-calculator') {
+      toolViewContent = <HraCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'startup-valuation-calculator') {
+      toolViewContent = <StartupValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'burn-rate-calculator') {
+      toolViewContent = <BurnRateCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'epf-calculator') {
+      toolViewContent = <EpfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'rent-vs-buy-calculator') {
+      toolViewContent = <RentVsBuyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'rule-of-72-calculator') {
+      toolViewContent = <RuleOf72CalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'annuity-calculator') {
+      toolViewContent = <AnnuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    } else if (tool.id === 'dividend-yield-calculator') {
+      toolViewContent = <DividendYieldCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
     } else {
       toolViewContent = <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} initialInput={initialInputForTool} />;
     }
@@ -429,6 +483,7 @@ export const App: React.FC = () => {
                 onOpenSearch={() => setIsSearchOpen(true)}
                 selectedCategory={selectedCategory}
                 onSelectCategory={handleSelectCategory}
+                onGoTrustPage={navigateToTrustPage}
               />
             )}
           </main>

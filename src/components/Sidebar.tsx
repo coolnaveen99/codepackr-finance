@@ -28,7 +28,7 @@ const FINANCE_NAV: Array<{ id: CategoryFilter; label: string; icon: React.ReactN
   { id: 'salary' as CategoryFilter, label: 'Salary & In-Hand', icon: <BadgeIndianRupee className="w-4 h-4" /> },
   { id: 'retirement' as CategoryFilter, label: 'Retirement & FIRE', icon: <PiggyBank className="w-4 h-4" /> },
   { id: 'personal-finance' as CategoryFilter, label: 'Personal Finance', icon: <ShieldCheck className="w-4 h-4" /> },
-  { id: 'business-finance' as CategoryFilter, label: 'Business & Valuation', icon: <BriefcaseBusiness className="w-4 h-4" /> },
+  { id: 'business-finance' as CategoryFilter, label: 'Business Finance', icon: <BriefcaseBusiness className="w-4 h-4" /> },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -76,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         id="app-sidebar"
         className={`fixed lg:sticky top-16 z-40 h-[calc(100vh-4rem)] transition-all duration-300 ease-in-out border-r border-[color:var(--border)] bg-[color:var(--surface)] flex flex-col justify-between shrink-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } ${isCollapsed ? 'w-18' : 'w-64'}`}
+        } ${isCollapsed ? 'w-18' : 'w-72'}`}
       >
         <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-6 custom-scrollbar">
           <div className="flex items-center justify-between lg:hidden pb-4 border-b border-[color:var(--border)]">
@@ -146,6 +146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button
                       key={String(cat.id)}
                       onClick={() => { onSelectCategory(cat.id); onClose(); }}
+                      title={cat.label}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer group ${
                         isSelected
                           ? 'bg-[color:var(--brand-light)] text-[color:var(--brand)] font-semibold'
@@ -156,7 +157,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <span className="shrink-0">{cat.icon}</span>
                         <span className="truncate">{cat.label}</span>
                       </div>
-                      <span className={`text-xs font-mono px-2 py-0.5 rounded-md ${isSelected ? 'bg-[color:var(--brand)]/10' : 'bg-[color:var(--surface-muted)]'}`}>
+                      <span className={`text-xs font-mono px-2 py-0.5 rounded-md shrink-0 ${isSelected ? 'bg-[color:var(--brand)]/10' : 'bg-[color:var(--surface-muted)]'}`}>
                         {count}
                       </span>
                     </button>

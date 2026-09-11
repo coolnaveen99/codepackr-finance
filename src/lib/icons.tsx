@@ -471,6 +471,7 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
     case 'barchart3':
     case 'flame':
     case 'award':
+    case 'rocket':
       return <ChartUpIcon {...props} />;
     case 'dollarsign':
     case 'calculator':
@@ -479,6 +480,11 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
     case 'landmark':
     case 'briefcasebusiness':
     case 'scale':
+    case 'building2':
+    case 'building':
+    case 'home':
+    case 'coins':
+    case 'creditcard':
       return <DollarIcon {...props} />;
     case 'percent':
       return <PercentIcon {...props} />;
@@ -488,6 +494,11 @@ export const getIcon = (iconName: string, size = 18, className = ''): React.Reac
       return <FileTextIcon {...props} />;
     case 'alertcircle':
       return <SecurityIcon {...props} />;
+    case 'clock':
+    case 'calendar':
+      return <ClockIcon {...props} />;
+    case 'gitcompare':
+      return <CompareIcon {...props} />;
 
     // Utilities
     case 'fingerprint':

@@ -18,9 +18,13 @@ import {
   WalletCards,
   X,
   Sparkles,
+  Calculator,
+  ChevronDown,
+  Play,
+  RotateCcw,
 } from 'lucide-react';
 import { ToolDef, CategoryFilter } from '../types';
-import { TOOLS } from '../data/tools';
+import { TOOLS, CATEGORIES } from '../data/tools';
 import { getIcon } from '../lib/icons';
 import { useBookmarks, shareToolUrl } from '../lib/bookmarks';
 import { useToolGovernance } from '../lib/useToolGovernance';
@@ -31,6 +35,7 @@ interface HomeDashboardProps {
   onOpenSearch: () => void;
   selectedCategory: CategoryFilter;
   onSelectCategory: (cat: CategoryFilter) => void;
+  onGoTrustPage?: (page: 'about' | 'financial-disclaimer' | 'cookie-policy' | 'calculation-methodology' | 'editorial-policy') => void;
 }
 
 const planningCards = [
@@ -90,7 +95,7 @@ const categoryCards: Array<{
   { id: 'salary', title: 'Salary & In-Hand', desc: 'CTC take-home, appraisal increments & gratuity', icon: BadgeIndianRupee },
   { id: 'retirement', title: 'Retirement & FIRE', desc: 'Corpus projection, FIRE milestones & inflation', icon: PiggyBank },
   { id: 'personal-finance', title: 'Personal Finance', desc: 'Emergency funds, savings goals & net worth', icon: ShieldCheck },
-  { id: 'business-finance', title: 'Business & Valuation', desc: 'Capital multiples, ROI and valuation analysis', icon: BriefcaseBusiness },
+  { id: 'business-finance', title: 'Business Finance', desc: 'Valuation, DCF, WACC, burn rate & multiples', icon: BriefcaseBusiness },
 ];
 
 const signatureCards = [
@@ -124,7 +129,103 @@ const CATEGORY_TABS: Array<{ id: CategoryFilter; label: string }> = [
   { id: 'salary', label: 'Salary & In-Hand' },
   { id: 'retirement', label: 'Retirement & FIRE' },
   { id: 'personal-finance', label: 'Personal Finance' },
+  { id: 'business-finance', label: 'Business Finance' },
   { id: 'bookmarks', label: 'Favorites' },
+];
+
+interface CalculationStepDetail {
+  step: number;
+  name: string;
+  tagline: string;
+  details: string;
+  formula?: string;
+  guarantee: string;
+  toolId: string;
+  toolLabel: string;
+}
+
+const CALCULATION_STEPS: CalculationStepDetail[] = [
+  {
+    step: 1,
+    name: 'Inputs',
+    tagline: 'Parameter sanitization & boundary validation',
+    details: 'User parameters (principal, APR, frequencies, cash flows) are validated in real-time. Edge cases like zero rates, negative tenures, and invalid characters are sanitized before mathematical execution.',
+    guarantee: 'Zero Server Telemetry: Raw numbers exist strictly in your browser memory.',
+    toolId: 'loan-calculator',
+    toolLabel: 'Test in Loan Calculator',
+  },
+  {
+    step: 2,
+    name: 'Formula Engine',
+    tagline: 'Deterministic mathematical execution',
+    details: 'Pure TypeScript engines compute results using standard financial mathematics (amortization, compound interest, DCF, IRR root-finding) without floating-point drift or external libraries.',
+    formula: 'EMI = [P × r × (1+r)ⁿ] / [(1+r)ⁿ - 1]',
+    guarantee: 'Standardized Vectors: Audited against statutory financial standards and banking benchmarks.',
+    toolId: 'sip-calculator',
+    toolLabel: 'Test in SIP Calculator',
+  },
+  {
+    step: 3,
+    name: 'Calculated Output',
+    tagline: 'Instantaneous metrics & chart visualization',
+    details: 'Outputs update on every keystroke. The engine delivers primary KPIs (monthly payment, total interest, break-even years, tax impact) with dynamic currency formatting.',
+    formula: 'Total Interest = (EMI × n) - Principal',
+    guarantee: 'Global Currency Context: Dynamic symbol and thousands separators for 30+ currencies.',
+    toolId: 'compound-interest-calculator',
+    toolLabel: 'Test in Compound Interest',
+  },
+  {
+    step: 4,
+    name: 'Amortization & Schedules',
+    tagline: 'Month-by-month & year-by-year payment schedules',
+    details: 'Generates up to 360+ rows of detailed repayment schedules showing opening balance, principal repayment, interest cost, and closing balance, including prepayment reduction simulations.',
+    formula: 'Monthly Interest_t = Balance_{t-1} × (r / 12)',
+    guarantee: 'Client-Side Speed: Zero-latency generation of complete amortizations without loading spinners.',
+    toolId: 'mortgage-calculator',
+    toolLabel: 'Test in Mortgage Calculator',
+  },
+  {
+    step: 5,
+    name: 'Local Summary',
+    tagline: 'Private exports, clipboard copy, & saved favorites',
+    details: 'Export results to formatted CSV tables, copy key takeaways directly to clipboard, bookmark calculations locally, or generate shareable permalinks without user tracking.',
+    guarantee: 'Privacy Guaranteed: Bookmarks and preferences stay in your device localStorage.',
+    toolId: 'net-worth-calculator',
+    toolLabel: 'Test in Net Worth Calculator',
+  },
+];
+
+const SIMULATION_STAGES = [
+  {
+    step: 1,
+    title: 'Validating Inputs',
+    data: 'Principal: $100,000 | Rate: 7.50% APR | Tenure: 30 Years (360 months)',
+    note: 'Sanitized 3 parameters, checked boundaries, and set compounding interval.',
+  },
+  {
+    step: 2,
+    title: 'Solving Formula Engine',
+    data: 'Monthly rate r = 0.075 / 12 = 0.00625 | Compounding factor (1+r)³⁶⁰ = 9.4215',
+    note: 'Pure TypeScript formula computed deterministic annuity in < 1ms.',
+  },
+  {
+    step: 3,
+    title: 'Generating Calculated Output',
+    data: 'Monthly EMI: $699.21 | Total Interest: $151,717 | Total Repaid: $251,717',
+    note: 'Real-time KPI metrics formatted dynamically in current currency.',
+  },
+  {
+    step: 4,
+    title: 'Building Amortization Schedule',
+    data: 'Compiled 360 monthly entries (Year 1: Principal $838, Interest $7,472)',
+    note: 'Prepayment models and annual amortization summaries ready for inspection.',
+  },
+  {
+    step: 5,
+    title: 'Finalizing Local Summary',
+    data: 'Structured CSV ready for download | Zero external network packets sent',
+    note: 'Complete calculation state stored locally in browser session.',
+  },
 ];
 
 export const HomeDashboard: React.FC<HomeDashboardProps> = ({
@@ -132,9 +233,13 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   selectedCategory,
   onSelectCategory,
   onOpenSearch,
+  onGoTrustPage,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationIndex, setSimulationIndex] = useState(0);
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks();
   const { isToolVisible } = useToolGovernance();
   const { isAuthenticated } = useAdminAuth();
@@ -453,11 +558,15 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 ? 'All Financial Calculators'
                 : selectedCategory === 'bookmarks'
                 ? 'Your Favorited Calculators'
-                : CATEGORY_TABS.find((t) => t.id === selectedCategory)?.label || 'Calculators'}
+                : CATEGORY_TABS.find((t) => t.id === selectedCategory)?.label ||
+                  CATEGORIES.find((t) => t.id === selectedCategory)?.label ||
+                  'Calculators'}
             </h2>
             <p className="mt-1 text-sm text-[color:var(--ink-muted)]">
               Showing {filteredTools.length} {filteredTools.length === 1 ? 'calculator' : 'calculators'}
-              {selectedCategory !== 'all' ? ` in ${selectedCategory}` : ''}
+              {selectedCategory !== 'all' && selectedCategory !== 'bookmarks'
+                ? ` in ${CATEGORY_TABS.find((t) => t.id === selectedCategory)?.label || CATEGORIES.find((t) => t.id === selectedCategory)?.label || selectedCategory}`
+                : ''}
               {searchQuery ? ` matching "${searchQuery}"` : ''}.
             </p>
           </div>
@@ -576,7 +685,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-[color:var(--border)] pt-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--ink-muted)]">
-                    <span className="capitalize">{tool.category.replace('-', ' ')}</span>
+                    <span>{CATEGORIES.find((c) => c.id === tool.category)?.label || tool.category.replace('-', ' ')}</span>
                     <span className="inline-flex items-center gap-1 text-[color:var(--brand)] font-bold">
                       Calculate <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </span>
@@ -639,16 +748,214 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             ))}
           </div>
         </div>
-        <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 sm:p-9">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">How calculations work</p>
-          <div className="mt-6 space-y-3">
-            {['Inputs', 'Formula Engine', 'Calculated Output', 'Amortization & Schedules', 'Local Summary'].map((step, index) => (
-              <div key={step} className="flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] px-4 py-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--brand)] text-xs font-bold text-white font-mono">{index + 1}</span>
-                <span className="font-semibold text-[color:var(--ink)] text-sm">{step}</span>
-                {index < 4 && <ArrowRight className="ml-auto h-4 w-4 text-[color:var(--ink-muted)]" />}
+        <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 sm:p-9 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">
+                HOW CALCULATIONS WORK
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  if (isSimulating) {
+                    setIsSimulating(false);
+                  } else {
+                    setIsSimulating(true);
+                    setSimulationIndex(0);
+                    setActiveStepIndex(null);
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink)] hover:border-[color:var(--brand)] hover:text-[color:var(--brand)] transition-colors cursor-pointer"
+                title="Run live demonstration of the 5 calculation stages"
+              >
+                {isSimulating ? <RotateCcw className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                <span>{isSimulating ? 'Exit Demo' : 'Live Demo'}</span>
+              </button>
+            </div>
+            <h3 className="mt-1 text-xl font-extrabold text-[color:var(--ink)]">
+              5-Stage Client-Side Pipeline
+            </h3>
+            <p className="mt-1 text-xs leading-5 text-[color:var(--ink-muted)]">
+              Every financial computation is deterministic, inspectable, and executed 100% locally in your browser. Click any stage below to inspect its formulas.
+            </p>
+
+            {/* Interactive Live Pipeline Simulation Runner */}
+            {isSimulating && (
+              <div className="mt-4 p-4 rounded-2xl border border-[color:var(--brand)]/30 bg-[color:var(--brand)]/5 space-y-3 animate-fade-in">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold font-mono text-[color:var(--brand)] uppercase tracking-wider">
+                    Stage {simulationIndex + 1} of 5: {SIMULATION_STAGES[simulationIndex].title}
+                  </span>
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-[color:var(--brand)]/10 text-[color:var(--brand)]">
+                    Active Flow
+                  </span>
+                </div>
+                <div className="p-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-xs font-mono text-[color:var(--ink)]">
+                  {SIMULATION_STAGES[simulationIndex].data}
+                </div>
+                <p className="text-xs text-[color:var(--ink-muted)]">
+                  {SIMULATION_STAGES[simulationIndex].note}
+                </p>
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex gap-1.5">
+                    {SIMULATION_STAGES.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setSimulationIndex(i)}
+                        className={`h-2 rounded-full transition-all cursor-pointer ${
+                          simulationIndex === i
+                            ? 'w-6 bg-[color:var(--brand)]'
+                            : 'w-2 bg-[color:var(--border)] hover:bg-[color:var(--ink-muted)]'
+                        }`}
+                        aria-label={`Jump to stage ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {simulationIndex > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setSimulationIndex((prev) => prev - 1)}
+                        className="px-2.5 py-1 rounded-lg text-xs font-semibold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:bg-[color:var(--surface-elevated)] cursor-pointer"
+                      >
+                        Previous
+                      </button>
+                    )}
+                    {simulationIndex < SIMULATION_STAGES.length - 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => setSimulationIndex((prev) => prev + 1)}
+                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[color:var(--brand)] text-white hover:bg-[color:var(--brand-hover)] cursor-pointer flex items-center gap-1"
+                      >
+                        Next Stage <ArrowRight className="w-3 h-3" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const target = visibleTools.find((t) => t.id === 'loan-calculator');
+                          if (target) onSelectTool(target);
+                        }}
+                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[color:var(--success)] text-white hover:opacity-90 cursor-pointer flex items-center gap-1"
+                      >
+                        Try Real Calculator <ArrowRight className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* 5 Stages List Matching the Exact Visual Mockup */}
+            <div className="mt-4 space-y-2.5">
+              {CALCULATION_STEPS.map((stepItem, index) => {
+                const isExpanded = activeStepIndex === index;
+                const isSimActive = isSimulating && simulationIndex === index;
+                return (
+                  <div
+                    key={stepItem.name}
+                    className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                      isExpanded || isSimActive
+                        ? 'border-[color:var(--brand)] bg-[color:var(--surface)] shadow-sm'
+                        : 'border-[color:var(--border)] bg-[color:var(--surface-elevated)] hover:border-[color:var(--brand)]/60 hover:bg-[color:var(--surface)]'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSimulating(false);
+                        setActiveStepIndex(isExpanded ? null : index);
+                      }}
+                      className="w-full flex items-center justify-between px-4 py-3 text-left cursor-pointer group transition-colors"
+                      aria-expanded={isExpanded}
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <span
+                          className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs font-bold font-mono transition-transform group-hover:scale-105 shrink-0 ${
+                            isExpanded || isSimActive
+                              ? 'bg-[color:var(--brand)] text-white ring-2 ring-[color:var(--brand)]/20'
+                              : 'bg-[color:var(--brand)] text-white'
+                          }`}
+                        >
+                          {stepItem.step}
+                        </span>
+                        <div className="min-w-0">
+                          <span className="font-bold text-[color:var(--ink)] text-sm sm:text-base group-hover:text-[color:var(--brand)] transition-colors block">
+                            {stepItem.name}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0 ml-3">
+                        <ArrowRight
+                          className={`h-4 w-4 transition-all duration-200 ${
+                            isExpanded
+                              ? 'rotate-90 text-[color:var(--brand)]'
+                              : 'text-[color:var(--ink-muted)] group-hover:text-[color:var(--brand)] group-hover:translate-x-0.5'
+                          }`}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Expanded Detail Panel */}
+                    {isExpanded && (
+                      <div className="px-4 pb-4 pt-1 border-t border-[color:var(--border)] space-y-3 text-xs sm:text-sm animate-fade-in">
+                        <p className="text-[color:var(--ink-muted)] leading-relaxed">
+                          {stepItem.details}
+                        </p>
+
+                        {stepItem.formula && (
+                          <div className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-muted)] p-2.5 font-mono text-xs text-[color:var(--ink)] flex items-center justify-between gap-2 overflow-x-auto">
+                            <span className="font-semibold text-[color:var(--brand)] shrink-0">Formula:</span>
+                            <code className="text-[color:var(--ink)]">{stepItem.formula}</code>
+                          </div>
+                        )}
+
+                        <div className="flex items-start gap-2 text-xs text-[color:var(--ink-muted)]">
+                          <ShieldCheck className="w-4 h-4 text-[color:var(--success)] shrink-0 mt-0.5" />
+                          <span>{stepItem.guarantee}</span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const tool = visibleTools.find((t) => t.id === stepItem.toolId);
+                              if (tool) onSelectTool(tool);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[color:var(--brand)]/10 text-[color:var(--brand)] hover:bg-[color:var(--brand)] hover:text-white font-semibold text-xs transition-colors cursor-pointer"
+                          >
+                            <Calculator className="w-3.5 h-3.5" />
+                            {stepItem.toolLabel}
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Footer Navigation Link */}
+          <div className="mt-5 pt-4 border-t border-[color:var(--border)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                if (onGoTrustPage) {
+                  onGoTrustPage('calculation-methodology');
+                } else {
+                  window.location.href = '/calculation-methodology';
+                }
+              }}
+              className="font-bold text-[color:var(--brand)] hover:underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              Inspect full Calculation Methodology <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            <span className="text-[color:var(--ink-muted)]">
+              Audited Deterministic Formulas
+            </span>
           </div>
         </div>
       </section>

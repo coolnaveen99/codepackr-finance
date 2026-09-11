@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-09-10",
+  "updatedAt": "2026-09-11",
   "host": "finance.codepackr.com",
   "baseUrl": "https://finance.codepackr.com",
-  "totalUrls": 38,
+  "totalUrls": 56,
   "urls": [
     {
       "loc": "https://finance.codepackr.com/",
@@ -71,7 +71,7 @@
     {
       "loc": "https://finance.codepackr.com/business-finance",
       "path": "/business-finance",
-      "name": "Business & Valuation Calculators",
+      "name": "Business Finance Calculators",
       "priority": "0.9",
       "changefreq": "weekly",
       "category": "business-finance"
@@ -243,6 +243,150 @@
       "priority": "0.8",
       "changefreq": "monthly",
       "category": "tax"
+    },
+    {
+      "loc": "https://finance.codepackr.com/npv-calculator",
+      "path": "/npv-calculator",
+      "name": "NPV Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/irr-calculator",
+      "path": "/irr-calculator",
+      "name": "IRR Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/break-even-calculator",
+      "path": "/break-even-calculator",
+      "name": "Break-Even Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/business-valuation-calculator",
+      "path": "/business-valuation-calculator",
+      "name": "Business Valuation Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/dcf-calculator",
+      "path": "/dcf-calculator",
+      "name": "DCF Valuation Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/wacc-calculator",
+      "path": "/wacc-calculator",
+      "name": "WACC Calculator (Cost of Capital)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/mortgage-affordability-calculator",
+      "path": "/mortgage-affordability-calculator",
+      "name": "Mortgage Affordability Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "loans"
+    },
+    {
+      "loc": "https://finance.codepackr.com/credit-card-payoff-calculator",
+      "path": "/credit-card-payoff-calculator",
+      "name": "Credit Card Payoff Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "loans"
+    },
+    {
+      "loc": "https://finance.codepackr.com/gst-calculator",
+      "path": "/gst-calculator",
+      "name": "GST Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "tax"
+    },
+    {
+      "loc": "https://finance.codepackr.com/capital-gains-tax-calculator",
+      "path": "/capital-gains-tax-calculator",
+      "name": "Capital Gains Tax Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "tax"
+    },
+    {
+      "loc": "https://finance.codepackr.com/hra-calculator",
+      "path": "/hra-calculator",
+      "name": "HRA Exemption Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "salary"
+    },
+    {
+      "loc": "https://finance.codepackr.com/startup-valuation-calculator",
+      "path": "/startup-valuation-calculator",
+      "name": "Startup Valuation Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/burn-rate-calculator",
+      "path": "/burn-rate-calculator",
+      "name": "Burn Rate & Runway Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "business-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/epf-calculator",
+      "path": "/epf-calculator",
+      "name": "EPF Calculator (Provident Fund)",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/rent-vs-buy-calculator",
+      "path": "/rent-vs-buy-calculator",
+      "name": "Rent vs. Buy Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "personal-finance"
+    },
+    {
+      "loc": "https://finance.codepackr.com/rule-of-72-calculator",
+      "path": "/rule-of-72-calculator",
+      "name": "Rule of 72 Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
+    },
+    {
+      "loc": "https://finance.codepackr.com/annuity-calculator",
+      "path": "/annuity-calculator",
+      "name": "Annuity Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "retirement"
+    },
+    {
+      "loc": "https://finance.codepackr.com/dividend-yield-calculator",
+      "path": "/dividend-yield-calculator",
+      "name": "Dividend Yield & DRIP Calculator",
+      "priority": "0.8",
+      "changefreq": "monthly",
+      "category": "investments"
     },
     {
       "loc": "https://finance.codepackr.com/about",
