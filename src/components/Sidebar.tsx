@@ -99,6 +99,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
 
+          <a
+            id="mobile-nav-codepackr-devsuite-link"
+            href="https://www.codepackr.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            title="Switch to Codepackr Developer & Utility Suite"
+            className="lg:hidden flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all cursor-pointer"
+          >
+            <span aria-hidden="true">←</span>
+            <span>Codepackr Dev Suite</span>
+          </a>
+
           <div className="space-y-1">
             <button onClick={handleHome} className={navClass(selectedCategory === 'all')} aria-current={selectedCategory === 'all' ? 'page' : undefined}>
               <div className="flex items-center gap-3 min-w-0">
