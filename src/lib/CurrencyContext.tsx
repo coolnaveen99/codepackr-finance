@@ -30,6 +30,18 @@ const STORAGE_KEY_MODE = 'codepackr_currency_mode';
 
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currencyCode, setCurrencyCodeState] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlCurrency = params.get('currency');
+        if (urlCurrency) {
+          const valid = getCurrency(urlCurrency.toUpperCase());
+          return valid.code;
+        }
+      } catch {
+        // Fallback
+      }
+    }
     const saved = safeLocalStorage.getItem(STORAGE_KEY_CODE);
     if (saved) return saved.toUpperCase();
     return DEFAULT_CURRENCY_CODE;

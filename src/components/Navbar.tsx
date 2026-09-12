@@ -116,6 +116,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </div>
             </a>
+
+            {/* Backlink Pill to Codepackr Dev Suite */}
+            <a
+              href="https://www.codepackr.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all shrink-0 shadow-xs"
+              title="Switch to Codepackr Developer & Utility Suite"
+            >
+              <span>← Codepackr Dev Suite</span>
+            </a>
           </div>
 
           {/* Center: Command Palette Trigger */}

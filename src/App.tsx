@@ -62,6 +62,15 @@ import { AlertTriangle, Lock, Shield } from 'lucide-react';
 export const App: React.FC = () => {
   // Theme state
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlTheme = params.get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
+      } catch {
+        // Fallback
+      }
+    }
     const saved = safeLocalStorage.getItem('codepackr_theme');
     if (saved === 'dark' || saved === 'light') return saved;
     try {
