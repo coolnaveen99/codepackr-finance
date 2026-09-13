@@ -1,7 +1,32 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Force-clear stale Service Workers / Cache Storage (org devices that cannot clear cache) -->
+    <script>
+    (function () {
+      if (!('serviceWorker' in navigator)) return;
+      var FLAG = 'codepackr_finance_sw_cleared_v6';
+      try {
+        if (sessionStorage.getItem(FLAG)) return;
+      } catch (e) {}
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        if (!regs || !regs.length) return;
+        return Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+          if (!('caches' in window)) return;
+          return caches.keys().then(function (keys) {
+            return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+          });
+        }).then(function () {
+          try { sessionStorage.setItem(FLAG, '1'); } catch (e) {}
+          location.reload();
+        });
+      }).catch(function () {});
+    })();
+    </script>
     <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />

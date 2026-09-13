@@ -16,24 +16,13 @@ if (rootElement) {
   );
 }
 
-// Register service worker for offline support and PWA caching (production only).
-// Unregister any previous SWs and clear caches first so users who still have
-// the old Cloudflare-era cache get a clean slate after the Vercel migration.
+// Register service worker (after any one-time cleanup in index.html has run)
 if ('serviceWorker' in navigator && import.meta.env.PROD && !window.location.host.includes('ais-dev')) {
-  window.addEventListener('load', async () => {
-    try {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map((reg) => reg.unregister()));
-      if ('caches' in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map((key) => caches.delete(key)));
-      }
-    } catch (err) {
-      console.warn('SW cleanup skipped:', err);
-    }
-
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.warn('ServiceWorker registration skipped:', err);
-    });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js', { updateViaCache: 'none' })
+      .catch((err) => {
+        console.warn('ServiceWorker registration skipped:', err);
+      });
   });
 }
