@@ -37,7 +37,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
       tool.description.toLowerCase().includes(q) ||
       tool.keywords.some((k) => k.toLowerCase().includes(q))
     );
-  }).slice(0, 10);
+  }).slice(0, 20);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -58,10 +58,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
   if (!isOpen) return null;
 
   return (
-    <div id="search-modal-backdrop" className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+    <div id="search-modal-backdrop" className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose} role="presentation">
       <div
         id="search-modal-container"
         className="w-full max-w-2xl rounded-2xl border border-[color:var(--border)] shadow-2xl overflow-hidden flex flex-col max-h-[70vh] bg-[color:var(--surface)]"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search financial calculators"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center px-4 py-4 border-b border-[color:var(--border)] gap-3 bg-[color:var(--surface-elevated)]">
@@ -70,14 +73,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
             id="search-modal-input"
             ref={inputRef}
             type="text"
-            placeholder="Search tools, converters, or keywords..."
+            placeholder="Search financial calculators..."
             value={query}
             onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0); }}
             onKeyDown={handleKeyDown}
             className="flex-1 bg-transparent border-none outline-none text-lg text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)]"
+            aria-label="Search calculators"
           />
           {query && (
-            <button onClick={() => setQuery('')} className="p-1 rounded text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer">
+            <button onClick={() => setQuery('')} className="p-1 rounded text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer" aria-label="Clear search">
               <X className="w-5 h-5" />
             </button>
           )}
@@ -86,10 +90,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           </kbd>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-2 custom-scrollbar" role="listbox" aria-label="Search results">
           {filteredTools.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[color:var(--ink-muted)]">
-              No tools matching "{query}"
+            <div className="p-8 text-center text-sm text-[color:var(--ink-muted)]" role="status">
+              <p className="font-medium text-[color:var(--ink)] mb-1">No calculators found</p>
+              <p>No tools matching &quot;{query}&quot;. Try a different keyword.</p>
             </div>
           ) : (
             filteredTools.map((tool, idx) => {
@@ -97,6 +102,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
               return (
                 <div
                   key={tool.id}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => { onSelectTool(tool); onClose(); }}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-colors ${
