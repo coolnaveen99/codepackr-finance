@@ -237,6 +237,85 @@ code, pre, kbd, samp, .font-mono {
   animation: badgeShimmer 3.5s linear infinite;
 }
 
+@keyframes fillPrincipalBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 68%;
+  }
+}
+
+@keyframes fillInterestBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 32%;
+  }
+}
+
+@keyframes drawSipLine {
+  0% {
+    stroke-dashoffset: 240;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeChartArea {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fillRetirementRing {
+  0% {
+    stroke-dashoffset: 88;
+  }
+  100% {
+    stroke-dashoffset: 19.36;
+  }
+}
+
+.animate-fill-principal {
+  animation: fillPrincipalBar 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fill-interest {
+  animation: fillInterestBar 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.animate-draw-line {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: drawSipLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+.animate-fade-chart-area {
+  animation: fadeChartArea 1.2s ease-out 0.4s forwards;
+}
+
+.animate-fill-ring {
+  stroke-dasharray: 88;
+  stroke-dashoffset: 88;
+  animation: fillRetirementRing 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+/* Mobile hero preview cards handling (strictly hide below 1024px to keep hero focused and fast) */
+@media (max-width: 1023px) {
+  .hero-floating-cards {
+    display: none !important;
+  }
+}
+
 /* Accessibility: Respect users who request reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-float-card-1,
@@ -246,7 +325,12 @@ code, pre, kbd, samp, .font-mono {
   .animate-float-medium,
   .animate-float-fast,
   .animate-badge-shimmer,
-  .animate-fade-in-up {
+  .animate-fade-in-up,
+  .animate-fill-principal,
+  .animate-fill-interest,
+  .animate-draw-line,
+  .animate-fade-chart-area,
+  .animate-fill-ring {
     animation: none !important;
     transform: none !important;
     transition: none !important;

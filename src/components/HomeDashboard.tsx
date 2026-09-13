@@ -249,7 +249,6 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationIndex, setSimulationIndex] = useState(0);
   const [sublineIndex, setSublineIndex] = useState(0);
-  const [cardsMounted, setCardsMounted] = useState(false);
   const [retirementProgress, setRetirementProgress] = useState(0);
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks();
   const { isToolVisible } = useToolGovernance();
@@ -262,14 +261,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     return () => clearInterval(timer);
   }, []);
 
-  // Entrance micro-animations for floating preview cards and count-up
+  // Entrance count-up animation for Retirement Goal Progress
   useEffect(() => {
-    const mountTimer = setTimeout(() => {
-      setCardsMounted(true);
-    }, 150);
-
     let startTimestamp: number | null = null;
-    const duration = 1200;
+    const duration = 1400;
     const target = 78;
     let frameId: number;
 
@@ -289,7 +284,6 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     }, 250);
 
     return () => {
-      clearTimeout(mountTimer);
       clearTimeout(countTimer);
       if (frameId) cancelAnimationFrame(frameId);
     };
@@ -375,7 +369,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             
             {/* Left Column: Emotion, Headlines & CTAs */}
-            <div className="lg:col-span-7 max-w-2xl">
+            <div className="col-span-1 lg:col-span-7 w-full max-w-2xl">
               {/* Privacy Badge with gentle pulse */}
               <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 mb-6 shadow-xs backdrop-blur-xs">
                 <Lock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
@@ -405,7 +399,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <button
                   type="button"
                   onClick={scrollToToolGrid}
-                  className="px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/35 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ease-out cursor-pointer inline-flex items-center gap-2 group"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/35 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ease-out cursor-pointer inline-flex items-center justify-center gap-2 group"
                 >
                   Explore All Calculators 
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
@@ -413,7 +407,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <button
                   type="button"
                   onClick={onOpenSearch}
-                  className="px-6 py-3.5 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-emerald-500/70 hover:bg-emerald-500/5 hover:scale-[1.01] transition-all duration-200 ease-out flex items-center gap-2.5 shadow-sm cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-emerald-500/70 hover:bg-emerald-500/5 hover:scale-[1.01] transition-all duration-200 ease-out flex items-center justify-center gap-2.5 shadow-sm cursor-pointer"
                 >
                   <Search className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>Search Calculators</span>
@@ -424,8 +418,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               </div>
             </div>
 
-            {/* Right Column: Desktop Floating Glassmorphic Preview Cards */}
-            <div className="hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
+            {/* Right Column: Desktop Floating Glassmorphic Preview Cards (Strictly hidden on mobile & tablets <1024px) */}
+            <div className="hero-floating-cards hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
               
               {/* Floating Card 1: Mini EMI Payment Schedule */}
               <div 
@@ -452,13 +446,11 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 {/* Visual Principal vs Interest Bar with Entrance Animation */}
                 <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex mb-2">
                   <div 
-                    className="bg-emerald-500 h-full transition-all duration-[1400ms] ease-out" 
-                    style={{ width: cardsMounted ? '68%' : '0%' }}
+                    className="bg-emerald-500 h-full animate-fill-principal" 
                     title="Principal: 68%" 
                   />
                   <div 
-                    className="bg-amber-400 h-full transition-all duration-[1400ms] ease-out delay-150" 
-                    style={{ width: cardsMounted ? '32%' : '0%' }}
+                    className="bg-amber-400 h-full animate-fill-interest" 
                     title="Interest: 32%" 
                   />
                 </div>
@@ -507,17 +499,12 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                       stroke="currentColor"
                       strokeWidth="2.5"
                       strokeLinecap="round"
-                      style={{
-                        strokeDasharray: 240,
-                        strokeDashoffset: cardsMounted ? 0 : 240,
-                        transition: 'stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1)',
-                      }}
+                      className="animate-draw-line"
                     />
                     <path
                       d="M0 38 Q 60 36, 110 26 T 200 4 L 200 40 L 0 40 Z"
                       fill="url(#sipGrad)"
-                      className="transition-opacity duration-1000 ease-out delay-200"
-                      style={{ opacity: cardsMounted ? 1 : 0 }}
+                      className="animate-fade-chart-area"
                     />
                   </svg>
                 </div>
@@ -548,13 +535,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                           cy="18"
                           r="14"
                           fill="none"
-                          className="stroke-emerald-500"
+                          className="stroke-emerald-500 animate-fill-ring"
                           strokeWidth="3.5"
-                          strokeDasharray="88"
-                          strokeDashoffset={cardsMounted ? 19.36 : 88}
-                          style={{
-                            transition: 'stroke-dashoffset 1.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                          }}
                           strokeLinecap="round"
                         />
                       </svg>
@@ -604,10 +586,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 key={tool.id}
                 onClick={() => onSelectTool(tool)}
                 style={{ animationDelay: `${idx * 80}ms` }}
-                className="animate-fade-in-up group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all duration-[220ms] ease-out hover:-translate-y-[7px] hover:scale-[1.015] hover:border-emerald-500/60 hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-950/40"
+                className="animate-fade-in-up group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all duration-[220ms] ease-out hover:-translate-y-2.5 hover:scale-[1.018] hover:border-emerald-500/75 dark:hover:border-emerald-400/60 hover:shadow-2xl hover:shadow-emerald-500/20 dark:hover:shadow-emerald-950/50"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/15 group-hover:text-emerald-600 transition-all duration-[220ms] ease-out">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 group-hover:shadow-md group-hover:shadow-emerald-500/20 transition-all duration-[220ms] ease-out">
                     {getIcon(tool.icon, 23)}
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -622,7 +604,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                         e.stopPropagation();
                         toggleBookmark(tool.id);
                       }}
-                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-amber-500 hover:scale-110 transition-all cursor-pointer"
+                      className="rounded-lg p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-amber-500 hover:scale-115 active:scale-125 transition-all cursor-pointer"
                       aria-label="Favorite calculator"
                     >
                       <Star className={`h-4 w-4 transition-transform active:scale-125 duration-150 ${bookmarked ? 'fill-amber-400 text-amber-400 scale-105' : ''}`} />
@@ -630,7 +612,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     <button
                       type="button"
                       onClick={(e) => handleCardShare(e, tool)}
-                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-[color:var(--ink)] hover:scale-110 transition-all cursor-pointer"
+                      className="rounded-lg p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-[color:var(--ink)] hover:scale-115 active:scale-110 transition-all cursor-pointer"
                       aria-label="Share calculator"
                     >
                       {copied ? <Check className="h-4 w-4 text-[color:var(--success)]" /> : <Share2 className="h-4 w-4" />}
@@ -645,8 +627,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 </p>
                 <div className="mt-5 flex items-center justify-between border-t border-[color:var(--border)] pt-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--ink-muted)]">
                   <span className="capitalize">{tool.category.replace('-', ' ')}</span>
-                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
-                    Calculate Now <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-[220ms] ease-out" />
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
+                    Calculate Now <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1.5 transition-transform duration-[220ms] ease-out" />
                   </span>
                 </div>
               </article>
