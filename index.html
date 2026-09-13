@@ -1,21 +1,24 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Force-clear stale Service Workers / Cache Storage (org devices that cannot clear cache) -->
     <script>
     (function () {
       if (!('serviceWorker' in navigator)) return;
-      var FLAG = 'codepackr_finance_sw_cleared_v6';
+      var FLAG = 'codepackr_finance_sw_disabled_v7';
       try {
         if (sessionStorage.getItem(FLAG)) return;
       } catch (e) {}
       navigator.serviceWorker.getRegistrations().then(function (regs) {
-        if (!regs || !regs.length) return;
+        if (!regs || !regs.length) {
+          try { sessionStorage.setItem(FLAG, '1'); } catch (e) {}
+          return;
+        }
         return Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
-          if (!('caches' in window)) return;
-          return caches.keys().then(function (keys) {
-            return Promise.all(keys.map(function (k) { return caches.delete(k); }));
-          });
+          if ('caches' in window) {
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          }
         }).then(function () {
           try { sessionStorage.setItem(FLAG, '1'); } catch (e) {}
           location.reload();
@@ -47,26 +50,20 @@
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
-    <!-- Google AdSense Verification & Auto-Ads Script -->
     <meta name="google-adsense-account" content="ca-pub-7526363571565796" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7526363571565796" crossorigin="anonymous"></script>
 
-    <!-- Google Analytics 4 (GA4): Measures aggregate visitor traffic, page views, and calculator engagement performance while keeping user financial calculations 100% private in-browser -->
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P9G4YRH6J4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-P9G4YRH6J4');
     </script>
 
-    <!-- Search Engine Verifications -->
     <meta name="yandex-verification" content="7c4e5ec0ba30b993" />
     <meta name="msvalidate.01" content="BC8B27F46BBCD43F50A45F870843689D" />
 
-    <!-- Clarity tracking code for https://www.codepackr.com from Bing webmaster -->
     <script>
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -77,7 +74,6 @@
 
     <link rel="canonical" href="https://finance.codepackr.com/" id="canonical-url" />
 
-    <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="CodePackr Finance" />
     <meta property="og:locale" content="en_US" />
@@ -89,7 +85,6 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="CodePackr Finance — Your Financial Future greater than or equal to Your Goals" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@Codepackr" />
     <meta name="twitter:creator" content="@Codepackr" />
@@ -97,7 +92,6 @@
     <meta name="twitter:description" content="Practical financial calculators for planning, loans, SIPs, retirement, and investment growth — private, fast, and browser-based." />
     <meta name="twitter:image" content="https://finance.codepackr.com/assets/og/default.png" />
 
-    <!-- Schema.org JSON-LD Structured Data for SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -109,47 +103,16 @@
           "name": "CodePackr Finance",
           "applicationCategory": "FinanceApplication",
           "operatingSystem": "All",
-          "sameAs": [
-            "https://x.com/Codepackr",
-            "https://www.linkedin.com/company/codepackr/",
-            "https://github.com/coolnaveen99/codepackr"
-          ],
           "browserRequirements": "Requires JavaScript. Requires HTML5.",
           "description": "Browser-based financial calculators for retirement planning, loans, SIPs, and investments.",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          },
-          "featureList": [
-            "Financial Planning & Retirement Readiness Calculator",
-            "Loan & EMI Calculator with Amortization Schedule",
-            "SIP Calculator with Growth Charts & Step-Up",
-            "Investment & Compound Interest Calculator"
-          ]
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
         },
         {
           "@type": "WebSite",
           "@id": "https://finance.codepackr.com/#website",
           "url": "https://finance.codepackr.com/",
           "name": "CodePackr Finance",
-          "description": "Financial calculators for planning, loans, SIPs, retirement, and investments.",
-          "publisher": {
-            "@type": "Organization",
-            "name": "CodePackr Finance",
-            "url": "https://finance.codepackr.com/"
-          }
-        },
-        {
-          "@type": "ItemList",
-          "name": "Financial Calculators",
-          "description": "Financial planning calculators running locally in the browser",
-          "itemListElement": [
-            {"@type":"ListItem","position":1,"name":"Financial Planning & Retirement Calculator","url":"https://finance.codepackr.com/financial-planner"},
-            {"@type":"ListItem","position":2,"name":"Loan & EMI Calculator","url":"https://finance.codepackr.com/loan-calculator"},
-            {"@type":"ListItem","position":3,"name":"SIP Calculator","url":"https://finance.codepackr.com/sip-calculator"},
-            {"@type":"ListItem","position":4,"name":"Investment Calculator","url":"https://finance.codepackr.com/investment-calculator"}
-          ]
+          "description": "Financial calculators for planning, loans, SIPs, retirement, and investments."
         }
       ]
     }

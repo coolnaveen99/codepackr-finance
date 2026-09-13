@@ -16,13 +16,21 @@ if (rootElement) {
   );
 }
 
-// Register service worker (after any one-time cleanup in index.html has run)
-if ('serviceWorker' in navigator && import.meta.env.PROD && !window.location.host.includes('ais-dev')) {
+// Service Worker disabled after Cloudflare → Vercel migration.
+// Old SWs caused ERR_FAILED / stale shells on org devices.
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js', { updateViaCache: 'none' })
-      .catch((err) => {
-        console.warn('ServiceWorker registration skipped:', err);
+    navigator.serviceWorker.getRegistrations().then((regs) => {
+      regs.forEach((reg) => {
+        reg.unregister().catch(() => {});
       });
+    }).catch(() => {});
+    if ('caches' in window) {
+      caches.keys().then((keys) => {
+        keys.forEach((key) => {
+          caches.delete(key).catch(() => {});
+        });
+      }).catch(() => {});
+    }
   });
 }
