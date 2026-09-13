@@ -4,15 +4,16 @@ import { ToolDef, CategoryFilter } from './types';
 import { Navbar } from './components/Navbar';
 import { SearchModal } from './components/SearchModal';
 import { HomeDashboard } from './components/HomeDashboard';
+import { NotFoundView } from './components/NotFoundView';
 import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
 import { SitemapModal } from './components/SitemapModal';
 import { ContactView } from './components/ContactView';
 import { PrivacyPolicyView } from './components/PrivacyPolicyView';
-import { TrustPageView, TrustPageKey } from './components/TrustPageView';
+import { TrustPageView, type TrustPageKey } from './components/TrustPageView';
 import { CalculatorsView } from './components/tools/CalculatorsView';
-import { SimpleInterestCalculatorView } from './components/tools/SimpleInterestCalculatorView';
 import { FinancialPlannerView } from './components/tools/FinancialPlannerView';
+import { SimpleInterestCalculatorView } from './components/tools/SimpleInterestCalculatorView';
 import { CagrCalculatorView } from './components/tools/CagrCalculatorView';
 import { InflationCalculatorView } from './components/tools/InflationCalculatorView';
 import { EmergencyFundCalculatorView } from './components/tools/EmergencyFundCalculatorView';
@@ -56,34 +57,20 @@ import { resolveCurrentRoute, getToolPath, SpecialPage } from './lib/urls';
 import { updateDocumentMetadata } from './lib/seo';
 import { CurrencyProvider } from './lib/CurrencyContext';
 import { safeLocalStorage } from './lib/storage';
-import { popSmartPastePayload } from './lib/workspace';
 import { AlertTriangle, Lock, Shield } from 'lucide-react';
 
 export const App: React.FC = () => {
-  // Theme state
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const urlTheme = params.get('theme');
-        if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
-      } catch {
-        // Fallback
-      }
-    }
-    const saved = safeLocalStorage.getItem('codepackr_theme');
+    const saved = safeLocalStorage.getItem('codepackr_finance_theme');
     if (saved === 'dark' || saved === 'light') return saved;
     try {
       if (typeof window !== 'undefined' && window.matchMedia) {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
-    } catch {
-      // Fallback for restricted environments
-    }
-    return 'dark'; // Enterprise default dark
+    } catch {}
+    return 'dark';
   });
 
-  // Navigation state initialized synchronously from current URL
   const [initialRoute] = useState(() => resolveCurrentRoute());
   const [activeTool, setActiveTool] = useState<ToolDef | null>(() => initialRoute.tool);
   const [activePage, setActivePage] = useState<SpecialPage>(() => initialRoute.page);
@@ -92,59 +79,39 @@ export const App: React.FC = () => {
     if (typeof window !== 'undefined' && window.location.pathname.includes('terms')) return 'terms';
     return 'privacy';
   });
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(() => {
-    return (initialRoute.category as CategoryFilter) || 'all';
-  });
+  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(() => (initialRoute.category as CategoryFilter) || 'all');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSitemapModalOpen, setIsSitemapModalOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [smartPasteInput, setSmartPasteInput] = useState<string>('');
   const { getToolStatus, isToolVisible } = useToolGovernance();
   const { isAuthenticated } = useAdminAuth();
 
-  // Apply theme to DOM
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    safeLocalStorage.setItem('codepackr_theme', theme);
+    if (theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    safeLocalStorage.setItem('codepackr_finance_theme', theme);
   }, [theme]);
 
-  // Synchronize document title, canonical tag, meta descriptions, social tags, and JSON-LD for SEO
   useEffect(() => {
     const rawSlug = typeof window !== 'undefined'
       ? window.location.pathname.replace(/^\/+|\/+$/g, '').replace(/\.html$/, '')
       : '';
-
     let routeKey = 'home';
-    if (activePage === 'contact') {
-      routeKey = 'contact';
-    } else if (activePage === 'privacy') {
-      routeKey = legalTab === 'terms' ? 'terms' : 'privacy';
-    } else if (activePage !== 'home' && activePage !== 'admin') {
-      routeKey = activePage;
-    } else if (rawSlug && rawSlug !== 'index') {
-      routeKey = rawSlug;
-    } else if (activeTool) {
-      routeKey = activeTool.id;
-    }
-
+    if (activePage === 'contact') routeKey = 'contact';
+    else if (activePage === 'privacy') routeKey = legalTab === 'terms' ? 'terms' : 'privacy';
+    else if (activePage === 'notFound') routeKey = 'home';
+    else if (activePage !== 'home' && activePage !== 'admin') routeKey = activePage;
+    else if (rawSlug && rawSlug !== 'index') routeKey = rawSlug;
+    else if (activeTool) routeKey = activeTool.id;
     updateDocumentMetadata(routeKey);
   }, [activeTool, activePage, legalTab]);
 
-  // Read URL query parameters and pathname on initial load & popstate
   useEffect(() => {
     const handleLocationChange = () => {
       const route = resolveCurrentRoute();
-
-      if (route.category) {
-        setSelectedCategory(route.category as CategoryFilter);
-      }
-
+      if (route.category) setSelectedCategory(route.category as CategoryFilter);
       if (route.page === 'admin') {
         setActivePage('admin');
         setActiveTool(null);
@@ -154,11 +121,11 @@ export const App: React.FC = () => {
       } else if (route.page === 'privacy') {
         setActivePage('privacy');
         setActiveTool(null);
-        if (route.category === 'terms' || (typeof window !== 'undefined' && window.location.pathname.includes('terms'))) {
-          setLegalTab('terms');
-        } else {
-          setLegalTab('privacy');
-        }
+        if (route.category === 'terms' || (typeof window !== 'undefined' && window.location.pathname.includes('terms'))) setLegalTab('terms');
+        else setLegalTab('privacy');
+      } else if (route.page === 'notFound') {
+        setActiveTool(null);
+        setActivePage('notFound');
       } else if (route.page !== 'home') {
         setActivePage(route.page);
         setActiveTool(null);
@@ -170,22 +137,17 @@ export const App: React.FC = () => {
         setActivePage('home');
       }
     };
-
     handleLocationChange();
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
-  // Keyboard shortcuts (Cmd/Ctrl+K for Search, Cmd/Ctrl+Shift+A for Admin Login)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Search: Cmd/Ctrl + K
       if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsSearchOpen((prev) => !prev);
       }
-
-      // Enterprise Admin Access: Ctrl + Shift + A (or Cmd + Shift + A on Mac)
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
         e.preventDefault();
         setIsAdminLoginOpen((prev) => !prev);
@@ -195,20 +157,15 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const navigateToTool = (tool: ToolDef, initialPayload?: string) => {
+  const navigateToTool = (tool: ToolDef) => {
     setActiveTool(tool);
-    if (initialPayload !== undefined) {
-      setSmartPasteInput(initialPayload);
-    }
     setActivePage('home');
-    const toolPath = getToolPath(tool);
-    window.history.pushState({}, '', toolPath);
+    window.history.pushState({}, '', getToolPath(tool));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navigateToHome = () => {
     setActiveTool(null);
-    setSmartPasteInput('');
     setActivePage('home');
     window.history.pushState({}, '', '/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -225,15 +182,7 @@ export const App: React.FC = () => {
     setLegalTab(tab);
     setActiveTool(null);
     setActivePage('privacy');
-    const path = tab === 'terms' ? '/terms' : '/privacy';
-    window.history.pushState({}, '', path);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const navigateToTrustPage = (page: TrustPageKey) => {
-    setActiveTool(null);
-    setActivePage(page);
-    window.history.pushState({}, '', `/${page}`);
+    window.history.pushState({}, '', tab === 'terms' ? '/terms' : '/privacy');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -241,191 +190,70 @@ export const App: React.FC = () => {
     setSelectedCategory(cat);
     setActiveTool(null);
     setActivePage('home');
-    const newPath = cat !== 'all' ? `/?cat=${cat}` : '/';
-    window.history.pushState({}, '', newPath);
-    if (cat !== 'all') {
-      setTimeout(() => {
-        const catSection = document.getElementById('tool-grid');
-        if (catSection) {
-          const navOffset = 110;
-          const targetY = catSection.getBoundingClientRect().top + window.pageYOffset - navOffset;
-          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-        }
-      }, 50);
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    window.history.pushState({}, '', cat !== 'all' ? `/?cat=${cat}` : '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Render active tool component
   const renderTool = (tool: ToolDef) => {
     const gov = getToolStatus(tool.id);
     const isHiddenTool = gov.status === 'hidden' || gov.visibility === 'admin_only';
-
     if (isHiddenTool && !isToolVisible(tool.id, isAuthenticated)) {
       return (
         <div className="max-w-md mx-auto py-20 text-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)]">
-            <Lock className="w-8 h-8" />
-          </div>
+          <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)]"><Lock className="w-8 h-8" /></div>
           <h2 className="text-2xl font-bold text-[color:var(--ink)]">Tool Unavailable</h2>
-          <p className="text-sm text-[color:var(--ink-muted)]">This utility is currently unlisted or undergoing administrative review.</p>
-          <div className="flex items-center justify-center gap-3 pt-4">
-            <button
-              onClick={navigateToHome}
-              className="px-6 py-2.5 rounded-xl font-bold bg-[color:var(--brand)] text-white hover:bg-[color:var(--brand-hover)] transition-colors cursor-pointer"
-            >
-              Browse All Tools
-            </button>
-            <button
-              onClick={() => setIsAdminLoginOpen(true)}
-              className="px-6 py-2.5 rounded-xl font-bold border border-[color:var(--border)] text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-colors cursor-pointer"
-            >
-              Admin Sign In
-            </button>
-          </div>
+          <p className="text-sm text-[color:var(--ink-muted)]">This calculator is currently unlisted or under review.</p>
+          <button onClick={navigateToHome} className="px-6 py-2.5 rounded-xl font-bold bg-[color:var(--brand)] text-white cursor-pointer">Browse Calculators</button>
         </div>
       );
     }
 
-    const renderAdminPreviewBanner = () => {
-      if (!isAuthenticated || !isHiddenTool) return null;
-      return (
-        <div className="mb-6 p-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 flex items-center justify-between gap-3 text-amber-900 dark:text-amber-200">
-          <div className="flex items-center gap-2.5">
-            <Shield className="w-5 h-5 text-amber-500 shrink-0" />
-            <div>
-              <div className="font-bold text-xs uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                Admin Preview Mode
-              </div>
-              <p className="text-xs mt-0.5 leading-relaxed">
-                This utility is marked as <strong>Hidden</strong> in Firestore Governance. Public visitors see a Tool Unavailable screen.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              setActivePage('admin');
-              setActiveTool(null);
-              window.history.pushState({}, '', '/admin');
-            }}
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/20 text-amber-950 dark:text-amber-100 hover:bg-amber-500/30 transition-colors whitespace-nowrap cursor-pointer"
-          >
-            Governance Console &rarr;
-          </button>
-        </div>
-      );
+    const views: Record<string, React.ReactNode> = {
+      'financial-planner': <FinancialPlannerView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'simple-interest-calculator': <SimpleInterestCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'cagr-calculator': <CagrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'inflation-calculator': <InflationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'emergency-fund-calculator': <EmergencyFundCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'net-worth-calculator': <NetWorthCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'roi-calculator': <RoiCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'fire-calculator': <FireCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'income-tax-calculator': <IncomeTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'ctc-to-in-hand-calculator': <CtcToInHandCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'debt-to-income-calculator': <DebtToIncomeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'loan-prepayment-calculator': <LoanPrepaymentCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'loan-amortization-calculator': <LoanAmortizationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'lumpsum-calculator': <LumpsumCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'future-value-calculator': <FutureValueCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'savings-goal-calculator': <SavingsGoalCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'salary-hike-calculator': <SalaryHikeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'gratuity-calculator': <GratuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'npv-calculator': <NpvCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'irr-calculator': <IrrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'break-even-calculator': <BreakEvenCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'business-valuation-calculator': <BusinessValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'dcf-calculator': <DcfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'wacc-calculator': <WaccCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'mortgage-affordability-calculator': <MortgageAffordabilityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'credit-card-payoff-calculator': <CreditCardPayoffCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'gst-calculator': <GstCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'capital-gains-tax-calculator': <CapitalGainsTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'hra-calculator': <HraCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'startup-valuation-calculator': <StartupValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'burn-rate-calculator': <BurnRateCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'epf-calculator': <EpfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'rent-vs-buy-calculator': <RentVsBuyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'rule-of-72-calculator': <RuleOf72CalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'annuity-calculator': <AnnuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'dividend-yield-calculator': <DividendYieldCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
     };
 
-    const renderMaintenanceBanner = () => {
-      if (gov.status !== 'maintenance' && !gov.noticeMessage) return null;
-      return (
-        <div className="mb-6 p-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 flex items-start gap-3 text-amber-800 dark:text-amber-200">
-          <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5 text-amber-500" />
-          <div>
-            <div className="font-bold text-xs uppercase tracking-wider text-amber-700 dark:text-amber-300">
-              {gov.status === 'maintenance' ? 'Scheduled Maintenance Notice' : 'Notice'}
-            </div>
-            <p className="text-xs mt-0.5 leading-relaxed">
-              {gov.noticeMessage || 'This utility is currently undergoing scheduled maintenance and updates by the Codepackr team. Some features may be temporarily limited.'}
-            </p>
-          </div>
-        </div>
-      );
-    };
-
-    const initialInputForTool = smartPasteInput || popSmartPastePayload(tool.id) || popSmartPastePayload(tool.category) || '';
-
-    let toolViewContent: React.ReactNode = null;
-    if (tool.id === 'financial-planner') {
-      toolViewContent = <FinancialPlannerView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'simple-interest-calculator') {
-      toolViewContent = <SimpleInterestCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'cagr-calculator') {
-      toolViewContent = <CagrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'inflation-calculator') {
-      toolViewContent = <InflationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'emergency-fund-calculator') {
-      toolViewContent = <EmergencyFundCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'net-worth-calculator') {
-      toolViewContent = <NetWorthCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'roi-calculator') {
-      toolViewContent = <RoiCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'fire-calculator') {
-      toolViewContent = <FireCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'income-tax-calculator') {
-      toolViewContent = <IncomeTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'ctc-to-in-hand-calculator') {
-      toolViewContent = <CtcToInHandCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'debt-to-income-calculator') {
-      toolViewContent = <DebtToIncomeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'loan-prepayment-calculator') {
-      toolViewContent = <LoanPrepaymentCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'loan-amortization-calculator') {
-      toolViewContent = <LoanAmortizationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'lumpsum-calculator') {
-      toolViewContent = <LumpsumCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'future-value-calculator') {
-      toolViewContent = <FutureValueCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'savings-goal-calculator') {
-      toolViewContent = <SavingsGoalCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'salary-hike-calculator') {
-      toolViewContent = <SalaryHikeCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'gratuity-calculator') {
-      toolViewContent = <GratuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'npv-calculator') {
-      toolViewContent = <NpvCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'irr-calculator') {
-      toolViewContent = <IrrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'break-even-calculator') {
-      toolViewContent = <BreakEvenCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'business-valuation-calculator') {
-      toolViewContent = <BusinessValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'dcf-calculator') {
-      toolViewContent = <DcfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'wacc-calculator') {
-      toolViewContent = <WaccCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'mortgage-affordability-calculator') {
-      toolViewContent = <MortgageAffordabilityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'credit-card-payoff-calculator') {
-      toolViewContent = <CreditCardPayoffCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'gst-calculator') {
-      toolViewContent = <GstCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'capital-gains-tax-calculator') {
-      toolViewContent = <CapitalGainsTaxCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'hra-calculator') {
-      toolViewContent = <HraCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'startup-valuation-calculator') {
-      toolViewContent = <StartupValuationCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'burn-rate-calculator') {
-      toolViewContent = <BurnRateCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'epf-calculator') {
-      toolViewContent = <EpfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'rent-vs-buy-calculator') {
-      toolViewContent = <RentVsBuyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'rule-of-72-calculator') {
-      toolViewContent = <RuleOf72CalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'annuity-calculator') {
-      toolViewContent = <AnnuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else if (tool.id === 'dividend-yield-calculator') {
-      toolViewContent = <DividendYieldCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
-    } else {
-      toolViewContent = <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} initialInput={initialInputForTool} />;
-    }
-
-    return (
-      <div className="space-y-4">
-        {renderAdminPreviewBanner()}
-        {renderMaintenanceBanner()}
-        {toolViewContent}
-      </div>
-    );
+    const content = views[tool.id] || <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
+    return <div className="space-y-4">{content}</div>;
   };
 
   return (
     <CurrencyProvider>
       <div className="min-h-screen flex flex-col font-sans selection:bg-[color:var(--brand)] selection:text-white bg-[color:var(--bg)] text-[color:var(--ink)]">
-        {/* Top Navigation */}
         <Navbar
           theme={theme}
           onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
@@ -438,17 +266,9 @@ export const App: React.FC = () => {
           onGoBookmarks={() => handleSelectCategory('bookmarks')}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
           isAdmin={isAuthenticated}
-          onGoAdmin={() => {
-            setActivePage('admin');
-            setActiveTool(null);
-            window.history.pushState({}, '', '/admin');
-          }}
+          onGoAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }}
         />
-
-        {/* Global Broadcast Announcement Banner */}
         <GlobalBanner />
-
-        {/* App Shell: Developer Sidebar + Main Content Workbench */}
         <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
           <Sidebar
             isOpen={isSidebarOpen}
@@ -456,98 +276,45 @@ export const App: React.FC = () => {
             isCollapsed={isSidebarCollapsed}
             onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
             selectedCategory={selectedCategory}
-            onSelectCategory={(cat) => {
-              handleSelectCategory(cat);
-              setIsSidebarOpen(false);
-            }}
+            onSelectCategory={(cat) => { handleSelectCategory(cat); setIsSidebarOpen(false); }}
             onGoHome={navigateToHome}
-            onGoBookmarks={() => {
-              handleSelectCategory('bookmarks');
-              setIsSidebarOpen(false);
-            }}
+            onGoBookmarks={() => { handleSelectCategory('bookmarks'); setIsSidebarOpen(false); }}
             onGoContact={navigateToContact}
             onGoPrivacy={() => navigateToPrivacy('privacy')}
             onGoTerms={() => navigateToPrivacy('terms')}
           />
-
-          {/* Main Content Area */}
           <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-8 lg:py-10">
             {activePage === 'admin' ? (
               <AdminPortal onBack={navigateToHome} />
             ) : activePage === 'contact' ? (
               <ContactView onBack={navigateToHome} />
             ) : activePage === 'privacy' ? (
-              <PrivacyPolicyView
-                onBack={navigateToHome}
-                onContactClick={navigateToContact}
-                initialTab={legalTab}
-              />
-            ) : activePage !== 'home' ? (
+              <PrivacyPolicyView onBack={navigateToHome} onContactClick={navigateToContact} initialTab={legalTab} />
+            ) : activePage === 'notFound' ? (
+              <NotFoundView onGoHome={navigateToHome} onOpenSearch={() => setIsSearchOpen(true)} onSelectTool={navigateToTool} />
+            ) : activePage !== 'home' && activePage !== 'admin' ? (
               <TrustPageView page={activePage as TrustPageKey} onBack={navigateToHome} />
             ) : activeTool ? (
               <div className="max-w-6xl mx-auto animate-fade-in">{renderTool(activeTool)}</div>
             ) : (
-              <HomeDashboard
-                onSelectTool={navigateToTool}
-                onOpenSearch={() => setIsSearchOpen(true)}
-                selectedCategory={selectedCategory}
-                onSelectCategory={handleSelectCategory}
-                onGoTrustPage={navigateToTrustPage}
-              />
+              <HomeDashboard onSelectTool={navigateToTool} onOpenSearch={() => setIsSearchOpen(true)} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
             )}
           </main>
         </div>
-
-        {/* Footer */}
         <Footer
           onGoHome={navigateToHome}
           onGoContact={navigateToContact}
           onGoPrivacy={navigateToPrivacy}
-          onGoTrustPage={navigateToTrustPage}
           onOpenSitemap={() => setIsSitemapModalOpen(true)}
           onOpenAdminLogin={() => {
             if (isAuthenticated) {
-              setActivePage('admin');
-              setActiveTool(null);
-              window.history.pushState({}, '', '/admin');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-              setIsAdminLoginOpen(true);
-            }
+              setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin');
+            } else setIsAdminLoginOpen(true);
           }}
         />
-
-        {/* Search Modal */}
-        <SearchModal
-          isOpen={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-          onSelectTool={navigateToTool}
-        />
-
-        {/* Live Sitemap & Search Indexing Hub Modal */}
-        <SitemapModal
-          isOpen={isSitemapModalOpen}
-          onClose={() => setIsSitemapModalOpen(false)}
-          onSelectTool={navigateToTool}
-          onNavigateAdmin={() => {
-            setActivePage('admin');
-            setActiveTool(null);
-            window.history.pushState({}, '', '/admin');
-          }}
-        />
-
-        {/* Admin Login Modal */}
-        <AdminLoginModal
-          isOpen={isAdminLoginOpen}
-          onClose={() => setIsAdminLoginOpen(false)}
-          onSuccess={() => {
-            setIsAdminLoginOpen(false);
-            setActivePage('admin');
-            setActiveTool(null);
-            window.history.pushState({}, '', '/admin');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        />
+        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onSelectTool={navigateToTool} />
+        <SitemapModal isOpen={isSitemapModalOpen} onClose={() => setIsSitemapModalOpen(false)} onSelectTool={navigateToTool} onNavigateAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
+        <AdminLoginModal isOpen={isAdminLoginOpen} onClose={() => setIsAdminLoginOpen(false)} onSuccess={() => { setIsAdminLoginOpen(false); setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
       </div>
     </CurrencyProvider>
   );
