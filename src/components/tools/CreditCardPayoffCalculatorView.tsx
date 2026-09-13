@@ -286,7 +286,7 @@ export const CreditCardPayoffCalculatorView: React.FC<
           </div>
           <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border" style={{ borderColor: 'var(--line)' }}>
             <span className="font-bold text-slate-900 dark:text-white block mb-1">Fixed Extra Payments</span>
-            Even a modest extra $50 to $150 per month ensures that 100% of the additional funds eliminate principal, causing compound interest to collapse.
+            Even a modest extra monthly payment ensures that 100% of the additional funds eliminate principal, causing compound interest to collapse.
           </div>
         </div>
       </div>

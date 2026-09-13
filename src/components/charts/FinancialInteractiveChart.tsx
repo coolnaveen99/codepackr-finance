@@ -219,13 +219,26 @@ export const FinancialInteractiveChart: React.FC<FinancialInteractiveChartProps>
   // Active point for tooltip
   const activePoint = hoveredIndex !== null && validData[hoveredIndex] ? validData[hoveredIndex] : validData[validData.length - 1];
 
-  // Helper for tick format (Investor.gov style: formatted currency)
+  // Helper for tick format (Investor.gov style: formatted currency with locale support)
   const formatTickAmount = (amt: number) => {
+    if (currency.code === 'INR') {
+      const abs = Math.abs(amt);
+      if (abs >= 1e7) {
+        return `${currency.symbol}${(amt / 1e7).toFixed(amt % 1e7 === 0 ? 0 : 1)} Cr`;
+      }
+      if (abs >= 1e5) {
+        return `${currency.symbol}${(amt / 1e5).toFixed(amt % 1e5 === 0 ? 0 : 1)} L`;
+      }
+      if (abs >= 1000) {
+        return `${currency.symbol}${Math.round(amt).toLocaleString('en-IN')}`;
+      }
+      return `${currency.symbol}${Math.round(amt)}`;
+    }
     if (Math.abs(amt) >= 1000000) {
       return `${currency.symbol}${(amt / 1000000).toFixed(amt % 1000000 === 0 ? 0 : 1)}M`;
     }
     if (Math.abs(amt) >= 10000) {
-      return `${currency.symbol}${Math.round(amt).toLocaleString()}`;
+      return `${currency.symbol}${Math.round(amt).toLocaleString('en-US')}`;
     }
     return `${currency.symbol}${Math.round(amt)}`;
   };

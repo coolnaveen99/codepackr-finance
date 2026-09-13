@@ -48,8 +48,11 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   const [conversionMode, setConversionModeState] = useState<ConversionMode>(() => {
+    // Clear legacy fx-convert mode to ensure calculator values are never mutated by exchange rates
     const saved = safeLocalStorage.getItem(STORAGE_KEY_MODE);
-    if (saved === 'face-value' || saved === 'fx-convert') return saved;
+    if (saved === 'fx-convert') {
+      safeLocalStorage.removeItem(STORAGE_KEY_MODE);
+    }
     return 'face-value';
   });
 
@@ -84,7 +87,7 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const formatAmount = (amount: number, customDecimals?: number, includeCode?: boolean): string => {
     return formatCurrencyAmount(amount, currency, {
       decimals: customDecimals,
-      convertFromUsd: conversionMode === 'fx-convert',
+      convertFromUsd: false,
       includeCode,
     });
   };

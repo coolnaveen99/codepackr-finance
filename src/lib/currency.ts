@@ -326,15 +326,15 @@ export function formatCurrencyAmount(
     includeCode?: boolean;
   }
 ): string {
-  let val = amount;
-  if (options?.convertFromUsd && currency.code !== 'USD') {
-    val = amount * currency.rateVsUsd;
-  }
+  // Financial calculators operate directly in the user's selected active currency.
+  // Input values are already in this currency, so calculation results must NEVER be scaled by FX rates.
+  const val = Number.isFinite(amount) ? amount : 0;
 
   const decimals = options?.decimals !== undefined ? options.decimals : currency.decimalPlaces;
 
-  // Format with standard thousands separator
-  const formattedNumber = val.toLocaleString('en-US', {
+  // Format with appropriate regional numbering system (e.g., en-IN for Indian Lakhs & Crores)
+  const locale = currency.code === 'INR' ? 'en-IN' : 'en-US';
+  const formattedNumber = val.toLocaleString(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });

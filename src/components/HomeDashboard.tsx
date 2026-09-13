@@ -30,6 +30,7 @@ import { getIcon } from '../lib/icons';
 import { useBookmarks, shareToolUrl } from '../lib/bookmarks';
 import { useToolGovernance } from '../lib/useToolGovernance';
 import { useAdminAuth } from '../lib/useAdminAuth';
+import { useCurrency } from '../lib/CurrencyContext';
 
 interface HomeDashboardProps {
   onSelectTool: (tool: ToolDef, initialPayload?: string) => void;
@@ -253,6 +254,33 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks();
   const { isToolVisible } = useToolGovernance();
   const { isAuthenticated } = useAdminAuth();
+  const { currency, formatAmount } = useCurrency();
+
+  // Dynamic preview numbers adapted to active currency
+  const previewData = useMemo(() => {
+    if (currency.code === 'INR') {
+      return {
+        loanSub: '₹50,00,000 @ 8.5% · 20y',
+        loanEmi: '₹43,391/mo',
+        principalBar: '58%',
+        interestBar: '42%',
+        sipSub: '₹10,000/mo · 15y @ 12%',
+        sipGain: '+₹32.46 L Gain',
+        sipCorpus: '₹50.46 Lakh',
+        retSub: '₹2.4 Cr of ₹3.0 Cr Goal Funded',
+      };
+    }
+    return {
+      loanSub: `${currency.symbol}400,000 @ 6.5% · 30y`,
+      loanEmi: `${currency.symbol}2,528/mo`,
+      principalBar: '68%',
+      interestBar: '32%',
+      sipSub: `${currency.symbol}500/mo · 15y @ 12%`,
+      sipGain: `+${currency.symbol}184,200 Gain`,
+      sipCorpus: `${currency.symbol}274,200`,
+      retSub: `${currency.symbol}1.18M of ${currency.symbol}1.5M Goal Funded`,
+    };
+  }, [currency.code, currency.symbol]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -436,27 +464,29 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[color:var(--ink)]">Home Loan EMI</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">$400,000 @ 6.5% · 30y</p>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.loanSub}</p>
                     </div>
                   </div>
                   <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                    $2,528/mo
+                    {previewData.loanEmi}
                   </span>
                 </div>
                 {/* Visual Principal vs Interest Bar with Entrance Animation */}
                 <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex mb-2">
                   <div 
                     className="bg-emerald-500 h-full animate-fill-principal" 
-                    title="Principal: 68%" 
+                    style={{ width: previewData.principalBar }}
+                    title={`Principal: ${previewData.principalBar}`} 
                   />
                   <div 
                     className="bg-amber-400 h-full animate-fill-interest" 
-                    title="Interest: 32%" 
+                    style={{ width: previewData.interestBar }}
+                    title={`Interest: ${previewData.interestBar}`} 
                   />
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
-                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 68% Principal</span>
-                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> 32% Interest</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {previewData.principalBar} Principal</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> {previewData.interestBar} Interest</span>
                   <span className="text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
                     Open →
                   </span>
@@ -478,11 +508,11 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[color:var(--ink)]">SIP Wealth Growth</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">$500/mo · 15y @ 12% CAGR</p>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.sipSub}</p>
                     </div>
                   </div>
                   <span className="text-xs font-extrabold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">
-                    +$184,200 Gain
+                    {previewData.sipGain}
                   </span>
                 </div>
                 {/* Upward Compounding Curve Sparkline SVG with Drawing Transition */}
@@ -509,7 +539,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   </svg>
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
-                  <span>Future Corpus: <strong className="text-[color:var(--ink)]">$274,200</strong></span>
+                  <span>Future Corpus: <strong className="text-[color:var(--ink)]">{previewData.sipCorpus}</strong></span>
                   <span className="text-teal-600 dark:text-teal-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
                     Open →
                   </span>
@@ -546,7 +576,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[color:var(--ink)]">Retirement Independence</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">$1.18M of $1.5M Goal Funded</p>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.retSub}</p>
                     </div>
                   </div>
                   <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-1">
@@ -826,7 +856,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             {numericMatch && (
               <div className="mt-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-1.5 text-xs animate-fade-in">
                 <span className="text-emerald-700 dark:text-emerald-300 font-semibold text-[11px] truncate">
-                  ${numericMatch.toLocaleString()}
+                  {formatAmount(numericMatch)}
                 </span>
                 <div className="flex items-center gap-1 shrink-0 text-[10px]">
                   <button

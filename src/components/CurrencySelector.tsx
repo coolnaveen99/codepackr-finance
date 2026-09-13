@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Search, Check, Globe, RefreshCw } from 'lucide-react';
+import { ChevronDown, Search, Check, Globe } from 'lucide-react';
 import { useCurrency } from '../lib/CurrencyContext';
 
 interface CurrencySelectorProps {
@@ -196,38 +196,18 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
               </span>
             </div>
 
-            {/* Conversion Mode Switcher */}
+            {/* Active Currency Guarantee Note */}
             <div
-              className="p-1.5 rounded-xl border flex items-center justify-between text-[11px]"
+              className="px-2.5 py-1.5 rounded-xl border flex items-center justify-between text-[11px]"
               style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}
             >
-              <span className="text-[var(--muted)] font-medium pl-1 flex items-center gap-1">
-                <RefreshCw className="w-3 h-3" /> Mode:
+              <span className="text-[var(--muted)] font-medium flex items-center gap-1.5">
+                <Globe className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                <span>Values calculate directly in chosen currency</span>
               </span>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setConversionMode('face-value')}
-                  className={`px-2 py-0.5 rounded-lg font-semibold transition-all cursor-pointer ${
-                    conversionMode === 'face-value'
-                      ? 'bg-[var(--surface)] text-[var(--brand)] shadow-sm font-bold'
-                      : 'text-[var(--muted)] hover:text-[var(--ink)]'
-                  }`}
-                  title="Keep number face value (e.g., $5,500 becomes €5,500)"
-                >
-                  Symbol Only
-                </button>
-                <button
-                  onClick={() => setConversionMode('fx-convert')}
-                  className={`px-2 py-0.5 rounded-lg font-semibold transition-all cursor-pointer ${
-                    conversionMode === 'fx-convert'
-                      ? 'bg-[var(--brand)] text-white shadow-sm font-bold'
-                      : 'text-[var(--muted)] hover:text-[var(--ink)]'
-                  }`}
-                  title="Convert via live baseline exchange rate (e.g., $5,500 becomes €5,060)"
-                >
-                  Live FX Convert
-                </button>
-              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--brand)] shrink-0 px-1.5 py-0.5 rounded bg-[var(--brand)]/10">
+                {currency.code} ({currency.symbol.trim()})
+              </span>
             </div>
 
             {/* Search Input */}

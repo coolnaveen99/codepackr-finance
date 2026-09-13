@@ -643,27 +643,6 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">Scenario comparison</h3>
-                <p className="text-[11px] text-[var(--muted)]">Compare the base SIP with a higher monthly contribution.</p>
-              </div>
-              <button type="button" onClick={() => setShowSipScenario((visible) => !visible)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--brand)] text-white cursor-pointer">
-                {showSipScenario ? 'Hide' : 'Compare'}
-              </button>
-            </div>
-            {showSipScenario && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
-                <label className="text-[11px] text-[var(--muted)]">Monthly increase ({currency.symbol.trim()})
-                  <input type="text" inputMode="decimal" value={sipMonthlyDeltaStr} onChange={(e) => handleCleanInput(e.target.value, setSipMonthlyDeltaStr)} className="w-full mt-1 p-2 rounded-lg border font-mono text-xs text-[var(--ink)]" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }} />
-                </label>
-                <div className="text-xs text-[var(--muted)]">Scenario maturity<strong className="block text-sm text-[var(--ink)]">{formatAmount(scenarioSipBalance)}</strong></div>
-                <div className="text-xs text-[var(--muted)]">Difference<strong className="block text-sm text-emerald-500">+{formatAmount(Math.max(0, scenarioSipBalance - sipMaturity))}</strong></div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">Scenario comparison</h3>
                 <p className="text-[11px] text-[var(--muted)]">See how a higher interest rate changes the repayment.</p>
               </div>
               <button type="button" onClick={() => setShowLoanScenario((visible) => !visible)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--brand)] text-white cursor-pointer">
@@ -1103,6 +1082,28 @@ export const CalculatorsView: React.FC<CalculatorsViewProps> = ({
                 </span>
               )}
             </div>
+          </div>
+
+          {/* SIP Scenario Comparison */}
+          <div className="p-4 rounded-xl border space-y-3" style={{ backgroundColor: 'var(--surface-2)', borderColor: 'var(--line)' }}>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">Scenario comparison</h3>
+                <p className="text-[11px] text-[var(--muted)]">Compare the base SIP with a higher monthly contribution.</p>
+              </div>
+              <button type="button" onClick={() => setShowSipScenario((visible) => !visible)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--brand)] text-white cursor-pointer">
+                {showSipScenario ? 'Hide' : 'Compare'}
+              </button>
+            </div>
+            {showSipScenario && (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                <label className="text-[11px] text-[var(--muted)]">Monthly increase ({currency.symbol.trim()})
+                  <input type="text" inputMode="decimal" value={sipMonthlyDeltaStr} onChange={(e) => handleCleanInput(e.target.value, setSipMonthlyDeltaStr)} className="w-full mt-1 p-2 rounded-lg border font-mono text-xs text-[var(--ink)]" style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--line)' }} />
+                </label>
+                <div className="text-xs text-[var(--muted)]">Scenario maturity<strong className="block text-sm text-[var(--ink)]">{formatAmount(scenarioSipBalance)}</strong></div>
+                <div className="text-xs text-[var(--muted)]">Difference<strong className="block text-sm text-emerald-500">+{formatAmount(Math.max(0, scenarioSipBalance - sipMaturity))}</strong></div>
+              </div>
+            )}
           </div>
 
           {/* Interactive Multi-View Financial Chart (Default: Line Chart like Investor.gov, with dropdown for Donut, Area, and Bar) */}

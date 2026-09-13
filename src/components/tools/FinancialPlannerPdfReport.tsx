@@ -71,7 +71,7 @@ export const FinancialPlannerPdfReport: React.FC<FinancialPlannerPdfReportProps>
     if (currency.code === 'INR') {
       if (abs >= 1e7) return `INR ${(num / 1e7).toFixed(2)} Cr`;
       if (abs >= 1e5) return `INR ${(num / 1e5).toFixed(2)} Lakh`;
-      return `INR ${Math.round(num).toLocaleString('en-US')}`;
+      return `INR ${Math.round(num).toLocaleString('en-IN')}`;
     }
     if (abs >= 1e9) return `${currency.code} ${(num / 1e9).toFixed(2)}B`;
     if (abs >= 1e6) return `${currency.code} ${(num / 1e6).toFixed(2)}M`;

@@ -424,7 +424,7 @@ export const StartupValuationCalculatorView: React.FC<
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
           <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border" style={{ borderColor: 'var(--line)' }}>
             <span className="font-bold text-slate-900 dark:text-white block mb-1">Berkus Risk-Capping</span>
-            Assigns up to $500k to each of 5 foundational business pillars, providing an objective $0–$2.5M valuation range before historical financials exist.
+            Assigns up to 500k to each of 5 foundational business pillars, providing an objective valuation range before historical financials exist.
           </div>
           <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border" style={{ borderColor: 'var(--line)' }}>
             <span className="font-bold text-slate-900 dark:text-white block mb-1">Payne Scorecard Comparison</span>
