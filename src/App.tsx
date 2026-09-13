@@ -57,7 +57,7 @@ import { resolveCurrentRoute, getToolPath, SpecialPage } from './lib/urls';
 import { updateDocumentMetadata } from './lib/seo';
 import { CurrencyProvider } from './lib/CurrencyContext';
 import { safeLocalStorage } from './lib/storage';
-import { AlertTriangle, Lock, Shield } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -167,6 +167,7 @@ export const App: React.FC = () => {
   const navigateToHome = () => {
     setActiveTool(null);
     setActivePage('home');
+    setSelectedCategory('all');
     window.history.pushState({}, '', '/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -190,8 +191,16 @@ export const App: React.FC = () => {
     setSelectedCategory(cat);
     setActiveTool(null);
     setActivePage('home');
-    window.history.pushState({}, '', cat !== 'all' ? `/?cat=${cat}` : '/');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.history.pushState({}, '', cat !== 'all' && cat !== 'bookmarks' ? `/?cat=${cat}` : '/');
+    window.setTimeout(() => {
+      const catSection = document.getElementById('tool-grid');
+      if (cat !== 'all' && catSection) {
+        const targetY = catSection.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 60);
   };
 
   const renderTool = (tool: ToolDef) => {
