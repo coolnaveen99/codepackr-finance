@@ -1,4 +1,4 @@
-const CACHE_NAME = 'codepackr-v4';
+const CACHE_NAME = 'codepackr-finance-v5-vercel';
 const STATIC_PRECACHE = [
   '/',
   '/index.html',
@@ -99,7 +99,7 @@ self.addEventListener('fetch', (event) => {
           }
 
           return new Response(
-            '<!doctype html><html><head><meta charset="utf-8"><title>Codepackr</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:48px 20px;background:#f8fafc;color:#0f172a;"><h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px;">Codepackr is temporarily offline</h2><p style="color:#64748b;margin-bottom:24px;">Please check your connection and reload.</p><button onclick="location.reload()" style="background:#5B52E8;color:#ffffff;border:none;border-radius:12px;padding:12px 24px;font-weight:600;cursor:pointer;">Reload Page</button></body></html>',
+            '<!doctype html><html><head><meta charset="utf-8"><title>CodePackr Finance</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:48px 20px;background:#0B0F19;color:#f8fafc;"><h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px;">CodePackr Finance is temporarily offline</h2><p style="color:#94a3b8;margin-bottom:24px;">Please check your connection and reload.</p><button onclick="location.reload()" style="background:#5B52E8;color:#ffffff;border:none;border-radius:12px;padding:12px 24px;font-weight:600;cursor:pointer;">Reload Page</button></body></html>',
             {
               status: 200,
               headers: { 'Content-Type': 'text/html; charset=utf-8' }
