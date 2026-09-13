@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X, ArrowRight, CornerDownLeft, EyeOff } from 'lucide-react';
 import { TOOLS } from '../data/tools';
 import { ToolDef } from '../types';
@@ -55,40 +55,104 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
     }
   };
 
+  // Extract any clean number from query (e.g. 50000, $100k, 1,00,000)
+  const numericMatch = useMemo(() => {
+    const cleaned = query.replace(/[$,\s]/g, '');
+    const num = parseFloat(cleaned);
+    return !isNaN(num) && num > 0 ? num : null;
+  }, [query]);
+
+  const quickSuggestions = [
+    { label: 'Home Loan EMI', query: 'loan' },
+    { label: 'SIP Wealth', query: 'sip' },
+    { label: 'Retirement Planner', query: 'retirement' },
+    { label: 'CTC Take-Home', query: 'salary' },
+    { label: 'Compound Interest', query: 'compound' },
+    { label: 'Emergency Fund', query: 'emergency' },
+  ];
+
   if (!isOpen) return null;
 
   return (
-    <div id="search-modal-backdrop" className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose} role="presentation">
+    <div id="search-modal-backdrop" className="fixed inset-0 z-50 flex items-start justify-center pt-20 sm:pt-24 px-4 bg-black/50 backdrop-blur-sm animate-fade-in" onClick={onClose} role="presentation">
       <div
         id="search-modal-container"
-        className="w-full max-w-2xl rounded-2xl border border-[color:var(--border)] shadow-2xl overflow-hidden flex flex-col max-h-[70vh] bg-[color:var(--surface)]"
+        className="w-full max-w-2xl rounded-2xl border border-[color:var(--border)] shadow-2xl overflow-hidden flex flex-col max-h-[75vh] bg-[color:var(--surface)] transition-all duration-300 ring-1 ring-emerald-500/30"
         role="dialog"
         aria-modal="true"
         aria-label="Search financial calculators"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center px-4 py-4 border-b border-[color:var(--border)] gap-3 bg-[color:var(--surface-elevated)]">
-          <Search className="w-5 h-5 text-[color:var(--ink-muted)]" />
+        <div className="flex items-center px-4 py-3.5 border-b border-[color:var(--border)] gap-3 bg-[color:var(--surface-elevated)] transition-all">
+          <Search className="w-5 h-5 text-emerald-500 shrink-0" />
           <input
             id="search-modal-input"
             ref={inputRef}
             type="text"
-            placeholder="Search financial calculators..."
+            placeholder="Search financial calculators or paste an amount (e.g., $50,000)..."
             value={query}
             onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0); }}
             onKeyDown={handleKeyDown}
-            className="flex-1 bg-transparent border-none outline-none text-lg text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)]"
+            className="flex-1 bg-transparent border-none outline-none text-base sm:text-lg text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)]"
             aria-label="Search calculators"
           />
           {query && (
-            <button onClick={() => setQuery('')} className="p-1 rounded text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer" aria-label="Clear search">
-              <X className="w-5 h-5" />
+            <button onClick={() => setQuery('')} className="p-1 rounded-lg text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:bg-[color:var(--surface)] cursor-pointer" aria-label="Clear search">
+              <X className="w-4 h-4" />
             </button>
           )}
-          <kbd className="hidden sm:block text-xs font-mono px-2 py-1 rounded border border-[color:var(--border)] text-[color:var(--ink-muted)] bg-[color:var(--surface)]">
+          <kbd className="hidden sm:block text-xs font-mono px-2 py-1 rounded-md border border-[color:var(--border)] text-[color:var(--ink-muted)] bg-[color:var(--surface)] shadow-xs">
             ESC
           </kbd>
         </div>
+
+        {/* Smart Number Detection Pill */}
+        {numericMatch && (
+          <div className="px-4 py-2 bg-emerald-500/10 border-b border-emerald-500/20 flex items-center justify-between gap-2 text-xs">
+            <span className="text-emerald-700 dark:text-emerald-300 font-medium">
+              💡 Value detected: <strong>{numericMatch.toLocaleString()}</strong> — Instant projection in:
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => {
+                  const sip = TOOLS.find(t => t.id === 'sip-calculator');
+                  if (sip) { onSelectTool(sip); onClose(); }
+                }}
+                className="px-2 py-0.5 rounded font-bold bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer transition-colors"
+              >
+                SIP Growth →
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const loan = TOOLS.find(t => t.id === 'loan-calculator');
+                  if (loan) { onSelectTool(loan); onClose(); }
+                }}
+                className="px-2 py-0.5 rounded font-bold bg-[color:var(--surface)] border border-emerald-500/30 text-[color:var(--ink)] hover:border-emerald-500 cursor-pointer transition-colors"
+              >
+                Loan EMI →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Suggestion Chips */}
+        {!query && (
+          <div className="px-4 py-2.5 bg-[color:var(--surface)] border-b border-[color:var(--border)] flex items-center gap-1.5 overflow-x-auto scrollbar-none text-xs">
+            <span className="text-[11px] font-bold text-[color:var(--ink-muted)] uppercase tracking-wider shrink-0 mr-1">Popular:</span>
+            {quickSuggestions.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => setQuery(item.query)}
+                className="px-2.5 py-1 rounded-full bg-[color:var(--surface-elevated)] border border-[color:var(--border)] text-[color:var(--ink)] hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap transition-colors cursor-pointer text-xs"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto p-2 custom-scrollbar" role="listbox" aria-label="Search results">
           {filteredTools.length === 0 ? (

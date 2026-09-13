@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   ArrowRight,
   BarChart3,
@@ -22,6 +22,7 @@ import {
   ChevronDown,
   Play,
   RotateCcw,
+  Lock,
 } from 'lucide-react';
 import { ToolDef, CategoryFilter } from '../types';
 import { TOOLS, CATEGORIES } from '../data/tools';
@@ -228,6 +229,13 @@ const SIMULATION_STAGES = [
   },
 ];
 
+const ROTATING_SUBLINES = [
+  'Plan your home loan with confidence…',
+  'See your SIP wealth grow over time…',
+  'Calculate exact take-home salary…',
+  'Model your retirement corpus…',
+];
+
 export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   onSelectTool,
   selectedCategory,
@@ -240,9 +248,17 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationIndex, setSimulationIndex] = useState(0);
+  const [sublineIndex, setSublineIndex] = useState(0);
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks();
   const { isToolVisible } = useToolGovernance();
   const { isAuthenticated } = useAdminAuth();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSublineIndex((prev) => (prev + 1) % ROTATING_SUBLINES.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   const visibleTools = useMemo(() => {
     return TOOLS.filter((tool) => isToolVisible(tool.id, isAuthenticated));
@@ -276,6 +292,13 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
     scrollToToolGrid();
   };
 
+  // Quick numeric extraction from local search query
+  const numericMatch = useMemo(() => {
+    const cleaned = searchQuery.replace(/[$,\s]/g, '');
+    const num = parseFloat(cleaned);
+    return !isNaN(num) && num > 0 ? num : null;
+  }, [searchQuery]);
+
   const filteredTools = useMemo(() => {
     return visibleTools.filter((tool) => {
       if (selectedCategory === 'bookmarks' && !isBookmarked(tool.id)) return false;
@@ -294,84 +317,229 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
 
   return (
     <div id="home-dashboard" className="space-y-16 pb-20 animate-fade-in">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] shadow-sm">
-        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[color:var(--brand)] via-[color:var(--accent)] to-[color:var(--success)]" />
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute right-[-80px] top-1/2 -translate-y-1/2 opacity-[0.07] text-[color:var(--brand)]" aria-hidden="true">
-            <span className="block text-[20rem] font-mono font-bold leading-none">&gt;=</span>
-          </div>
-          <div className="absolute -right-28 -top-28 h-72 w-72 rounded-full bg-[color:var(--brand)]/10 blur-3xl" />
-          <div className="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-[color:var(--accent)]/10 blur-3xl" />
+      {/* Hero Section – Warm, Emotional First Impression with Growth Shapes & Glassmorphic Floating Previews */}
+      <section className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-[color:var(--surface)] via-emerald-500/[0.04] to-teal-500/[0.07] dark:from-[color:var(--surface)] dark:via-emerald-950/20 dark:to-teal-950/25 shadow-lg shadow-emerald-500/[0.03]">
+        {/* Soft top gradient accent line */}
+        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
+        
+        {/* Floating growth background shapes */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+          {/* Gentle growth curves SVG */}
+          <svg className="absolute -right-12 top-0 w-[580px] h-full text-emerald-500/10 dark:text-emerald-400/[0.07]" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 380C120 360 220 280 320 180C420 80 480 20 500 0" stroke="currentColor" strokeWidth="2.5" strokeDasharray="6 6" />
+            <path d="M50 400C160 370 260 270 370 150C440 70 490 10 500 0" stroke="currentColor" strokeWidth="1.5" />
+            <circle cx="320" cy="180" r="6" fill="currentColor" />
+            <circle cx="420" cy="80" r="5" fill="currentColor" />
+          </svg>
+          {/* Ambient soft glowing radial orbs */}
+          <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
+          <div className="absolute -bottom-36 left-1/4 h-80 w-80 rounded-full bg-teal-500/10 blur-3xl" />
         </div>
-        <div className="relative z-10 px-6 py-12 sm:px-10 lg:px-12 lg:py-14">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)] mb-6">
-              <span className="w-2 h-2 rounded-full bg-[color:var(--success)] animate-pulse" />
-              100% Client-Side Execution · Privacy Guaranteed
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[color:var(--ink)] leading-[1.08] mb-5 max-w-4xl">
-              Free Financial Calculators,<br />
-              Built for <span className="text-transparent bg-clip-text bg-gradient-to-r from-[color:var(--brand)] to-[color:var(--accent)]">Smart Money Decisions.</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-[color:var(--ink-muted)] mb-8 max-w-3xl leading-relaxed">
-              Calculate, compare, and forecast loans, investments, retirement, salary, and personal finance with transparent assumptions, interactive schedules, and instant local results.
-            </p>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <button
-                type="button"
-                onClick={scrollToToolGrid}
-                className="px-6 py-3 rounded-xl font-bold text-white bg-[color:var(--brand)] hover:bg-[color:var(--brand-hover)] transition-colors shadow-sm cursor-pointer inline-flex items-center gap-2"
-              >
-                Explore All Calculators <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={onOpenSearch}
-                className="px-6 py-3 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
-              >
-                <Search className="w-5 h-5 text-[color:var(--ink-muted)]" />
-                Search Calculators ({typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac') ? '⌘' : 'Ctrl'} K)
-              </button>
+        <div className="relative z-10 px-6 py-12 sm:px-10 lg:px-12 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            
+            {/* Left Column: Emotion, Headlines & CTAs */}
+            <div className="lg:col-span-7 max-w-2xl">
+              {/* Privacy Badge with gentle pulse */}
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 mb-6 shadow-xs backdrop-blur-xs">
+                <Lock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+                <span>100% Client-Side Execution · Privacy Guaranteed</span>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="text-3xl sm:text-5xl lg:text-5.5xl font-black tracking-tight text-[color:var(--ink)] leading-[1.12] mb-5">
+                Free Financial Calculators,<br />
+                Built for <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 dark:from-emerald-400 dark:via-teal-300 dark:to-emerald-400">Smart Money Decisions.</span>
+              </h1>
+
+              {/* Dynamic Rotating Sub-line */}
+              <div className="h-8 flex items-center gap-2 text-base sm:text-lg font-semibold text-emerald-600 dark:text-emerald-400 mb-4">
+                <Sparkles className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span key={sublineIndex} className="animate-fade-in-up inline-block">
+                  {ROTATING_SUBLINES[sublineIndex]}
+                </span>
+              </div>
+
+              <p className="text-base sm:text-lg text-[color:var(--ink-muted)] mb-8 leading-relaxed max-w-xl">
+                Calculate, compare, and forecast loans, investments, retirement, salary, and personal finance with transparent assumptions, interactive schedules, and zero tracking.
+              </p>
+
+              {/* Primary & Secondary Action CTAs */}
+              <div className="flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={scrollToToolGrid}
+                  className="px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2 group"
+                >
+                  Explore All Calculators 
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenSearch}
+                  className="px-6 py-3.5 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-emerald-500/60 hover:bg-emerald-500/5 hover:scale-[1.01] transition-all flex items-center gap-2.5 shadow-sm cursor-pointer"
+                >
+                  <Search className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>Search Calculators</span>
+                  <kbd className="hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)]">
+                    {typeof navigator !== 'undefined' && navigator.userAgent.includes('Mac') ? '⌘' : 'Ctrl'} K
+                  </kbd>
+                </button>
+              </div>
             </div>
+
+            {/* Right Column: Desktop Floating Glassmorphic Preview Cards */}
+            <div className="hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
+              
+              {/* Floating Card 1: Mini EMI Payment Schedule */}
+              <div 
+                onClick={() => {
+                  const loan = visibleTools.find(t => t.id === 'loan-calculator');
+                  if (loan) onSelectTool(loan);
+                }}
+                className="animate-float-slow group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-emerald-500/20 hover:scale-105 hover:border-emerald-500 transition-all duration-300 ml-4"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                      <Landmark className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[color:var(--ink)]">Home Loan EMI</h4>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">$400,000 @ 6.5% · 30y</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    $2,528/mo
+                  </span>
+                </div>
+                {/* Visual Principal vs Interest Bar */}
+                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex mb-2">
+                  <div className="bg-emerald-500 h-full w-[68%]" title="Principal: 68%" />
+                  <div className="bg-amber-400 h-full w-[32%]" title="Interest: 32%" />
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 68% Principal</span>
+                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> 32% Interest</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                    Open →
+                  </span>
+                </div>
+              </div>
+
+              {/* Floating Card 2: Growing Investment SIP Chart */}
+              <div 
+                onClick={() => {
+                  const sip = visibleTools.find(t => t.id === 'sip-calculator');
+                  if (sip) onSelectTool(sip);
+                }}
+                className="animate-float-medium group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-teal-500/25 shadow-xl hover:shadow-teal-500/20 hover:scale-105 hover:border-teal-500 transition-all duration-300 mr-2"
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600 dark:text-teal-400">
+                      <TrendingUp className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[color:var(--ink)]">SIP Wealth Growth</h4>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">$500/mo · 15y @ 12% CAGR</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">
+                    +$184,200 Gain
+                  </span>
+                </div>
+                {/* Upward Compounding Curve Sparkline SVG */}
+                <div className="h-10 w-full mb-1">
+                  <svg className="w-full h-full text-teal-500" viewBox="0 0 200 40" fill="none" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="sipGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="currentColor" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0 38 Q 60 36, 110 26 T 200 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M0 38 Q 60 36, 110 26 T 200 4 L 200 40 L 0 40 Z" fill="url(#sipGrad)" />
+                  </svg>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
+                  <span>Future Corpus: <strong className="text-[color:var(--ink)]">$274,200</strong></span>
+                  <span className="text-teal-600 dark:text-teal-400 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                    Open →
+                  </span>
+                </div>
+              </div>
+
+              {/* Floating Card 3: Financial Goal Progress Ring */}
+              <div 
+                onClick={() => {
+                  const ret = visibleTools.find(t => t.id === 'retirement-calculator' || t.id === 'financial-planner');
+                  if (ret) onSelectTool(ret);
+                }}
+                className="animate-float-fast group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-emerald-500/20 hover:scale-105 hover:border-emerald-500 transition-all duration-300 ml-6"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {/* Mini SVG Progress Ring */}
+                    <div className="relative w-9 h-9 flex items-center justify-center shrink-0">
+                      <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="14" fill="none" className="stroke-slate-200 dark:stroke-slate-700" strokeWidth="3.5" />
+                        <circle cx="18" cy="18" r="14" fill="none" className="stroke-emerald-500" strokeWidth="3.5" strokeDasharray="88" strokeDashoffset="20" strokeLinecap="round" />
+                      </svg>
+                      <span className="absolute text-[9px] font-black text-[color:var(--ink)]">78%</span>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[color:var(--ink)]">Retirement Independence</h4>
+                      <p className="text-[10px] text-[color:var(--ink-muted)]">$1.18M of $1.5M Goal Funded</p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                    Calculate →
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Popular Tools Section */}
+      {/* Most Popular Calculators Section – Card Magic with Staggered Entrance & Shimmer */}
       <section id="popular-tools" className="space-y-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Most Popular</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Most Popular</p>
             <h2 className="mt-1 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">Start with a premier calculator</h2>
             <p className="mt-2 text-sm text-[color:var(--ink-muted)]">High-value tools for the essential financial decisions people make most often.</p>
           </div>
           <button
             type="button"
             onClick={() => handleCategoryTabClick('all')}
-            className="self-start text-sm font-bold text-[color:var(--brand)] hover:underline sm:self-auto cursor-pointer flex items-center gap-1"
+            className="self-start text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline sm:self-auto cursor-pointer flex items-center gap-1 group"
           >
-            Browse all {visibleTools.length} tools <ArrowRight className="w-4 h-4" />
+            Browse all {visibleTools.length} tools <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {popularTools.slice(0, 6).map((tool) => {
+          {popularTools.slice(0, 6).map((tool, idx) => {
             const bookmarked = isBookmarked(tool.id);
             const copied = copiedId === tool.id;
             return (
               <article
                 key={tool.id}
                 onClick={() => onSelectTool(tool)}
-                className="group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[color:var(--brand)] hover:shadow-lg"
+                style={{ animationDelay: `${idx * 80}ms` }}
+                className="animate-fade-in-up group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/60 hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-950/30"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--brand)]">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/15 group-hover:text-emerald-600 transition-all duration-300">
                     {getIcon(tool.icon, 23)}
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     {tool.popular && (
-                      <span className="rounded-md bg-[color:var(--brand)]/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[color:var(--brand)]">
+                      <span className="rounded-full bg-gradient-to-r from-emerald-500/15 via-teal-500/25 to-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 animate-pulse">
                         Popular
                       </span>
                     )}
@@ -381,10 +549,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                         e.stopPropagation();
                         toggleBookmark(tool.id);
                       }}
-                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-[color:var(--ink)] cursor-pointer"
+                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-amber-500 transition-colors cursor-pointer"
                       aria-label="Favorite calculator"
                     >
-                      <Star className={`h-4 w-4 ${bookmarked ? 'fill-current text-[color:var(--warning)]' : ''}`} />
+                      <Star className={`h-4 w-4 transition-transform active:scale-125 duration-150 ${bookmarked ? 'fill-amber-400 text-amber-400' : ''}`} />
                     </button>
                     <button
                       type="button"
@@ -396,7 +564,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     </button>
                   </div>
                 </div>
-                <h3 className="mt-5 text-lg font-extrabold text-[color:var(--ink)] group-hover:text-[color:var(--brand)]">
+                <h3 className="mt-5 text-lg font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                   {tool.name}
                 </h3>
                 <p className="mt-2 line-clamp-2 text-sm leading-6 text-[color:var(--ink-muted)]">
@@ -404,8 +572,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 </p>
                 <div className="mt-5 flex items-center justify-between border-t border-[color:var(--border)] pt-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--ink-muted)]">
                   <span className="capitalize">{tool.category.replace('-', ' ')}</span>
-                  <span className="inline-flex items-center gap-1 text-[color:var(--brand)] font-bold">
-                    Calculate Now <ArrowRight className="h-3.5 w-3.5" />
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
+                    Calculate Now <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1.5 transition-transform duration-200" />
                   </span>
                 </div>
               </article>
@@ -414,23 +582,24 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
         </div>
       </section>
 
-      {/* Intent-based Navigation */}
+      {/* Goal-Oriented Planning Section – Hover Lift + Left Border Accent */}
       <section className="space-y-6">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand)]">Goal-Oriented Planning</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">Goal-Oriented Planning</p>
           <h2 className="mt-1 text-2xl font-extrabold text-[color:var(--ink)] sm:text-3xl">What are you planning today?</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-[color:var(--ink-muted)]">
             Choose the financial milestone or question you want answered. Each goal links directly to its dedicated calculator.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {planningCards.map((card) => {
+          {planningCards.map((card, idx) => {
             const Icon = card.icon;
             const target = visibleTools.find((t) => t.id === card.toolId);
             return (
               <button
                 key={card.title}
                 type="button"
+                style={{ animationDelay: `${idx * 60}ms` }}
                 onClick={() => {
                   if (target) {
                     onSelectTool(target);
@@ -438,20 +607,24 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     handleCategoryTabClick(card.category);
                   }
                 }}
-                className="group flex items-start gap-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 text-left transition hover:border-[color:var(--brand)] hover:bg-[color:var(--surface-elevated)] cursor-pointer"
+                className="animate-fade-in-up group flex items-start gap-4 rounded-2xl border border-[color:var(--border)] border-l-4 border-l-transparent hover:border-l-emerald-500 bg-[color:var(--surface)] p-5 text-left transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[color:var(--border-hover)] cursor-pointer"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[color:var(--brand)]/10 text-[color:var(--brand)]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-extrabold text-[color:var(--ink)] group-hover:text-[color:var(--brand)]">
-                    {card.title}
-                  </h3>
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {card.title}
+                    </h3>
+                  </div>
                   <p className="mt-1 text-sm leading-6 text-[color:var(--ink-muted)]">
                     {card.description}
                   </p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 opacity-80 group-hover:opacity-100 transition-opacity">
+                    Launch Plan <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </div>
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[color:var(--ink-muted)] group-hover:text-[color:var(--brand)] transition-transform group-hover:translate-x-0.5" />
               </button>
             );
           })}
@@ -572,24 +745,57 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           </div>
 
           {/* Quick in-page search */}
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[color:var(--ink-muted)]" />
-            <input
-              type="text"
-              placeholder="Filter calculators..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-9 py-2 rounded-xl text-sm border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus:outline-none focus:border-[color:var(--brand)] shadow-xs"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer"
-                aria-label="Clear filter"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
+          <div className="relative w-full md:w-80">
+            <div className="relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <input
+                type="text"
+                placeholder="Filter calculators (e.g., loan, 50000)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-9 py-2.5 rounded-xl text-sm border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] placeholder:text-[color:var(--ink-muted)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 shadow-xs transition-all"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] cursor-pointer"
+                  aria-label="Clear filter"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Smart Numeric Detection Pill for Directory Search */}
+            {numericMatch && (
+              <div className="mt-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-between gap-1.5 text-xs animate-fade-in">
+                <span className="text-emerald-700 dark:text-emerald-300 font-semibold text-[11px] truncate">
+                  ${numericMatch.toLocaleString()}
+                </span>
+                <div className="flex items-center gap-1 shrink-0 text-[10px]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const sip = visibleTools.find((t) => t.id === 'sip-calculator');
+                      if (sip) onSelectTool(sip);
+                    }}
+                    className="px-1.5 py-0.5 rounded font-bold bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
+                  >
+                    SIP →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const loan = visibleTools.find((t) => t.id === 'loan-calculator');
+                      if (loan) onSelectTool(loan);
+                    }}
+                    className="px-1.5 py-0.5 rounded font-bold bg-[color:var(--surface)] border border-emerald-500/30 text-[color:var(--ink)] hover:border-emerald-500 cursor-pointer"
+                  >
+                    EMI →
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -765,11 +971,14 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     setActiveStepIndex(null);
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink)] hover:border-[color:var(--brand)] hover:text-[color:var(--brand)] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/15 hover:border-red-500/50 transition-all cursor-pointer shadow-xs"
                 title="Run live demonstration of the 5 calculation stages"
               >
-                {isSimulating ? <RotateCcw className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                <span>{isSimulating ? 'Exit Demo' : 'Live Demo'}</span>
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                </span>
+                <span className="text-red-600 dark:text-red-400 font-bold">{isSimulating ? 'Exit Demo' : 'Live Demo'}</span>
               </button>
             </div>
             <h3 className="mt-1 text-xl font-extrabold text-[color:var(--ink)]">
