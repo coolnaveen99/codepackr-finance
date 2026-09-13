@@ -249,6 +249,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationIndex, setSimulationIndex] = useState(0);
   const [sublineIndex, setSublineIndex] = useState(0);
+  const [cardsMounted, setCardsMounted] = useState(false);
+  const [retirementProgress, setRetirementProgress] = useState(0);
   const { isBookmarked, toggleBookmark, bookmarks } = useBookmarks();
   const { isToolVisible } = useToolGovernance();
   const { isAuthenticated } = useAdminAuth();
@@ -258,6 +260,39 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
       setSublineIndex((prev) => (prev + 1) % ROTATING_SUBLINES.length);
     }, 3000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Entrance micro-animations for floating preview cards and count-up
+  useEffect(() => {
+    const mountTimer = setTimeout(() => {
+      setCardsMounted(true);
+    }, 150);
+
+    let startTimestamp: number | null = null;
+    const duration = 1200;
+    const target = 78;
+    let frameId: number;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const elapsed = timestamp - startTimestamp;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setRetirementProgress(Math.round(easeOut * target));
+      if (progress < 1) {
+        frameId = requestAnimationFrame(step);
+      }
+    };
+
+    const countTimer = setTimeout(() => {
+      frameId = requestAnimationFrame(step);
+    }, 250);
+
+    return () => {
+      clearTimeout(mountTimer);
+      clearTimeout(countTimer);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, []);
 
   const visibleTools = useMemo(() => {
@@ -370,15 +405,15 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <button
                   type="button"
                   onClick={scrollToToolGrid}
-                  className="px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2 group"
+                  className="px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/35 hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 ease-out cursor-pointer inline-flex items-center gap-2 group"
                 >
                   Explore All Calculators 
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
                 <button
                   type="button"
                   onClick={onOpenSearch}
-                  className="px-6 py-3.5 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-emerald-500/60 hover:bg-emerald-500/5 hover:scale-[1.01] transition-all flex items-center gap-2.5 shadow-sm cursor-pointer"
+                  className="px-6 py-3.5 rounded-xl font-bold border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-emerald-500/70 hover:bg-emerald-500/5 hover:scale-[1.01] transition-all duration-200 ease-out flex items-center gap-2.5 shadow-sm cursor-pointer"
                 >
                   <Search className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span>Search Calculators</span>
@@ -398,7 +433,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   const loan = visibleTools.find(t => t.id === 'loan-calculator');
                   if (loan) onSelectTool(loan);
                 }}
-                className="animate-float-slow group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-emerald-500/20 hover:scale-105 hover:border-emerald-500 transition-all duration-300 ml-4"
+                className="animate-float-card-1 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 hover:scale-[1.035] hover:border-emerald-500 transition-all duration-[220ms] ease-out ml-4"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -414,15 +449,23 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     $2,528/mo
                   </span>
                 </div>
-                {/* Visual Principal vs Interest Bar */}
+                {/* Visual Principal vs Interest Bar with Entrance Animation */}
                 <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex mb-2">
-                  <div className="bg-emerald-500 h-full w-[68%]" title="Principal: 68%" />
-                  <div className="bg-amber-400 h-full w-[32%]" title="Interest: 32%" />
+                  <div 
+                    className="bg-emerald-500 h-full transition-all duration-[1400ms] ease-out" 
+                    style={{ width: cardsMounted ? '68%' : '0%' }}
+                    title="Principal: 68%" 
+                  />
+                  <div 
+                    className="bg-amber-400 h-full transition-all duration-[1400ms] ease-out delay-150" 
+                    style={{ width: cardsMounted ? '32%' : '0%' }}
+                    title="Interest: 32%" 
+                  />
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
                   <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 68% Principal</span>
                   <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> 32% Interest</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
                     Open →
                   </span>
                 </div>
@@ -434,7 +477,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   const sip = visibleTools.find(t => t.id === 'sip-calculator');
                   if (sip) onSelectTool(sip);
                 }}
-                className="animate-float-medium group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-teal-500/25 shadow-xl hover:shadow-teal-500/20 hover:scale-105 hover:border-teal-500 transition-all duration-300 mr-2"
+                className="animate-float-card-2 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-teal-500/25 shadow-xl hover:shadow-2xl hover:shadow-teal-500/20 hover:scale-[1.035] hover:border-teal-500 transition-all duration-[220ms] ease-out mr-2"
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
@@ -450,7 +493,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     +$184,200 Gain
                   </span>
                 </div>
-                {/* Upward Compounding Curve Sparkline SVG */}
+                {/* Upward Compounding Curve Sparkline SVG with Drawing Transition */}
                 <div className="h-10 w-full mb-1">
                   <svg className="w-full h-full text-teal-500" viewBox="0 0 200 40" fill="none" preserveAspectRatio="none">
                     <defs>
@@ -459,13 +502,28 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                         <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
                       </linearGradient>
                     </defs>
-                    <path d="M0 38 Q 60 36, 110 26 T 200 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                    <path d="M0 38 Q 60 36, 110 26 T 200 4 L 200 40 L 0 40 Z" fill="url(#sipGrad)" />
+                    <path
+                      d="M0 38 Q 60 36, 110 26 T 200 4"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      style={{
+                        strokeDasharray: 240,
+                        strokeDashoffset: cardsMounted ? 0 : 240,
+                        transition: 'stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1)',
+                      }}
+                    />
+                    <path
+                      d="M0 38 Q 60 36, 110 26 T 200 4 L 200 40 L 0 40 Z"
+                      fill="url(#sipGrad)"
+                      className="transition-opacity duration-1000 ease-out delay-200"
+                      style={{ opacity: cardsMounted ? 1 : 0 }}
+                    />
                   </svg>
                 </div>
                 <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
                   <span>Future Corpus: <strong className="text-[color:var(--ink)]">$274,200</strong></span>
-                  <span className="text-teal-600 dark:text-teal-400 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                  <span className="text-teal-600 dark:text-teal-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
                     Open →
                   </span>
                 </div>
@@ -477,24 +535,39 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                   const ret = visibleTools.find(t => t.id === 'retirement-calculator' || t.id === 'financial-planner');
                   if (ret) onSelectTool(ret);
                 }}
-                className="animate-float-fast group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-emerald-500/20 hover:scale-105 hover:border-emerald-500 transition-all duration-300 ml-6"
+                className="animate-float-card-3 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 hover:scale-[1.035] hover:border-emerald-500 transition-all duration-[220ms] ease-out ml-6"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {/* Mini SVG Progress Ring */}
+                    {/* Mini SVG Progress Ring with Stroke Drawing Animation & Count-up */}
                     <div className="relative w-9 h-9 flex items-center justify-center shrink-0">
                       <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                         <circle cx="18" cy="18" r="14" fill="none" className="stroke-slate-200 dark:stroke-slate-700" strokeWidth="3.5" />
-                        <circle cx="18" cy="18" r="14" fill="none" className="stroke-emerald-500" strokeWidth="3.5" strokeDasharray="88" strokeDashoffset="20" strokeLinecap="round" />
+                        <circle
+                          cx="18"
+                          cy="18"
+                          r="14"
+                          fill="none"
+                          className="stroke-emerald-500"
+                          strokeWidth="3.5"
+                          strokeDasharray="88"
+                          strokeDashoffset={cardsMounted ? 19.36 : 88}
+                          style={{
+                            transition: 'stroke-dashoffset 1.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                          }}
+                          strokeLinecap="round"
+                        />
                       </svg>
-                      <span className="absolute text-[9px] font-black text-[color:var(--ink)]">78%</span>
+                      <span className="absolute text-[9px] font-black text-[color:var(--ink)] tabular-nums">
+                        {retirementProgress}%
+                      </span>
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-[color:var(--ink)]">Retirement Independence</h4>
                       <p className="text-[10px] text-[color:var(--ink-muted)]">$1.18M of $1.5M Goal Funded</p>
                     </div>
                   </div>
-                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-1">
                     Calculate →
                   </span>
                 </div>
@@ -531,15 +604,15 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 key={tool.id}
                 onClick={() => onSelectTool(tool)}
                 style={{ animationDelay: `${idx * 80}ms` }}
-                className="animate-fade-in-up group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/60 hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-950/30"
+                className="animate-fade-in-up group cursor-pointer rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-5 transition-all duration-[220ms] ease-out hover:-translate-y-[7px] hover:scale-[1.015] hover:border-emerald-500/60 hover:shadow-xl hover:shadow-emerald-500/15 dark:hover:shadow-emerald-950/40"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/15 group-hover:text-emerald-600 transition-all duration-300">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/15 group-hover:text-emerald-600 transition-all duration-[220ms] ease-out">
                     {getIcon(tool.icon, 23)}
                   </div>
                   <div className="flex items-center gap-1.5">
                     {tool.popular && (
-                      <span className="rounded-full bg-gradient-to-r from-emerald-500/15 via-teal-500/25 to-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 animate-pulse">
+                      <span className="animate-badge-shimmer rounded-full bg-gradient-to-r from-emerald-500/15 via-teal-500/30 to-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 shadow-xs">
                         Popular
                       </span>
                     )}
@@ -549,22 +622,22 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                         e.stopPropagation();
                         toggleBookmark(tool.id);
                       }}
-                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-amber-500 transition-colors cursor-pointer"
+                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-amber-500 hover:scale-110 transition-all cursor-pointer"
                       aria-label="Favorite calculator"
                     >
-                      <Star className={`h-4 w-4 transition-transform active:scale-125 duration-150 ${bookmarked ? 'fill-amber-400 text-amber-400' : ''}`} />
+                      <Star className={`h-4 w-4 transition-transform active:scale-125 duration-150 ${bookmarked ? 'fill-amber-400 text-amber-400 scale-105' : ''}`} />
                     </button>
                     <button
                       type="button"
                       onClick={(e) => handleCardShare(e, tool)}
-                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-[color:var(--ink)] cursor-pointer"
+                      className="rounded-lg p-2 text-[color:var(--ink-muted)] hover:bg-[color:var(--surface-elevated)] hover:text-[color:var(--ink)] hover:scale-110 transition-all cursor-pointer"
                       aria-label="Share calculator"
                     >
                       {copied ? <Check className="h-4 w-4 text-[color:var(--success)]" /> : <Share2 className="h-4 w-4" />}
                     </button>
                   </div>
                 </div>
-                <h3 className="mt-5 text-lg font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                <h3 className="mt-5 text-lg font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-[220ms]">
                   {tool.name}
                 </h3>
                 <p className="mt-2 line-clamp-2 text-sm leading-6 text-[color:var(--ink-muted)]">
@@ -573,7 +646,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <div className="mt-5 flex items-center justify-between border-t border-[color:var(--border)] pt-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--ink-muted)]">
                   <span className="capitalize">{tool.category.replace('-', ' ')}</span>
                   <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
-                    Calculate Now <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1.5 transition-transform duration-200" />
+                    Calculate Now <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-[220ms] ease-out" />
                   </span>
                 </div>
               </article>
@@ -599,7 +672,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <button
                 key={card.title}
                 type="button"
-                style={{ animationDelay: `${idx * 60}ms` }}
+                style={{ animationDelay: `${idx * 80}ms` }}
                 onClick={() => {
                   if (target) {
                     onSelectTool(target);
@@ -607,14 +680,14 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     handleCategoryTabClick(card.category);
                   }
                 }}
-                className="animate-fade-in-up group flex items-start gap-4 rounded-2xl border border-[color:var(--border)] border-l-4 border-l-transparent hover:border-l-emerald-500 bg-[color:var(--surface)] p-5 text-left transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[color:var(--border-hover)] cursor-pointer"
+                className="animate-fade-in-up group flex items-start gap-4 rounded-2xl border border-[color:var(--border)] border-l-4 border-l-transparent hover:border-l-emerald-500 bg-[color:var(--surface)] p-5 text-left transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-lg hover:border-[color:var(--border-hover)] cursor-pointer"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 group-hover:text-emerald-600 transition-all duration-[220ms] ease-out">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    <h3 className="font-extrabold text-[color:var(--ink)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-[220ms]">
                       {card.title}
                     </h3>
                   </div>
@@ -622,7 +695,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     {card.description}
                   </p>
                   <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 opacity-80 group-hover:opacity-100 transition-opacity">
-                    Launch Plan <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    Launch Plan <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-[220ms] ease-out" />
                   </span>
                 </div>
               </button>
