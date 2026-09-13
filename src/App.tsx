@@ -187,6 +187,13 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const navigateToTrustPage = (page: TrustPageKey) => {
+    setActiveTool(null);
+    setActivePage(page);
+    window.history.pushState({}, '', `/${page}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSelectCategory = (cat: CategoryFilter) => {
     setSelectedCategory(cat);
     setActiveTool(null);
@@ -301,12 +308,18 @@ export const App: React.FC = () => {
               <PrivacyPolicyView onBack={navigateToHome} onContactClick={navigateToContact} initialTab={legalTab} />
             ) : activePage === 'notFound' ? (
               <NotFoundView onGoHome={navigateToHome} onOpenSearch={() => setIsSearchOpen(true)} onSelectTool={navigateToTool} />
-            ) : activePage !== 'home' && activePage !== 'admin' ? (
+            ) : activePage !== 'home' ? (
               <TrustPageView page={activePage as TrustPageKey} onBack={navigateToHome} />
             ) : activeTool ? (
               <div className="max-w-6xl mx-auto animate-fade-in">{renderTool(activeTool)}</div>
             ) : (
-              <HomeDashboard onSelectTool={navigateToTool} onOpenSearch={() => setIsSearchOpen(true)} selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
+              <HomeDashboard
+                onSelectTool={navigateToTool}
+                onOpenSearch={() => setIsSearchOpen(true)}
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleSelectCategory}
+                onGoTrustPage={navigateToTrustPage}
+              />
             )}
           </main>
         </div>
@@ -314,6 +327,7 @@ export const App: React.FC = () => {
           onGoHome={navigateToHome}
           onGoContact={navigateToContact}
           onGoPrivacy={navigateToPrivacy}
+          onGoTrustPage={navigateToTrustPage}
           onOpenSitemap={() => setIsSitemapModalOpen(true)}
           onOpenAdminLogin={() => {
             if (isAuthenticated) {
