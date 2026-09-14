@@ -140,10 +140,10 @@ export const TOOLS: ToolDef[] = [
   },
   {
     id: 'savings-goal-calculator',
-    name: 'Savings Goal Calculator',
+    name: 'Savings Goal Projector',
     category: 'retirement',
-    description: 'Calculate the exact monthly contribution required to reach a specific financial target or purchase milestone.',
-    keywords: ['savings goal', 'target savings', 'goal calculator', 'reverse annuity', 'milestone planning'],
+    description: 'Project required monthly savings across Savings Accounts, RDs, FDs, Liquid, Ultra-Short, and Arbitrage funds to reach your target financial milestone.',
+    keywords: ['savings goal', 'savings goal projector', 'goal calculator', 'reverse annuity', 'milestone planning', 'recurring deposit', 'fixed deposit', 'liquid fund', 'arbitrage fund', 'pmt calculator'],
     icon: 'Target',
     popular: true,
     isNew: true,

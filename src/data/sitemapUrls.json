@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-13",
+  "updatedAt": "2026-09-14",
   "host": "finance.codepackr.com",
   "baseUrl": "https://finance.codepackr.com",
   "totalUrls": 56,
@@ -183,7 +183,7 @@
     {
       "loc": "https://finance.codepackr.com/savings-goal-calculator",
       "path": "/savings-goal-calculator",
-      "name": "Savings Goal Calculator",
+      "name": "Savings Goal Projector",
       "priority": "0.8",
       "changefreq": "monthly",
       "category": "retirement"

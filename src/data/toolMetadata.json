@@ -803,14 +803,14 @@
     ]
   },
   "savings-goal-calculator": {
-    "name": "Savings Goal Calculator",
-    "title": "Savings Goal Calculator - CodePackr Finance",
-    "description": "Calculate the exact monthly contribution required to reach a specific financial target or purchase milestone.",
+    "name": "Savings Goal Projector",
+    "title": "Savings Goal Projector - CodePackr Finance",
+    "description": "Project required monthly savings across Savings Accounts, RDs, FDs, Liquid, Ultra-Short, and Arbitrage funds to reach your target financial milestone.",
     "canonicalPath": "/savings-goal-calculator",
     "canonicalUrl": "https://finance.codepackr.com/savings-goal-calculator",
     "category": "retirement",
     "features": [
-      "Fast, responsive browser calculator for Savings Goal Calculator with intuitive controls.",
+      "Fast, responsive browser calculator for Savings Goal Projector with intuitive controls.",
       "Modern UI optimized for dark and light themes.",
       "Runs offline and locally without sending telemetry on your inputs.",
       "Instant results with convenient one-click copying.",
@@ -823,19 +823,19 @@
     ],
     "faqs": [
       {
-        "question": "Is my data or code sent to an external server when using Savings Goal Calculator?",
-        "answer": "No. All operations in Savings Goal Calculator execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
+        "question": "Is my data or code sent to an external server when using Savings Goal Projector?",
+        "answer": "No. All operations in Savings Goal Projector execute 100% client-side in your web browser. Your source code, tokens, queries, and files never leave your computer or get transmitted to any remote server."
       },
       {
-        "question": "Can I use Savings Goal Calculator offline without an internet connection?",
-        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Savings Goal Calculator offline."
+        "question": "Can I use Savings Goal Projector offline without an internet connection?",
+        "answer": "Yes. CodePackr Finance is engineered as a Progressive Web App (PWA) with service-worker caching. Once loaded in your browser, you can continue using Savings Goal Projector offline."
       },
       {
         "question": "Are there any usage limits, fees, or account registrations required?",
         "answer": "No. All calculators on CodePackr Finance are 100% free to use. There are no daily quotas, paywalls, or account sign-up requirements."
       },
       {
-        "question": "How does Savings Goal Calculator handle large files or sensitive data?",
+        "question": "How does Savings Goal Projector handle large files or sensitive data?",
         "answer": "Because execution happens locally in your browser using modern Web APIs and V8 JavaScript engine optimizations, you get maximum privacy and low latency without network transfer limits."
       }
     ]
