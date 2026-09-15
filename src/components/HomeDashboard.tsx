@@ -31,6 +31,7 @@ import { useBookmarks, shareToolUrl } from '../lib/bookmarks';
 import { useToolGovernance } from '../lib/useToolGovernance';
 import { useAdminAuth } from '../lib/useAdminAuth';
 import { useCurrency } from '../lib/CurrencyContext';
+import { HeroPreviewCards } from './HeroPreviewCards';
 
 interface HomeDashboardProps {
   onSelectTool: (tool: ToolDef, initialPayload?: string) => void;
@@ -446,146 +447,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               </div>
             </div>
 
-            {/* Right Column: Desktop Floating Glassmorphic Preview Cards (Strictly hidden on mobile & tablets <1024px) */}
-            <div className="hero-floating-cards hidden lg:flex lg:col-span-5 flex-col gap-4 relative">
-              
-              {/* Floating Card 1: Mini EMI Payment Schedule */}
-              <div 
-                onClick={() => {
-                  const loan = visibleTools.find(t => t.id === 'loan-calculator');
-                  if (loan) onSelectTool(loan);
-                }}
-                className="animate-float-card-1 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 hover:scale-[1.035] hover:border-emerald-500 transition-all duration-[220ms] ease-out ml-4"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                      <Landmark className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[color:var(--ink)]">Home Loan EMI</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.loanSub}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                    {previewData.loanEmi}
-                  </span>
-                </div>
-                {/* Visual Principal vs Interest Bar with Entrance Animation */}
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex mb-2">
-                  <div 
-                    className="bg-emerald-500 h-full animate-fill-principal" 
-                    style={{ width: previewData.principalBar }}
-                    title={`Principal: ${previewData.principalBar}`} 
-                  />
-                  <div 
-                    className="bg-amber-400 h-full animate-fill-interest" 
-                    style={{ width: previewData.interestBar }}
-                    title={`Interest: ${previewData.interestBar}`} 
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
-                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {previewData.principalBar} Principal</span>
-                  <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> {previewData.interestBar} Interest</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
-                    Open →
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating Card 2: Growing Investment SIP Chart */}
-              <div 
-                onClick={() => {
-                  const sip = visibleTools.find(t => t.id === 'sip-calculator');
-                  if (sip) onSelectTool(sip);
-                }}
-                className="animate-float-card-2 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-teal-500/25 shadow-xl hover:shadow-2xl hover:shadow-teal-500/20 hover:scale-[1.035] hover:border-teal-500 transition-all duration-[220ms] ease-out mr-2"
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600 dark:text-teal-400">
-                      <TrendingUp className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[color:var(--ink)]">SIP Wealth Growth</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.sipSub}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-extrabold text-teal-600 dark:text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">
-                    {previewData.sipGain}
-                  </span>
-                </div>
-                {/* Upward Compounding Curve Sparkline SVG with Drawing Transition */}
-                <div className="h-10 w-full mb-1">
-                  <svg className="w-full h-full text-teal-500" viewBox="0 0 200 40" fill="none" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="sipGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="currentColor" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M0 38 Q 60 36, 110 26 T 200 4"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      className="animate-draw-line"
-                    />
-                    <path
-                      d="M0 38 Q 60 36, 110 26 T 200 4 L 200 40 L 0 40 Z"
-                      fill="url(#sipGrad)"
-                      className="animate-fade-chart-area"
-                    />
-                  </svg>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-[color:var(--ink-muted)]">
-                  <span>Future Corpus: <strong className="text-[color:var(--ink)]">{previewData.sipCorpus}</strong></span>
-                  <span className="text-teal-600 dark:text-teal-400 font-bold group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-0.5">
-                    Open →
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating Card 3: Financial Goal Progress Ring */}
-              <div 
-                onClick={() => {
-                  const ret = visibleTools.find(t => t.id === 'retirement-calculator' || t.id === 'financial-planner');
-                  if (ret) onSelectTool(ret);
-                }}
-                className="animate-float-card-3 group cursor-pointer p-4 rounded-2xl bg-[color:var(--surface)]/90 dark:bg-[color:var(--surface)]/80 backdrop-blur-md border border-emerald-500/25 shadow-xl hover:shadow-2xl hover:shadow-emerald-500/20 hover:scale-[1.035] hover:border-emerald-500 transition-all duration-[220ms] ease-out ml-6"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {/* Mini SVG Progress Ring with Stroke Drawing Animation & Count-up */}
-                    <div className="relative w-9 h-9 flex items-center justify-center shrink-0">
-                      <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="14" fill="none" className="stroke-slate-200 dark:stroke-slate-700" strokeWidth="3.5" />
-                        <circle
-                          cx="18"
-                          cy="18"
-                          r="14"
-                          fill="none"
-                          className="stroke-emerald-500 animate-fill-ring"
-                          strokeWidth="3.5"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      <span className="absolute text-[9px] font-black text-[color:var(--ink)] tabular-nums">
-                        {retirementProgress}%
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[color:var(--ink)]">Retirement Independence</h4>
-                      <p className="text-[10px] text-[color:var(--ink-muted)]">{previewData.retSub}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform duration-200 flex items-center gap-1">
-                    Calculate →
-                  </span>
-                </div>
-              </div>
-
-            </div>
+            {/* Right Column: Desktop Floating Glassmorphic Preview Cards (Rotating Pool, configurable 2 or 3 slots) */}
+            <HeroPreviewCards onSelectTool={onSelectTool} visibleSlots={3} />
 
           </div>
         </div>

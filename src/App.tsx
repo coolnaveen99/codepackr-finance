@@ -57,6 +57,7 @@ import { resolveCurrentRoute, getToolPath, SpecialPage } from './lib/urls';
 import { updateDocumentMetadata } from './lib/seo';
 import { CurrencyProvider } from './lib/CurrencyContext';
 import { safeLocalStorage } from './lib/storage';
+import { NavEntry, NavigationProvider } from './lib/NavigationContext';
 import { Lock } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -80,6 +81,7 @@ export const App: React.FC = () => {
     return 'privacy';
   });
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>(() => (initialRoute.category as CategoryFilter) || 'all');
+  const [navStack, setNavStack] = useState<NavEntry[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSitemapModalOpen, setIsSitemapModalOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
@@ -157,14 +159,64 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const navigateToTool = (tool: ToolDef) => {
+  const getCurrentEntry = (): NavEntry => {
+    if (activeTool) {
+      return { kind: 'tool', toolId: activeTool.id };
+    }
+    if (activePage === 'contact') {
+      return { kind: 'page', page: 'contact' };
+    }
+    if (activePage === 'privacy') {
+      return { kind: 'page', page: 'privacy', tab: legalTab };
+    }
+    if (activePage === 'admin') {
+      return { kind: 'page', page: 'admin' };
+    }
+    if (activePage && activePage !== 'home' && activePage !== 'notFound') {
+      return { kind: 'page', page: activePage };
+    }
+    if (selectedCategory && selectedCategory !== 'all') {
+      return { kind: 'category', category: selectedCategory };
+    }
+    return { kind: 'home' };
+  };
+
+  const pushToHistory = (fromEntry?: NavEntry) => {
+    const current = fromEntry || getCurrentEntry();
+    setNavStack((prev) => {
+      const last = prev[prev.length - 1];
+      if (
+        last &&
+        last.kind === current.kind &&
+        last.toolId === current.toolId &&
+        last.category === current.category &&
+        last.page === current.page &&
+        last.tab === current.tab
+      ) {
+        return prev;
+      }
+      return [...prev.slice(-29), current];
+    });
+  };
+
+  const navigateToTool = (tool: ToolDef, options?: { pushHistory?: boolean } | string) => {
+    const shouldPush = typeof options === 'object' && options !== null ? options.pushHistory !== false : true;
+    if (shouldPush) {
+      pushToHistory();
+    }
     setActiveTool(tool);
     setActivePage('home');
     window.history.pushState({}, '', getToolPath(tool));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToHome = () => {
+  const navigateToHome = (options?: { pushHistory?: boolean } | React.MouseEvent | unknown) => {
+    const shouldPush = typeof options === 'object' && options !== null && 'pushHistory' in options
+      ? (options as { pushHistory?: boolean }).pushHistory !== false
+      : true;
+    if (shouldPush) {
+      pushToHistory();
+    }
     setActiveTool(null);
     setActivePage('home');
     setSelectedCategory('all');
@@ -172,14 +224,20 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToContact = () => {
+  const navigateToContact = (options?: { pushHistory?: boolean }) => {
+    if (options?.pushHistory !== false) {
+      pushToHistory();
+    }
     setActiveTool(null);
     setActivePage('contact');
     window.history.pushState({}, '', '/contact');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToPrivacy = (tab: 'privacy' | 'terms' = 'privacy') => {
+  const navigateToPrivacy = (tab: 'privacy' | 'terms' = 'privacy', options?: { pushHistory?: boolean }) => {
+    if (options?.pushHistory !== false) {
+      pushToHistory();
+    }
     setLegalTab(tab);
     setActiveTool(null);
     setActivePage('privacy');
@@ -187,14 +245,20 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToTrustPage = (page: TrustPageKey) => {
+  const navigateToTrustPage = (page: TrustPageKey, options?: { pushHistory?: boolean }) => {
+    if (options?.pushHistory !== false) {
+      pushToHistory();
+    }
     setActiveTool(null);
     setActivePage(page);
     window.history.pushState({}, '', `/${page}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSelectCategory = (cat: CategoryFilter) => {
+  const handleSelectCategory = (cat: CategoryFilter, options?: { pushHistory?: boolean }) => {
+    if (options?.pushHistory !== false) {
+      pushToHistory();
+    }
     setSelectedCategory(cat);
     setActiveTool(null);
     setActivePage('home');
@@ -210,6 +274,60 @@ export const App: React.FC = () => {
     }, 60);
   };
 
+  const handleBack = () => {
+    if (navStack.length === 0) {
+      navigateToHome({ pushHistory: false });
+      return;
+    }
+
+    const previous = navStack[navStack.length - 1];
+    setNavStack((prev) => prev.slice(0, -1));
+
+    if (previous.kind === 'tool' && previous.toolId) {
+      const foundTool = TOOLS.find((t) => t.id === previous.toolId);
+      if (foundTool) {
+        setActiveTool(foundTool);
+        setActivePage('home');
+        window.history.pushState({}, '', getToolPath(foundTool));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+    } else if (previous.kind === 'category' && previous.category) {
+      setSelectedCategory(previous.category as CategoryFilter);
+      setActiveTool(null);
+      setActivePage('home');
+      window.history.pushState(
+        {},
+        '',
+        previous.category !== 'all' && previous.category !== 'bookmarks' ? `/?cat=${previous.category}` : '/'
+      );
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    } else if (previous.kind === 'page' && previous.page) {
+      setActiveTool(null);
+      if (previous.page === 'privacy') {
+        const t = previous.tab || 'privacy';
+        setLegalTab(t);
+        setActivePage('privacy');
+        window.history.pushState({}, '', t === 'terms' ? '/terms' : '/privacy');
+      } else if (previous.page === 'contact') {
+        setActivePage('contact');
+        window.history.pushState({}, '', '/contact');
+      } else if (previous.page === 'admin') {
+        setActivePage('admin');
+        window.history.pushState({}, '', '/admin');
+      } else {
+        setActivePage(previous.page as SpecialPage);
+        window.history.pushState({}, '', `/${previous.page}`);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Default to home
+    navigateToHome({ pushHistory: false });
+  };
+
   const renderTool = (tool: ToolDef) => {
     const gov = getToolStatus(tool.id);
     const isHiddenTool = gov.status === 'hidden' || gov.visibility === 'admin_only';
@@ -219,7 +337,7 @@ export const App: React.FC = () => {
           <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)]"><Lock className="w-8 h-8" /></div>
           <h2 className="text-2xl font-bold text-[color:var(--ink)]">Tool Unavailable</h2>
           <p className="text-sm text-[color:var(--ink-muted)]">This calculator is currently unlisted or under review.</p>
-          <button onClick={navigateToHome} className="px-6 py-2.5 rounded-xl font-bold bg-[color:var(--brand)] text-white cursor-pointer">Browse Calculators</button>
+          <button onClick={() => navigateToHome()} className="px-6 py-2.5 rounded-xl font-bold bg-[color:var(--brand)] text-white cursor-pointer">Browse Calculators</button>
         </div>
       );
     }
@@ -267,78 +385,88 @@ export const App: React.FC = () => {
     return <div className="space-y-4">{content}</div>;
   };
 
+  const navContextValue = {
+    navStack,
+    onBack: navStack.length > 0 ? handleBack : undefined,
+    onBackToHome: navigateToHome,
+    navigateToTool,
+    navigateToHome,
+  };
+
   return (
     <CurrencyProvider>
-      <div className="min-h-screen flex flex-col font-sans selection:bg-[color:var(--brand)] selection:text-white bg-[color:var(--bg)] text-[color:var(--ink)]">
-        <Navbar
-          theme={theme}
-          onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-          onOpenSearch={() => setIsSearchOpen(true)}
-          selectedCategory={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-          onGoHome={navigateToHome}
-          onGoContact={navigateToContact}
-          isContactActive={activePage === 'contact'}
-          onGoBookmarks={() => handleSelectCategory('bookmarks')}
-          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
-          isAdmin={isAuthenticated}
-          onGoAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }}
-        />
-        <GlobalBanner />
-        <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
-          <Sidebar
-            isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
-            isCollapsed={isSidebarCollapsed}
-            onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
+      <NavigationProvider value={navContextValue}>
+        <div className="min-h-screen flex flex-col font-sans selection:bg-[color:var(--brand)] selection:text-white bg-[color:var(--bg)] text-[color:var(--ink)]">
+          <Navbar
+            theme={theme}
+            onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+            onOpenSearch={() => setIsSearchOpen(true)}
             selectedCategory={selectedCategory}
-            onSelectCategory={(cat) => { handleSelectCategory(cat); setIsSidebarOpen(false); }}
+            onSelectCategory={handleSelectCategory}
             onGoHome={navigateToHome}
-            onGoBookmarks={() => { handleSelectCategory('bookmarks'); setIsSidebarOpen(false); }}
             onGoContact={navigateToContact}
-            onGoPrivacy={() => navigateToPrivacy('privacy')}
-            onGoTerms={() => navigateToPrivacy('terms')}
+            isContactActive={activePage === 'contact'}
+            onGoBookmarks={() => handleSelectCategory('bookmarks')}
+            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+            isAdmin={isAuthenticated}
+            onGoAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }}
           />
-          <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-8 lg:py-10">
-            {activePage === 'admin' ? (
-              <AdminPortal onBack={navigateToHome} />
-            ) : activePage === 'contact' ? (
-              <ContactView onBack={navigateToHome} />
-            ) : activePage === 'privacy' ? (
-              <PrivacyPolicyView onBack={navigateToHome} onContactClick={navigateToContact} initialTab={legalTab} />
-            ) : activePage === 'notFound' ? (
-              <NotFoundView onGoHome={navigateToHome} onOpenSearch={() => setIsSearchOpen(true)} onSelectTool={navigateToTool} />
-            ) : activePage !== 'home' ? (
-              <TrustPageView page={activePage as TrustPageKey} onBack={navigateToHome} />
-            ) : activeTool ? (
-              <div className="max-w-6xl mx-auto animate-fade-in">{renderTool(activeTool)}</div>
-            ) : (
-              <HomeDashboard
-                onSelectTool={navigateToTool}
-                onOpenSearch={() => setIsSearchOpen(true)}
-                selectedCategory={selectedCategory}
-                onSelectCategory={handleSelectCategory}
-                onGoTrustPage={navigateToTrustPage}
-              />
-            )}
-          </main>
+          <GlobalBanner />
+          <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
+            <Sidebar
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              isCollapsed={isSidebarCollapsed}
+              onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
+              selectedCategory={selectedCategory}
+              onSelectCategory={(cat) => { handleSelectCategory(cat); setIsSidebarOpen(false); }}
+              onGoHome={navigateToHome}
+              onGoBookmarks={() => { handleSelectCategory('bookmarks'); setIsSidebarOpen(false); }}
+              onGoContact={navigateToContact}
+              onGoPrivacy={() => navigateToPrivacy('privacy')}
+              onGoTerms={() => navigateToPrivacy('terms')}
+            />
+            <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-8 lg:py-10">
+              {activePage === 'admin' ? (
+                <AdminPortal onBack={navStack.length > 0 ? handleBack : navigateToHome} />
+              ) : activePage === 'contact' ? (
+                <ContactView onBack={navStack.length > 0 ? handleBack : navigateToHome} />
+              ) : activePage === 'privacy' ? (
+                <PrivacyPolicyView onBack={navStack.length > 0 ? handleBack : navigateToHome} onContactClick={navigateToContact} initialTab={legalTab} />
+              ) : activePage === 'notFound' ? (
+                <NotFoundView onGoHome={navigateToHome} onOpenSearch={() => setIsSearchOpen(true)} onSelectTool={navigateToTool} />
+              ) : activePage !== 'home' ? (
+                <TrustPageView page={activePage as TrustPageKey} onBack={navStack.length > 0 ? handleBack : navigateToHome} />
+              ) : activeTool ? (
+                <div className="max-w-6xl mx-auto animate-fade-in">{renderTool(activeTool)}</div>
+              ) : (
+                <HomeDashboard
+                  onSelectTool={navigateToTool}
+                  onOpenSearch={() => setIsSearchOpen(true)}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={handleSelectCategory}
+                  onGoTrustPage={navigateToTrustPage}
+                />
+              )}
+            </main>
+          </div>
+          <Footer
+            onGoHome={navigateToHome}
+            onGoContact={navigateToContact}
+            onGoPrivacy={navigateToPrivacy}
+            onGoTrustPage={navigateToTrustPage}
+            onOpenSitemap={() => setIsSitemapModalOpen(true)}
+            onOpenAdminLogin={() => {
+              if (isAuthenticated) {
+                setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin');
+              } else setIsAdminLoginOpen(true);
+            }}
+          />
+          <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onSelectTool={navigateToTool} />
+          <SitemapModal isOpen={isSitemapModalOpen} onClose={() => setIsSitemapModalOpen(false)} onSelectTool={navigateToTool} onNavigateAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
+          <AdminLoginModal isOpen={isAdminLoginOpen} onClose={() => setIsAdminLoginOpen(false)} onSuccess={() => { setIsAdminLoginOpen(false); setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
         </div>
-        <Footer
-          onGoHome={navigateToHome}
-          onGoContact={navigateToContact}
-          onGoPrivacy={navigateToPrivacy}
-          onGoTrustPage={navigateToTrustPage}
-          onOpenSitemap={() => setIsSitemapModalOpen(true)}
-          onOpenAdminLogin={() => {
-            if (isAuthenticated) {
-              setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin');
-            } else setIsAdminLoginOpen(true);
-          }}
-        />
-        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onSelectTool={navigateToTool} />
-        <SitemapModal isOpen={isSitemapModalOpen} onClose={() => setIsSitemapModalOpen(false)} onSelectTool={navigateToTool} onNavigateAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
-        <AdminLoginModal isOpen={isAdminLoginOpen} onClose={() => setIsAdminLoginOpen(false)} onSuccess={() => { setIsAdminLoginOpen(false); setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
-      </div>
+      </NavigationProvider>
     </CurrencyProvider>
   );
 };
