@@ -65,9 +65,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   // Shared styles WITHOUT display utilities (avoid Tailwind conflict)
-  // Option D — Dual-Tone Gradient Pill (emerald → teal)
+  // CodePackr (tools) brand blue dual-tone gradient — matches www.codepackr.com theme
   const devPillBase =
-    'items-center gap-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-0 shadow-sm hover:from-emerald-600 hover:to-teal-600 transition-all shrink-0 cursor-pointer group';
+    'items-center gap-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-600 to-sky-500 text-white border-0 shadow-sm hover:from-blue-700 hover:to-sky-600 transition-all shrink-0 cursor-pointer group';
 
   return (
     <header id="main-header" className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors border-[color:var(--border)] bg-[color:var(--surface)]/85">
