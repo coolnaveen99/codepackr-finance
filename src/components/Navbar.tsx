@@ -18,6 +18,20 @@ interface NavbarProps {
   onGoAdmin?: () => void;
 }
 
+/** Simple chart bars icon for the Finance brand badge (matches favicon family). */
+const FinanceBadgeIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <rect x="3" y="14" width="4" height="7" rx="1" />
+    <rect x="10" y="9" width="4" height="12" rx="1" />
+    <rect x="17" y="4" width="4" height="17" rx="1" />
+  </svg>
+);
+
 export const Navbar: React.FC<NavbarProps> = ({
   theme,
   onToggleTheme,
@@ -50,14 +64,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  const desktopLogoSrc = darkMode
-    ? '/codepackr-finance-logo-dark.svg'
-    : '/codepackr-finance-logo.svg';
-
-  const mobileIconSrc = darkMode
-    ? '/codepackr-finance-icon-dark.svg'
-    : '/codepackr-finance-icon.svg';
-
   // Shared styles WITHOUT display utilities (avoid Tailwind conflict)
   const devPillBase =
     'items-center gap-1.5 rounded-full text-xs font-semibold border border-indigo-500/30 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-500/50 transition-all shrink-0 shadow-xs cursor-pointer group';
@@ -80,6 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
+            {/* Enterprise-style brand: badge + CodePackr + FINANCE (same pattern as codepackr.com) */}
             <a
               href="/"
               onClick={(e) => {
@@ -88,23 +95,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onGoHome();
                 }
               }}
-              className="flex items-center gap-2 cursor-pointer focus:outline-none rounded-xl transition-opacity hover:opacity-90 min-w-0 shrink"
+              className="flex items-center gap-2 group text-left cursor-pointer focus:outline-none min-w-0 shrink"
               aria-label="CodePackr Finance home"
             >
-              {/* Desktop: full lockup — enlarged for readability */}
-              <img
-                src={desktopLogoSrc}
-                alt="CodePackr Finance"
-                className="hidden sm:block h-11 md:h-12 w-auto max-w-[220px] md:max-w-[260px] object-contain object-left"
-              />
-              {/* Mobile: mark + Finance label — larger icon */}
-              <div className="flex sm:hidden items-center gap-2.5 min-w-0">
-                <img
-                  src={mobileIconSrc}
-                  alt=""
-                  className="h-10 w-10 object-contain shrink-0"
-                />
-                <span className="font-bold text-[15px] leading-tight tracking-tight text-[color:var(--ink)] truncate">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white shadow-sm bg-[color:var(--brand)] transition-transform group-hover:scale-105 shrink-0">
+                <FinanceBadgeIcon className="w-5 h-5" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="font-bold text-base sm:text-lg leading-tight tracking-tight text-[color:var(--ink)] truncate">
+                  CodePackr
+                </span>
+                <span className="hidden sm:block text-[10px] font-mono font-medium tracking-wider text-emerald-600 dark:text-emerald-400 uppercase">
                   Finance
                 </span>
               </div>
