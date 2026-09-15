@@ -131,6 +131,9 @@ You are building and maintaining **Codepackr Finance** (`finance.codepackr.com`)
   - Use CSS theme variables: `var(--bg)`, `var(--surface)`, `var(--ink)`, `var(--muted)`, `var(--brand)`, `var(--line)`.
   - Ensure perfect contrast in both Light and Dark modes.
   - Use mathematical border radii: outer container `rounded-2xl` (16px), inner inputs/buttons `rounded-xl` (12px).
+- **DO maintain Hero Floating Slides (`HeroPreviewCards.tsx`)**:
+  - Keep active vertical floating animations (`animate-float-card-1`, `animate-float-card-2`, `animate-float-card-3`) with staggered delays and hover pause.
+  - Mandate visual charts for ALL ads: Sparkline compounding curves (`MiniSparkline`), multi-segment bars (`MiniSegmentedBar`), or radial progress rings (`MiniProgressRing`). Plain text cards are strictly forbidden. Refer to `.github/skills/hero-floating-slides.md`.
 - **DO import all standard icons from `lucide-react`**:
   - For social and brand icons, use `src/components/BrandIcons.tsx` (e.g. `GithubIcon`, `XTwitterIcon`, `LinkedinIcon`, `YoutubeIcon`).
 - **DO include user conveniences**:
@@ -170,7 +173,8 @@ When adding a new tool to Codepackr Finance, complete this sequential checklist:
 1. [ ] **Define Tool in `src/data/tools.ts`**: Add unique `id`, `name`, `category`, `description`, `keywords`, and `icon`.
 2. [ ] **Implement Component**: Create the tool component in `src/components/tools/`.
 3. [ ] **Wire into Category View & Dashboard**: Update `src/components/HomeDashboard.tsx` or category views to render the component when active.
-4. [ ] **Register Routing in `src/lib/urls.ts`**: Add slug to `SLUG_TO_TOOL_ID` and `TOOL_ID_TO_CANONICAL_SLUG`.
-5. [ ] **Add Metadata in `scripts/generate-metadata.mjs`**: Include tool name, description, category, and features for prerendering.
-6. [ ] **Run Full Build & Sync**: Run `npm run build` (which automatically regenerates `sitemap.xml`, `toolMetadata.json`, `codepackr_social_media_promotions.csv`, prerenders HTML, and dispatches IndexNow pings).
-7. [ ] **Verify with `lint_applet` and `compile_applet`**: Ensure zero type errors and a clean build.
+4. [ ] **Add Ad to Hero Floating Stack**: Add tool entry with a visual chart to `adPool` in `src/components/HeroPreviewCards.tsx`.
+5. [ ] **Register Routing in `src/lib/urls.ts`**: Add slug to `SLUG_TO_TOOL_ID` and `TOOL_ID_TO_CANONICAL_SLUG`.
+6. [ ] **Add Metadata in `scripts/generate-metadata.mjs`**: Include tool name, description, category, and features for prerendering.
+7. [ ] **Run Full Build & Sync**: Run `npm run build` (which automatically regenerates `sitemap.xml`, `toolMetadata.json`, `codepackr_social_media_promotions.csv`, prerenders HTML, and dispatches IndexNow pings).
+8. [ ] **Verify with `lint_applet` and `compile_applet`**: Ensure zero type errors and a clean build.

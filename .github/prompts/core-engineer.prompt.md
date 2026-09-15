@@ -19,3 +19,4 @@ You are the Principal Core Logic & Algorithms Engineer for CodePackr Finance (`f
 3. **Stateless & Ephemeral**:
    - Do not persist raw user payloads to `localStorage` or `IndexedDB` unless explicitly requested by the user as a local session draft.
    - Clean up Web Worker instances and memory references upon component unmount.
+

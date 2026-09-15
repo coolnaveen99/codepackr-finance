@@ -47,6 +47,10 @@ This skill specifies the standard operating procedure (SOP) and mandatory file s
 - `src/components/tools/<Category>View.tsx`: Add the tool tab and render the new component.
 - `src/App.tsx`: Ensure route state matches when `activeTool` is selected or rendered directly.
 
+### Step 3b: Add Preview Ad to Hero Floating Stack
+**Target File**: `src/components/HeroPreviewCards.tsx`
+- Add a visual preview card to `adPool` featuring an authentic mini chart (`MiniSparkline`, `MiniSegmentedBar`, or `MiniProgressRing`). Plain text cards are strictly forbidden. Refer to `.github/skills/hero-floating-slides.md`.
+
 ### Step 4: Register URL Slugs & Aliases
 **Target File**: `src/lib/urls.ts`
 - Map tool ID to canonical slug:
@@ -101,3 +105,4 @@ This automatically:
 npm run lint
 ```
 Verify 0 TypeScript errors and clean build output.
+
