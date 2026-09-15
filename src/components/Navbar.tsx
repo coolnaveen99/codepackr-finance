@@ -91,18 +91,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 cursor-pointer focus:outline-none rounded-xl transition-opacity hover:opacity-90 min-w-0 shrink"
               aria-label="CodePackr Finance home"
             >
+              {/* Desktop: full lockup — enlarged for readability */}
               <img
                 src={desktopLogoSrc}
                 alt="CodePackr Finance"
-                className="hidden sm:block h-9 w-auto max-w-[180px] object-contain"
+                className="hidden sm:block h-11 md:h-12 w-auto max-w-[220px] md:max-w-[260px] object-contain object-left"
               />
-              <div className="flex sm:hidden items-center gap-2 min-w-0">
+              {/* Mobile: mark + Finance label — larger icon */}
+              <div className="flex sm:hidden items-center gap-2.5 min-w-0">
                 <img
                   src={mobileIconSrc}
                   alt=""
-                  className="h-8 w-8 object-contain shrink-0"
+                  className="h-10 w-10 object-contain shrink-0"
                 />
-                <span className="font-bold text-sm leading-tight tracking-tight text-[color:var(--ink)] truncate">
+                <span className="font-bold text-[15px] leading-tight tracking-tight text-[color:var(--ink)] truncate">
                   Finance
                 </span>
               </div>
