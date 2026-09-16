@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import {
   CurrencyDefinition,
   CURRENCIES,
@@ -8,6 +8,18 @@ import {
   formatCurrencyAmount,
 } from './currency';
 import { safeLocalStorage } from './storage';
+import {
+  type FxStatus,
+  type FxSnapshot,
+  applyRatesToCurrencies,
+  fetchFrankfurterRates,
+  getStaticFxSnapshot,
+  isCacheFresh,
+  isLiveFxEnabledDefault,
+  readCachedFx,
+  setLiveFxEnabled as persistLiveFxEnabled,
+  formatFxDate,
+} from './fxRates';
 
 export type ConversionMode = 'face-value' | 'fx-convert';
 
@@ -21,6 +33,13 @@ interface CurrencyContextType {
   symbol: string;
   popularCurrencies: CurrencyDefinition[];
   allCurrencies: CurrencyDefinition[];
+  /** Live FX */
+  liveFxEnabled: boolean;
+  setLiveFxEnabled: (enabled: boolean) => void;
+  fxStatus: FxStatus;
+  fxDateLabel: string;
+  fxSnapshot: FxSnapshot;
+  refreshFxRates: () => Promise<void>;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | null>(null);
@@ -48,7 +67,6 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   const [conversionMode, setConversionModeState] = useState<ConversionMode>(() => {
-    // Clear legacy fx-convert mode to ensure calculator values are never mutated by exchange rates
     const saved = safeLocalStorage.getItem(STORAGE_KEY_MODE);
     if (saved === 'fx-convert') {
       safeLocalStorage.removeItem(STORAGE_KEY_MODE);
@@ -56,14 +74,32 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return 'face-value';
   });
 
-  const currency = getCurrency(currencyCode);
+  const [liveFxEnabled, setLiveFxEnabledState] = useState<boolean>(() => isLiveFxEnabledDefault());
+  const [fxStatus, setFxStatus] = useState<FxStatus>('idle');
+  const [fxSnapshot, setFxSnapshot] = useState<FxSnapshot>(() => {
+    const cached = readCachedFx();
+    if (cached && isCacheFresh(cached)) return cached;
+    if (cached) return cached;
+    return getStaticFxSnapshot();
+  });
+
+  const catalog = useMemo(() => applyRatesToCurrencies(fxSnapshot, CURRENCIES), [fxSnapshot]);
+
+  const resolveCurrency = useCallback(
+    (code: string): CurrencyDefinition => {
+      const found = catalog.find((c) => c.code.toUpperCase() === code.toUpperCase());
+      return found || catalog[0] || getCurrency(DEFAULT_CURRENCY_CODE);
+    },
+    [catalog]
+  );
+
+  const currency = resolveCurrency(currencyCode);
 
   const setCurrencyCode = (code: string) => {
-    const valid = getCurrency(code);
+    const valid = resolveCurrency(code);
     setCurrencyCodeState(valid.code);
     safeLocalStorage.setItem(STORAGE_KEY_CODE, valid.code);
     if (typeof window !== 'undefined') {
-      // Dispatch a custom storage event so all components react instantly if needed
       window.dispatchEvent(new CustomEvent('codepackr-currency-change', { detail: valid.code }));
     }
   };
@@ -72,6 +108,49 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setConversionModeState(mode);
     safeLocalStorage.setItem(STORAGE_KEY_MODE, mode);
   };
+
+  const refreshFxRates = useCallback(async () => {
+    if (!liveFxEnabled) {
+      setFxSnapshot(getStaticFxSnapshot());
+      setFxStatus('static');
+      return;
+    }
+
+    const cached = readCachedFx();
+    if (cached && isCacheFresh(cached)) {
+      setFxSnapshot(cached);
+      setFxStatus('cached');
+      return;
+    }
+
+    setFxStatus('loading');
+    try {
+      const snap = await fetchFrankfurterRates();
+      setFxSnapshot(snap);
+      setFxStatus('live');
+    } catch {
+      if (cached) {
+        setFxSnapshot(cached);
+        setFxStatus('cached');
+      } else {
+        setFxSnapshot(getStaticFxSnapshot());
+        setFxStatus('static');
+      }
+    }
+  }, [liveFxEnabled]);
+
+  const setLiveFxEnabled = (enabled: boolean) => {
+    setLiveFxEnabledState(enabled);
+    persistLiveFxEnabled(enabled);
+    if (!enabled) {
+      setFxSnapshot(getStaticFxSnapshot());
+      setFxStatus('static');
+    }
+  };
+
+  useEffect(() => {
+    void refreshFxRates();
+  }, [refreshFxRates]);
 
   useEffect(() => {
     const handleCustomChange = (e: Event) => {
@@ -92,7 +171,12 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
-  const popularList = POPULAR_CURRENCIES.map((code) => getCurrency(code));
+  const popularList = POPULAR_CURRENCIES.map((code) => resolveCurrency(code));
+
+  const fxDateLabel =
+    fxStatus === 'static' || fxSnapshot.date === 'static'
+      ? 'static table'
+      : formatFxDate(fxSnapshot.date);
 
   return (
     <CurrencyContext.Provider
@@ -105,7 +189,13 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         formatAmount,
         symbol: currency.symbol,
         popularCurrencies: popularList,
-        allCurrencies: CURRENCIES,
+        allCurrencies: catalog,
+        liveFxEnabled,
+        setLiveFxEnabled,
+        fxStatus,
+        fxDateLabel,
+        fxSnapshot,
+        refreshFxRates,
       }}
     >
       {children}
@@ -117,6 +207,7 @@ export const useCurrency = (): CurrencyContextType => {
   const context = useContext(CurrencyContext);
   if (!context) {
     const defaultCurr = getCurrency(DEFAULT_CURRENCY_CODE);
+    const staticSnap = getStaticFxSnapshot();
     return {
       currency: defaultCurr,
       currencyCode: defaultCurr.code,
@@ -128,6 +219,12 @@ export const useCurrency = (): CurrencyContextType => {
       symbol: defaultCurr.symbol,
       popularCurrencies: POPULAR_CURRENCIES.map(getCurrency),
       allCurrencies: CURRENCIES,
+      liveFxEnabled: false,
+      setLiveFxEnabled: () => {},
+      fxStatus: 'static',
+      fxDateLabel: 'static table',
+      fxSnapshot: staticSnap,
+      refreshFxRates: async () => {},
     };
   }
   return context;
