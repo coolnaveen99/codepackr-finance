@@ -1,199 +1,131 @@
 # CodePackr Finance
 
-CodePackr Finance is a free collection of browser-based financial calculators for loans, mortgages, retirement, budgeting, and investing. It is available at [finance.codepackr.com](https://finance.codepackr.com/).
+[![Live App](https://img.shields.io/badge/Live%20App-finance.codepackr.com-10b981?style=for-the-badge&logo=vercel)](https://finance.codepackr.com)
+[![Parent Hub](https://img.shields.io/badge/Parent%20Hub-codepackr.com-0ea5e9?style=for-the-badge&logo=github)](https://www.codepackr.com)
+[![GitHub Wiki](https://img.shields.io/badge/Docs-GitHub%20Wiki-181717?style=for-the-badge&logo=github)](https://github.com/coolnaveen99/codepackr-finance/wiki)
+[![Copyright](https://img.shields.io/badge/©%202026-All%20Rights%20Reserved-6b7280?style=for-the-badge)](https://finance.codepackr.com)
 
-All calculators run locally in the browser. Your financial inputs are never uploaded to any server.
+**CodePackr Finance** is a free collection of browser-based financial calculators for loans, mortgages, retirement, investing, tax, salary, and business finance.  
+Live at **[finance.codepackr.com](https://finance.codepackr.com)**.
 
----
-
-## Tools
-
-### Financial Calculators
-- Financial Planning & Retirement Calculator
-- Loan & EMI Calculator
-- SIP Calculator
-- Investment Calculator
+All calculators run **100% client-side**. Your financial inputs are never uploaded to any server.
 
 ---
 
-## Features
+## 📚 Documentation Hub
 
-- **100% Client-Side Privacy**: Data stays in your browser; zero payload uploads or backend logging.
-- **Fast Search & Keyboard Navigation**: `Ctrl/Cmd+K` for global tool search and `Ctrl/Cmd+Enter` to run a tool.
-- **Theme Support**: Persistent light and dark modes.
-- **Deep Linking**: Shareable tool URLs with optional `?input=` query parameter.
-- **Offline Capable & Installable**: Full PWA support with service worker caching.
-- **Responsive Layout**: Designed for mobile and desktop screens.
-- **SEO & Social Sharing**: Pre-rendered semantic HTML, Open Graph tags, Twitter Cards, and per-tool JSON-LD Schema.
-- **Instant Search Engine Indexing**: Automated IndexNow pings to Bing & Yandex on every deployment.
-- **Google AdSense Ready**: Configured with official Auto-Ads, publisher meta verification, and live `ads.txt`.
+| Resource | Link |
+|----------|------|
+| **GitHub Wiki** (full docs + calculator directory) | [github.com/coolnaveen99/codepackr-finance/wiki](https://github.com/coolnaveen99/codepackr-finance/wiki) |
+| **Team Guide** | [docs/TEAM_GUIDE.md](docs/TEAM_GUIDE.md) |
+| **Parent Developer Suite** | [www.codepackr.com](https://www.codepackr.com) |
 
 ---
 
-## Getting Started & Local Development
+## 🛠️ Calculators Directory
 
-This project is built using **React 18**, **TypeScript**, and **Vite** with Tailwind CSS.
+### 💳 Loans & Mortgages
+- [EMI Calculator](https://finance.codepackr.com/loan-calculator)
+- [Loan Amortization Calculator](https://finance.codepackr.com/loan-amortization-calculator)
+- [Loan Prepayment Calculator](https://finance.codepackr.com/loan-prepayment-calculator)
+- [Debt-to-Income (DTI) Ratio Calculator](https://finance.codepackr.com/debt-to-income-calculator)
+- [Simple Interest Calculator](https://finance.codepackr.com/simple-interest-calculator)
+- [Mortgage Affordability Calculator](https://finance.codepackr.com/mortgage-affordability-calculator)
+- [Credit Card Payoff Calculator](https://finance.codepackr.com/credit-card-payoff-calculator)
 
-### Prerequisites
-- Node.js 18 or 20+
-- npm (or bun)
+### 📈 Investment & Wealth
+- [SIP Calculator](https://finance.codepackr.com/sip-calculator)
+- [Lumpsum Investment Calculator](https://finance.codepackr.com/lumpsum-calculator)
+- [CAGR Calculator](https://finance.codepackr.com/cagr-calculator)
+- [ROI Calculator](https://finance.codepackr.com/roi-calculator)
+- [Compound Interest Calculator](https://finance.codepackr.com/investment-calculator)
+- [Rule of 72 Calculator](https://finance.codepackr.com/rule-of-72-calculator)
+- [Dividend Yield & DRIP Calculator](https://finance.codepackr.com/dividend-yield-calculator)
 
-### Installation & Run
+### 🏖️ Retirement & Planning
+- [Retirement Corpus Calculator](https://finance.codepackr.com/financial-planner)
+- [Inflation & Purchasing Power Calculator](https://finance.codepackr.com/inflation-calculator)
+- [Future Value Calculator (TVM)](https://finance.codepackr.com/future-value-calculator)
+- [Savings Goal Projector](https://finance.codepackr.com/savings-goal-calculator)
+- [FIRE Calculator](https://finance.codepackr.com/fire-calculator)
+- [EPF Calculator](https://finance.codepackr.com/epf-calculator)
+- [Annuity Calculator](https://finance.codepackr.com/annuity-calculator)
 
-1. Clone or extract the repository:
-   ```bash
-   git clone https://github.com/<your-username>/codepackr.git
-   cd codepackr
-   ```
+### 💼 Tax & Salary
+- [CTC to In-Hand Salary Calculator](https://finance.codepackr.com/ctc-to-in-hand-calculator)
+- [Salary Hike & Increment Calculator](https://finance.codepackr.com/salary-hike-calculator)
+- [Gratuity Calculator](https://finance.codepackr.com/gratuity-calculator)
+- [HRA Exemption Calculator](https://finance.codepackr.com/hra-calculator)
+- [Income Tax Calculator](https://finance.codepackr.com/income-tax-calculator)
+- [GST Calculator](https://finance.codepackr.com/gst-calculator)
+- [Capital Gains Tax Calculator](https://finance.codepackr.com/capital-gains-tax-calculator)
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+### 🏠 Personal Finance
+- [Emergency Fund Calculator](https://finance.codepackr.com/emergency-fund-calculator)
+- [Net Worth Calculator](https://finance.codepackr.com/net-worth-calculator)
+- [Rent vs. Buy Calculator](https://finance.codepackr.com/rent-vs-buy-calculator)
 
-3. Start the local development server:
-   ```bash
-   npm run dev
-   ```
-   Open `http://localhost:3000` (or `http://localhost:5173`) in your browser.
-
-4. Check code quality & TypeScript types:
-   ```bash
-   npm run lint
-   ```
-
-5. Test the production build and pre-rendering locally:
-   ```bash
-   npm run build
-   npm run preview
-   ```
-
-The build command executes:
-1. `scripts/generate-metadata.mjs` — compiles calculator metadata.
-2. `vite build` — bundles client-side assets to `dist/`.
-3. `scripts/prerender.mjs` — generates static HTML pages and updates `sitemap.xml`.
+### 🏢 Business Finance
+- [NPV Calculator](https://finance.codepackr.com/npv-calculator)
+- [IRR Calculator](https://finance.codepackr.com/irr-calculator)
+- [Break-Even Calculator](https://finance.codepackr.com/break-even-calculator)
+- [Business Valuation Calculator](https://finance.codepackr.com/business-valuation-calculator)
+- [DCF Valuation Calculator](https://finance.codepackr.com/dcf-calculator)
+- [WACC Calculator](https://finance.codepackr.com/wacc-calculator)
+- [Startup Valuation Calculator](https://finance.codepackr.com/startup-valuation-calculator)
+- [Burn Rate & Runway Calculator](https://finance.codepackr.com/burn-rate-calculator)
 
 ---
 
-## CI/CD & GitHub Automation Architecture
+## ✨ Features
 
-The repository includes GitHub Actions workflows integrated with Vercel for continuous deployment:
+- **100% Client-Side Privacy** — Data stays in your browser; zero payload uploads or backend logging.
+- **Fast Search & Keyboard Navigation** — `Ctrl/Cmd+K` for global tool search and `Ctrl/Cmd+Enter` to run a tool.
+- **Theme Support** — Persistent light and dark modes.
+- **Deep Linking** — Shareable tool URLs with optional `?input=` query parameter.
+- **Offline Capable & Installable** — Full PWA support with service worker caching.
+- **Responsive Layout** — Designed for mobile and desktop screens.
+- **SEO & Social Sharing** — Pre-rendered semantic HTML, Open Graph tags, Twitter Cards, and per-tool JSON-LD Schema.
+- **Instant Search Engine Indexing** — Automated IndexNow pings to Bing & Yandex on every deployment.
+- **Google AdSense Ready** — Configured with official Auto-Ads, publisher meta verification, and live `ads.txt`.
 
-```text
-                               [ Developer ]
-                                     │
-                 ┌───────────────────┴───────────────────┐
-                 ▼                                       ▼
-       [ Pull Request opened ]                 [ Merge into 'main' ]
-                 │                                       │
-                 ▼                                       ▼
-     ┌───────────────────────┐               ┌───────────────────────┐
-     │ .github/workflows/    │               │  Vercel Git Deploy    │
-     │        ci.yml         │               │ (Auto-deploys to prod │
-     │ • npm ci              │               │  finance.codepackr.com)│
-     │ • npm run lint        │               └───────────┬───────────┘
-     │ • npm run build       │                           │
-     └───────────┬───────────┘              Vercel emits deployment_status: success
-                 │                                       │
-         PR Check Passes                                 ▼
-                 │                           ┌───────────────────────┐
-                 ▼                           │  .github/workflows/   │
-         Vercel Preview Bot                  │  notify-indexnow.yml  │
-         posts preview URL                   │ • Pings IndexNow API  │
-                                             │   (Bing & Yandex)     │
-                                             └───────────────────────┘
+---
 
-                 ── Independent Release Workflow ──
+## 🚀 Development Quickstart
 
-                 [ git tag v1.0.0 && git push origin v1.0.0 ]
-                                     │
-                                     ▼
-                         ┌───────────────────────┐
-                         │  .github/workflows/   │
-                         │      release.yml      │
-                         │ • npm run build       │
-                         │ • Package dist.zip    │
-                         │ • Create GH Release   │
-                         │ • Auto-Changelog      │
-                         └───────────────────────┘
+**Prerequisites:** Node.js 18 or 20+, npm (or bun)
+
+```bash
+git clone https://github.com/coolnaveen99/codepackr-finance.git
+cd codepackr-finance
+npm install
+
+npm run dev          # Local dev server → http://localhost:3000
+npm run lint         # TypeScript typecheck
+npm run build        # Production build + prerender + IndexNow
+npm run sync:wiki    # Generate GitHub Wiki pages into ./wiki
 ```
 
-### Workflows Explained
+---
 
-1. **`ci.yml` (PR Quality Gate)**:
-   - Runs automatically on any pull request targeting `main`.
-   - Runs `npm ci`, `npm run lint`, and `npm run build` to ensure no broken code is merged.
-2. **`notify-indexnow.yml` (Automated Search Indexing)**:
-   - Automatically listens for Vercel's production `deployment_status` success event.
-   - Pings IndexNow with all sitemap URLs within seconds of deployment. Can also be triggered manually via GitHub's *Run workflow* button.
-3. **`release.yml` (Automated Version Packaging)**:
-   - Triggers when a git tag like `v1.0.0` is pushed.
-   - Packages `dist/` into a release zip and publishes an official GitHub Release with auto-generated release notes.
+## 🏗️ CI/CD & Wiki Automation
+
+On push to `main` affecting `docs/**` or `scripts/sync-wiki.mjs`, `.github/workflows/sync-wiki.yml` checks out the wiki repo, runs `node scripts/sync-wiki.mjs wiki`, and commits Home.md, `_Sidebar.md`, `_Footer.md`, and tool pages.
+
+Vercel `ignoreCommand` skips builds when only docs, markdown, CSV, or config change.
 
 ---
 
-## AI-as-Code: Specialized GitHub Agents & Skills
+## 🤖 AI-as-Code
 
-CodePackr Finance employs an **AI-as-Code** architectural pattern in `.github/` to optimize context windows, eliminate token bloat, and enforce strict enterprise quality and privacy standards across AI-assisted development sessions.
-
-```text
-.github/
-├── agents/                           # Agent definitions, allowed skills & strict constraints
-│   ├── ui-architect.yml              # Frontend UI/UX & Enterprise Design System
-│   ├── core-engineer.yml             # Financial calculation engines & client-side performance
-│   └── seo-specialist.yml            # Four-layer metadata, sitemap & promotional datasets
-├── prompts/                          # Version-controlled system prompts referenced by agents
-│   ├── ui-architect.prompt.md
-│   ├── core-engineer.prompt.md
-│   └── seo-specialist.prompt.md
-└── skills/                           # Executable SOPs & guardrails for AI workflows
-    └── add-new-tool.md               # Strict 7-step sequence for adding new financial calculators
-```
-
-### Specialized Agents
-
-| Agent | Specification File | System Prompt | Scope & Strict Constraints |
-|---|---|---|---|
-| **Frontend UI/UX Architect** | `.github/agents/ui-architect.yml` | `.github/prompts/ui-architect.prompt.md` | React 18, Tailwind CSS, Enterprise design tokens (`var(--surface)`, `var(--brand)`), CodeMirror 6 (`CodeEditor.tsx`), WCAG AA contrast, and centralized currency formatting via `useCurrency()`. |
-| **Core Logic & Algorithms** | `.github/agents/core-engineer.yml` | `.github/prompts/core-engineer.prompt.md` | In-browser financial calculation engines (loan/EMI, SIP, retirement, investment growth). Strict zero data leakage mandate: 100% memory execution, non-blocking Web Workers, zero remote API calls. |
-| **SEO, Content & Metadata** | `.github/agents/seo-specialist.yml` | `.github/prompts/seo-specialist.prompt.md` | Four-layer metadata synchronization (`tools.ts`, `seo.ts`, `generate-metadata.mjs`, `sitemap.xml`), URL slug backward-compatibility, automated IndexNow pings, and social media promotion datasets. |
-
-### Tool Integration Skill (`.github/skills/add-new-tool.md`)
-Whenever introducing a new financial calculator, refer to `.github/skills/add-new-tool.md` for the mandatory sequential lifecycle:
-1. **Define Tool**: Register in `src/data/tools.ts`.
-2. **Implement Component**: Build with Enterprise Design System in `src/components/tools/`.
-3. **Wire Views & Routing**: Connect in category views and `src/App.tsx`.
-4. **Register Slugs**: Add canonical slugs and backward-compatible aliases in `src/lib/urls.ts`.
-5. **Add SEO Schemas**: Provide rich features and FAQ structured data in `scripts/generate-metadata.mjs`.
-6. **Build & Auto-Sync**: Run `npm run build` (regenerates sitemaps, prerendered HTML, social CSVs, and pings IndexNow).
-7. **Type Check**: Validate with `npm run lint`.
+See [AGENTS.md](AGENTS.md) and `.github/skills/sync-wiki-and-readme.md` for the Wiki & README synchronization directive and new-tool checklist.
 
 ---
 
-## Deployment Configuration (Vercel)
+## ⚖️ Copyright & Terms
 
-The project is pre-configured for Vercel:
-- **Root Directory**: Project root (`.`)
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Install Command**: `npm install`
-- **Security & Headers (`vercel.json`)**: Configured with strict Content Security Policy (CSP), custom 404 routing, and clean URLs.
+**© 2026 CodePackr Finance. All rights reserved.**
 
----
+**100% client-side guarantee:** All calculations execute in the user's browser. No financial or personal data is transmitted to or stored on CodePackr servers.
 
-## Search Engine Verification & Monetization
-
-- **IndexNow Key**: `bc8b27f46bbcd43f50a45f870843689d.txt`
-- **Bing Webmaster Verification**: Included in `index.html` and `BingSiteAuth.xml`.
-- **Yandex Verification**: Included in `index.html`.
-- **Google AdSense**:
-  - Publisher ID: `pub-7368262160205015`
-  - Auto-Ads script and `<meta name="google-adsense-account">` in `<head>`.
-  - Authorized digital seller records in `public/ads.txt`.
-  - Crawler access enabled for `User-agent: Mediapartners-Google` in `public/robots.txt`.
-
----
-
-## License
-
-Free and open-source financial calculators. Built with privacy in mind.
+Parent suite: [CodePackr](https://www.codepackr.com) · Source: [coolnaveen99/codepackr-finance](https://github.com/coolnaveen99/codepackr-finance)
