@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Moon, Sun, Star, Menu, Shield, Mail, Terminal } from 'lucide-react';
 import { CategoryFilter } from '../types';
 import { useBookmarks } from '../lib/bookmarks';
+import { CurrencySelector } from './CurrencySelector';
 
 interface NavbarProps {
   theme: 'light' | 'dark';
@@ -154,6 +155,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <Search className="w-5 h-5" />
             </button>
+
+            {/* Global currency picker — includes live FX toggle */}
+            <CurrencySelector idPrefix="nav-currency" variant="nav" />
 
             <button
               id="nav-bookmarks-btn"
