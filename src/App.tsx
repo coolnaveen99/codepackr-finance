@@ -50,6 +50,8 @@ import { AnnuityCalculatorView } from './components/tools/AnnuityCalculatorView'
 import { DividendYieldCalculatorView } from './components/tools/DividendYieldCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
+import { BugReportModal } from './components/BugReportModal';
+import { BugReportModalDetail } from './lib/diagnostics';
 import { GlobalBanner } from './components/GlobalBanner';
 import { useToolGovernance } from './lib/useToolGovernance';
 import { useAdminAuth } from './lib/useAdminAuth';
@@ -85,6 +87,8 @@ export const App: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSitemapModalOpen, setIsSitemapModalOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
+  const [isBugReportOpen, setIsBugReportOpen] = useState(false);
+  const [bugReportData, setBugReportData] = useState<BugReportModalDetail | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { getToolStatus, isToolVisible } = useToolGovernance();
@@ -158,6 +162,17 @@ export const App: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    const handleOpenBugReport = (e: Event) => {
+      const customEvent = e as CustomEvent<BugReportModalDetail>;
+      const detail = customEvent.detail;
+      setBugReportData(detail || (activeTool ? { tool: activeTool } : null));
+      setIsBugReportOpen(true);
+    };
+    window.addEventListener('codepackr:open-bug-report', handleOpenBugReport);
+    return () => window.removeEventListener('codepackr:open-bug-report', handleOpenBugReport);
+  }, [activeTool]);
 
   const getCurrentEntry = (): NavEntry => {
     if (activeTool) {
@@ -456,6 +471,10 @@ export const App: React.FC = () => {
             onGoPrivacy={navigateToPrivacy}
             onGoTrustPage={navigateToTrustPage}
             onOpenSitemap={() => setIsSitemapModalOpen(true)}
+            onOpenBugReport={() => {
+              setBugReportData(activeTool ? { tool: activeTool } : null);
+              setIsBugReportOpen(true);
+            }}
             onOpenAdminLogin={() => {
               if (isAuthenticated) {
                 setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin');
@@ -465,6 +484,11 @@ export const App: React.FC = () => {
           <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onSelectTool={navigateToTool} />
           <SitemapModal isOpen={isSitemapModalOpen} onClose={() => setIsSitemapModalOpen(false)} onSelectTool={navigateToTool} onNavigateAdmin={() => { setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
           <AdminLoginModal isOpen={isAdminLoginOpen} onClose={() => setIsAdminLoginOpen(false)} onSuccess={() => { setIsAdminLoginOpen(false); setActivePage('admin'); setActiveTool(null); window.history.pushState({}, '', '/admin'); }} />
+          <BugReportModal
+            isOpen={isBugReportOpen}
+            onClose={() => setIsBugReportOpen(false)}
+            initialData={bugReportData}
+          />
         </div>
       </NavigationProvider>
     </CurrencyProvider>

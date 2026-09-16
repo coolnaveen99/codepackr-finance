@@ -1,20 +1,33 @@
 import React, { useState } from 'react';
-import { Share2, Check, ArrowLeft, Star } from 'lucide-react';
+import { Share2, Check, ArrowLeft, Star, Bug } from 'lucide-react';
 import { ToolDef } from '../types';
 import { TOOLS } from '../data/tools';
 import { useBookmarks, shareToolUrl } from '../lib/bookmarks';
 import { getIcon } from '../lib/icons';
 import { useNavigation } from '../lib/NavigationContext';
+import { openBugReportModal } from '../lib/diagnostics';
 
 interface ToolHeaderProps {
   tool: ToolDef;
   onBackToHome?: () => void;
   onBack?: () => void;
   onSelectRelated?: (t: ToolDef) => void;
+  onReportBug?: () => void;
+  inputsSnapshot?: Record<string, any>;
+  outputsSnapshot?: Record<string, any>;
   actions?: React.ReactNode;
 }
 
-export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onBack, onSelectRelated, actions }) => {
+export const ToolHeader: React.FC<ToolHeaderProps> = ({
+  tool,
+  onBackToHome,
+  onBack,
+  onSelectRelated,
+  onReportBug,
+  inputsSnapshot,
+  outputsSnapshot,
+  actions,
+}) => {
   const [copiedLink, setCopiedLink] = useState(false);
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(tool.id);
@@ -45,6 +58,18 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onBa
     if (success) {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
+    }
+  };
+
+  const handleReportIssue = () => {
+    if (onReportBug) {
+      onReportBug();
+    } else {
+      openBugReportModal({
+        tool,
+        inputsSnapshot,
+        outputsSnapshot,
+      });
     }
   };
 
@@ -83,11 +108,11 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onBa
           </div>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0 self-start md:self-auto mt-2 md:mt-0">
+        <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto mt-2 md:mt-0 flex-wrap">
           {actions}
           <button
             onClick={() => toggleBookmark(tool.id)}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border transition-all shadow-sm cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 text-sm font-bold rounded-xl border transition-all shadow-sm cursor-pointer ${
               bookmarked
                 ? 'bg-[color:var(--warning)]/10 border-[color:var(--warning)]/30 text-[color:var(--warning)]'
                 : 'bg-[color:var(--surface)] border-[color:var(--border)] text-[color:var(--ink)] hover:border-[color:var(--brand)]'
@@ -98,10 +123,20 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool, onBackToHome, onBa
           </button>
           <button
             onClick={handleShare}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-all shadow-sm cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2 text-sm font-bold rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] hover:border-[color:var(--brand)] transition-all shadow-sm cursor-pointer"
           >
             {copiedLink ? <Check className="w-4 h-4 text-[color:var(--success)]" /> : <Share2 className="w-4 h-4" />}
             <span>{copiedLink ? 'Copied' : 'Share'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleReportIssue}
+            className="flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:border-red-500/40 transition-all shadow-sm cursor-pointer"
+            title="Report calculation issue or bug"
+            aria-label="Report issue or calculation bug"
+          >
+            <Bug className="w-4 h-4 text-red-500" />
+            <span className="hidden sm:inline">Report Issue</span>
           </button>
         </div>
       </div>

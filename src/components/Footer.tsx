@@ -1,6 +1,7 @@
 import React from 'react';
-import { Globe, Lock } from 'lucide-react';
+import { Globe, Lock, Bug } from 'lucide-react';
 import { GithubIcon, XTwitterIcon, LinkedinIcon, YoutubeIcon, InstagramIcon } from './BrandIcons';
+import { openBugReportModal } from '../lib/diagnostics';
 
 interface FooterProps {
   onGoHome: () => void;
@@ -9,6 +10,7 @@ interface FooterProps {
   onGoTrustPage: (page: 'about' | 'financial-disclaimer' | 'cookie-policy' | 'calculation-methodology' | 'editorial-policy') => void;
   onOpenSitemap: () => void;
   onOpenAdminLogin?: () => void;
+  onOpenBugReport?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -18,6 +20,7 @@ export const Footer: React.FC<FooterProps> = ({
   onGoTrustPage,
   onOpenSitemap,
   onOpenAdminLogin,
+  onOpenBugReport,
 }) => {
   return (
     <footer id="main-footer" className="border-t border-[color:var(--border)] bg-[color:var(--surface)] py-10 mt-16">
@@ -48,6 +51,13 @@ export const Footer: React.FC<FooterProps> = ({
             <button onClick={() => onGoTrustPage('cookie-policy')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Cookies</button>
             <button onClick={() => onGoTrustPage('calculation-methodology')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Methodology</button>
             <button onClick={() => onGoTrustPage('editorial-policy')} className="hover:text-[color:var(--brand)] transition-colors cursor-pointer">Editorial</button>
+            <button
+              onClick={onOpenBugReport || (() => openBugReportModal())}
+              className="flex items-center gap-1.5 hover:text-red-500 transition-colors cursor-pointer text-red-500/90 dark:text-red-400 font-semibold"
+              title="Report calculation discrepancy or bug"
+            >
+              <Bug className="w-3.5 h-3.5 text-red-500" /> Report a Bug
+            </button>
             <button onClick={onOpenSitemap} className="flex items-center gap-1.5 hover:text-[color:var(--brand)] transition-colors cursor-pointer">
               <Globe className="w-4 h-4" /> Index &amp; Sitemap
             </button>
