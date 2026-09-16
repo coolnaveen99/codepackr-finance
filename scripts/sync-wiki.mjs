@@ -269,6 +269,14 @@ Foundational financial guides, formulas, and methodologies included in this docu
 
 ---
 
+## ⚙️ Architecture & Operational Docs
+- 🐞 **[Bug Reporting & Technical Diagnostics](BUG_REPORTING_AND_DIAGNOSTICS)** — Zero-exfiltration client-side issue reporting, error buffers, and telemetry.
+- 🛡️ **[Admin Portal & Tool Governance](ADMIN_PORTAL_ARCHITECTURE)** — Offline PIN authentication, feature flags, and emergency maintenance.
+- 👥 **[Team Guide & Release Workflow](TEAM_GUIDE)** — Git branching model, PR rules, Vercel preview environments, and release protocol.
+- 📋 **[Sprint Roadmap & Tool Expansion](SPRINT_PLAN_MISSING_TOOLS)** — Prioritized feature roadmap and planned calculator additions.
+
+---
+
 ## 🗂️ Complete Calculator & Planning Tool Directory
 
 `;
@@ -337,6 +345,14 @@ let sidebarContent = `### [🏠 Wiki Home](Home)
 - [Retirement & FIRE](02-retirement-and-fire)
 - [Investments & Returns](03-investments-and-compounding)
 - [Business Valuation & Capital](04-business-valuation-and-capital)
+
+---
+
+### ⚙️ System & Governance
+- [Bug Reporting & Diagnostics](BUG_REPORTING_AND_DIAGNOSTICS)
+- [Admin Portal Architecture](ADMIN_PORTAL_ARCHITECTURE)
+- [Team Guide & Releases](TEAM_GUIDE)
+- [Sprint Roadmap](SPRINT_PLAN_MISSING_TOOLS)
 
 ---
 

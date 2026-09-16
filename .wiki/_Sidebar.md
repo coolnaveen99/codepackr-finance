@@ -14,6 +14,14 @@
 
 ---
 
+### ⚙️ System & Governance
+- [Bug Reporting & Diagnostics](BUG_REPORTING_AND_DIAGNOSTICS)
+- [Admin Portal Architecture](ADMIN_PORTAL_ARCHITECTURE)
+- [Team Guide & Releases](TEAM_GUIDE)
+- [Sprint Roadmap](SPRINT_PLAN_MISSING_TOOLS)
+
+---
+
 ### 🧮 Financial Calculators
 
 <details open>

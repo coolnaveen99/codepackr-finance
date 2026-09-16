@@ -14,11 +14,14 @@ All calculators run **100% client-side**. Your financial inputs are never upload
 
 ## 📚 Documentation Hub
 
-| Resource | Link |
-|----------|------|
-| **GitHub Wiki** (full docs + calculator directory) | [github.com/coolnaveen99/codepackr-finance/wiki](https://github.com/coolnaveen99/codepackr-finance/wiki) |
-| **Team Guide** | [docs/TEAM_GUIDE.md](docs/TEAM_GUIDE.md) |
-| **Parent Developer Suite** | [www.codepackr.com](https://www.codepackr.com) |
+| Resource | Link | Description |
+|----------|------|-------------|
+| **GitHub Wiki** | [github.com/coolnaveen99/codepackr-finance/wiki](https://github.com/coolnaveen99/codepackr-finance/wiki) | Complete documentation, mathematical primers & tool directory |
+| **Bug Reporting & Diagnostics** | [docs/BUG_REPORTING_AND_DIAGNOSTICS.md](docs/BUG_REPORTING_AND_DIAGNOSTICS.md) | Privacy-first error buffers, client telemetry, and issue tickets |
+| **Admin Portal Architecture** | [docs/ADMIN_PORTAL_ARCHITECTURE.md](docs/ADMIN_PORTAL_ARCHITECTURE.md) | Offline PIN governance, maintenance banners, and tool visibility |
+| **Team Guide & Workflows** | [docs/TEAM_GUIDE.md](docs/TEAM_GUIDE.md) | Git branching model, PR rules, Vercel preview environments & releases |
+| **Sprint Plan & Roadmaps** | [docs/SPRINT_PLAN_MISSING_TOOLS.md](docs/SPRINT_PLAN_MISSING_TOOLS.md) | Prioritized feature roadmap and planned calculator expansions |
+| **Parent Developer Suite** | [www.codepackr.com](https://www.codepackr.com) | Unified CodePackr developer hub & developer productivity tools |
 
 ---
 
