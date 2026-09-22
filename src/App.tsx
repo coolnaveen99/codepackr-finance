@@ -61,18 +61,11 @@ import { CurrencyProvider } from './lib/CurrencyContext';
 import { safeLocalStorage } from './lib/storage';
 import { NavEntry, NavigationProvider } from './lib/NavigationContext';
 import { Lock } from 'lucide-react';
+import { CodepackrFamilyBar } from './components/CodepackrFamilyBar';
 
 export const App: React.FC = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = safeLocalStorage.getItem('codepackr_finance_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    try {
-      if (typeof window !== 'undefined' && window.matchMedia) {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-    } catch {}
-    return 'dark';
-  });
+  // Enforce light theme only (dark mode disabled per user request)
+  const theme: 'light' = 'light';
 
   const [initialRoute] = useState(() => resolveCurrentRoute());
   const [activeTool, setActiveTool] = useState<ToolDef | null>(() => initialRoute.tool);
@@ -95,10 +88,9 @@ export const App: React.FC = () => {
   const { isAuthenticated } = useAdminAuth();
 
   useEffect(() => {
-    if (theme === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-    safeLocalStorage.setItem('codepackr_finance_theme', theme);
-  }, [theme]);
+    document.documentElement.classList.remove('dark');
+    safeLocalStorage.setItem('codepackr_finance_theme', 'light');
+  }, []);
 
   useEffect(() => {
     const rawSlug = typeof window !== 'undefined'
@@ -412,9 +404,10 @@ export const App: React.FC = () => {
     <CurrencyProvider>
       <NavigationProvider value={navContextValue}>
         <div className="min-h-screen flex flex-col font-sans selection:bg-[color:var(--brand)] selection:text-white bg-[color:var(--bg)] text-[color:var(--ink)]">
+          <CodepackrFamilyBar />
           <Navbar
             theme={theme}
-            onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+            onToggleTheme={() => {}}
             onOpenSearch={() => setIsSearchOpen(true)}
             selectedCategory={selectedCategory}
             onSelectCategory={handleSelectCategory}

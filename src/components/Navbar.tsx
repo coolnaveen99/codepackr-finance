@@ -212,11 +212,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               id="theme-toggle-btn"
-              onClick={onToggleTheme}
-              className="p-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] hover:text-[color:var(--ink)] hover:bg-[color:var(--surface-elevated)] transition-colors cursor-pointer"
-              aria-label="Toggle Theme"
+              disabled
+              className="p-2 rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] opacity-50 cursor-not-allowed"
+              title="Light theme is default (Dark mode disabled)"
+              aria-label="Light mode only (Dark mode disabled)"
             >
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              <Sun className="w-5 h-5 text-amber-500" />
             </button>
           </div>
         </div>
