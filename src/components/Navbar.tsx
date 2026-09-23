@@ -123,6 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono font-medium rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] group-hover:border-[color:var(--brand)]/40 transition-colors shrink-0">
                 <span className="text-[10px]">{isMac ? '⌘' : 'Ctrl'}</span>K
               </kbd>
+            </button>
           </div>
 
           {/* Right actions */}

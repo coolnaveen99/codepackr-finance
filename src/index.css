@@ -398,7 +398,7 @@ code, pre, kbd, samp, .font-mono {
   #main-footer,
   #sidebar-toggle-btn,
   #global-banner,
-  .print\\:hidden,
+  .print\:hidden,
   button:not(.print-allow),
   input:not(.print-allow),
   select:not(.print-allow) {
