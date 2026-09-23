@@ -65,18 +65,13 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  // Shared styles WITHOUT display utilities (avoid Tailwind conflict)
-  // CodePackr (tools) brand blue dual-tone gradient — matches www.codepackr.com theme
-  const devPillBase =
-    'items-center gap-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-600 to-sky-500 text-white border-0 shadow-sm hover:from-blue-700 hover:to-sky-600 transition-all shrink-0 cursor-pointer group';
-
   return (
-    <header id="main-header" className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors border-[color:var(--border)] bg-[color:var(--surface)]/85">
+    <header id="main-header" className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors border-[color:var(--border)] bg-[color:var(--surface)]/90">
       <div className="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-3 min-w-0">
 
-          {/* Left: Menu + Brand + Dev Suite link */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          {/* Left: Menu + Brand */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {onToggleSidebar && (
               <button
                 id="sidebar-toggle-btn"
@@ -88,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Enterprise-style brand: badge + CodePackr + FINANCE (same pattern as codepackr.com) */}
+            {/* Enterprise-style brand: badge + CodePackr + FINANCE */}
             <a
               href="/"
               onClick={(e) => {
@@ -100,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-2 group text-left cursor-pointer focus:outline-none min-w-0 shrink"
               aria-label="CodePackr Finance home"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white shadow-sm bg-[color:var(--brand)] transition-transform group-hover:scale-105 shrink-0">
+              <div className="size-9 sm:size-10 rounded-xl flex items-center justify-center text-white shadow-sm bg-gradient-to-br from-emerald-600 to-teal-600 transition-transform group-hover:scale-105 shrink-0 ring-1 ring-emerald-500/20">
                 <FinanceBadgeIcon className="w-5 h-5" />
               </div>
               <div className="flex flex-col min-w-0">
@@ -112,21 +107,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
             </a>
-
-            {/* Single Dev Suite cross-link — short on mobile, full on sm+ */}
-            <a
-              id="nav-codepackr-dev-link"
-              href="https://www.codepackr.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Codepackr Developer Suite"
-              aria-label="Open Codepackr Developer Suite"
-              className={`inline-flex ${devPillBase} px-2.5 sm:px-3 py-1.5`}
-            >
-              <Terminal className="w-3.5 h-3.5 shrink-0" />
-              <span className="sm:hidden">Dev Suite</span>
-              <span className="hidden sm:inline">Codepackr Dev Suite</span>
-            </a>
           </div>
 
           {/* Center search — desktop only */}
@@ -134,16 +114,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="search-trigger-btn"
               onClick={onOpenSearch}
-              className="w-full flex items-center justify-between px-4 py-2 text-sm rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)] hover:border-[color:var(--brand)] focus:outline-none transition-all shadow-sm cursor-pointer group"
+              className="w-full flex items-center justify-between px-4 py-2 text-sm rounded-xl border border-[color:var(--border)] bg-[color:var(--surface-elevated)] text-[color:var(--ink-muted)] hover:border-[color:var(--brand)] hover:ring-2 hover:ring-[color:var(--brand)]/15 focus:outline-none transition-all duration-200 hover:scale-[1.005] shadow-xs cursor-pointer group"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Search className="w-4 h-4 group-hover:text-[color:var(--brand)] transition-colors shrink-0" />
-                <span className="truncate">Search financial calculators...</span>
+                <span className="truncate group-hover:text-[color:var(--ink)] transition-colors">Search calculators & planning...</span>
               </div>
-              <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono font-medium rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] shrink-0">
+              <kbd className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono font-medium rounded-md border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink-muted)] group-hover:border-[color:var(--brand)]/40 transition-colors shrink-0">
                 <span className="text-[10px]">{isMac ? '⌘' : 'Ctrl'}</span>K
               </kbd>
-            </button>
           </div>
 
           {/* Right actions */}
