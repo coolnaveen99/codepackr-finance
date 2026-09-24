@@ -1,4 +1,4 @@
-# CodePackr Finance
+# CodePackr Finance.
 
 [![Live App](https://img.shields.io/badge/Live%20App-finance.codepackr.com-10b981?style=for-the-badge&logo=vercel)](https://finance.codepackr.com)
 [![Parent Hub](https://img.shields.io/badge/Parent%20Hub-codepackr.com-0ea5e9?style=for-the-badge&logo=github)](https://www.codepackr.com)
