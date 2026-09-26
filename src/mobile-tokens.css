@@ -48,6 +48,16 @@
   }
 }
 
+/* When nav is mounted via bridge (not App className) */
+html.cp-has-mobile-nav body {
+  padding-bottom: calc(var(--cp-bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+}
+@media (min-width: 1024px) {
+  html.cp-has-mobile-nav body {
+    padding-bottom: 0;
+  }
+}
+
 .cp-touch {
   min-height: var(--cp-touch-target);
   min-width: var(--cp-touch-target);
@@ -62,7 +72,8 @@
 }
 
 @media print {
-  #mobile-bottom-nav {
+  #mobile-bottom-nav,
+  #cp-mobile-nav-root {
     display: none !important;
   }
 }
