@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { mountFinanceMobileNav } from './components/MobileNavBridge';
 import './index.css';
 import './mobile-tokens.css';
 
@@ -15,10 +16,11 @@ if (rootElement) {
       </ErrorBoundary>
     </React.StrictMode>
   );
+  // Fixed mobile bottom nav (spec §07–§08)
+  mountFinanceMobileNav();
 }
 
 // Service Worker disabled after Cloudflare → Vercel migration.
-// Old SWs caused ERR_FAILED / stale shells on org devices.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.getRegistrations().then((regs) => {
