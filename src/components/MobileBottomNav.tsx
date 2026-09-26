@@ -1,5 +1,18 @@
 import React from 'react';
-import { Home, Calculator, Search, Star, MoreHorizontal, BookOpen, Scale, Sparkles, TrendingUp, ClipboardList, GraduationCap, LayoutGrid } from 'lucide-react';
+import {
+  Home,
+  Calculator,
+  Search,
+  Star,
+  MoreHorizontal,
+  BookOpen,
+  Scale,
+  Sparkles,
+  TrendingUp,
+  ClipboardList,
+  GraduationCap,
+  type LucideIcon,
+} from 'lucide-react';
 
 export type MobileTab = string;
 
@@ -76,8 +89,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   );
 };
 
-const icon = (El: React.ComponentType<{ className?: string; strokeWidth?: number }>) =>
-  <El className="w-5 h-5" strokeWidth={2} />;
+const icon = (El: LucideIcon) => <El className="w-5 h-5" strokeWidth={2} />;
 
 /** finance.codepackr.com — Home · Calculators · Saved · History/Plans · More */
 export const FINANCE_MOBILE_TABS: MobileNavTab[] = [
