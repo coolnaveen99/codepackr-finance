@@ -1,0 +1,79 @@
+/* CodePackr Shared Mobile Design System (spec §04) — feature/mobile-premium-ux */
+:root {
+  --cp-space-1: 4px;
+  --cp-space-2: 8px;
+  --cp-space-3: 12px;
+  --cp-space-4: 16px;
+  --cp-space-5: 20px;
+  --cp-space-6: 24px;
+  --cp-space-7: 32px;
+  --cp-space-8: 40px;
+  --cp-space-9: 48px;
+  --cp-space-10: 64px;
+  --cp-radius-sm: 10px;
+  --cp-radius-md: 14px;
+  --cp-radius-lg: 20px;
+  --cp-radius-xl: 24px;
+  --cp-touch-target: 44px;
+  --cp-mobile-padding: 16px;
+  --cp-header-height: 56px;
+  --cp-bottom-nav-height: 56px;
+  --cp-shadow-rest: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --cp-shadow-raised: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --cp-shadow-overlay: 0 12px 40px rgba(15, 23, 42, 0.14);
+  --cp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cp-duration-micro: 150ms;
+  --cp-duration-sheet: 250ms;
+}
+
+.cp-no-h-scroll,
+.cp-page {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+.cp-break-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cp-mobile-main-pad {
+  padding-bottom: calc(var(--cp-bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+}
+
+@media (min-width: 1024px) {
+  .cp-mobile-main-pad {
+    padding-bottom: 0;
+  }
+}
+
+/* When nav is mounted via bridge (not App className) */
+html.cp-has-mobile-nav body {
+  padding-bottom: calc(var(--cp-bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+}
+@media (min-width: 1024px) {
+  html.cp-has-mobile-nav body {
+    padding-bottom: 0;
+  }
+}
+
+.cp-touch {
+  min-height: var(--cp-touch-target);
+  min-width: var(--cp-touch-target);
+}
+
+.cp-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.cp-safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+@media print {
+  #mobile-bottom-nav,
+  #cp-mobile-nav-root {
+    display: none !important;
+  }
+}
