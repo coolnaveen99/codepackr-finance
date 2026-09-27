@@ -4,11 +4,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':!docs' ':!.github' ':!*.md' ':!*.csv' ':!LICENSE' ':!.git*' ':!.n*'",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/).*)",
       "destination": "/index.html"
     }
   ],
