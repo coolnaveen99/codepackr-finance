@@ -74,6 +74,16 @@ export const SLUG_TO_TOOL_ID: Record<string, string> = {
   'apy-calculator': 'apy-calculator',
   'apy': 'apy-calculator',
   'atal-pension-yojana-calculator': 'apy-calculator',
+  'xirr-calculator': 'xirr-calculator',
+  'xirr': 'xirr-calculator',
+  'brokerage-calculator': 'brokerage-calculator',
+  'brokerage': 'brokerage-calculator',
+  'stock-average-calculator': 'stock-average-calculator',
+  'stock-average': 'stock-average-calculator',
+  'flat-vs-reducing-calculator': 'flat-vs-reducing-calculator',
+  'flat-vs-reducing': 'flat-vs-reducing-calculator',
+  'tds-calculator': 'tds-calculator',
+  'tds': 'tds-calculator',
 };
 
 export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
@@ -126,6 +136,11 @@ export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
   'nsc-calculator': 'nsc-calculator',
   'scss-calculator': 'scss-calculator',
   'apy-calculator': 'apy-calculator',
+  'xirr-calculator': 'xirr-calculator',
+  'brokerage-calculator': 'brokerage-calculator',
+  'stock-average-calculator': 'stock-average-calculator',
+  'flat-vs-reducing-calculator': 'flat-vs-reducing-calculator',
+  'tds-calculator': 'tds-calculator',
 };
 
 export function getToolPath(tool: ToolDef | string): string {
