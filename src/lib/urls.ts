@@ -111,6 +111,10 @@ export const SLUG_TO_TOOL_ID: Record<string, string> = {
   'dividend-yield-calculator': 'dividend-yield-calculator',
   'dividend-yield': 'dividend-yield-calculator',
   'dividend-calculator': 'dividend-yield-calculator',
+  'term-insurance-calculator': 'term-insurance-calculator',
+  'term-insurance': 'term-insurance-calculator',
+  'term-plan-calculator': 'term-insurance-calculator',
+  'life-insurance-calculator': 'term-insurance-calculator',
 };
 
 export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
@@ -153,6 +157,7 @@ export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
   'rule-of-72-calculator': 'rule-of-72-calculator',
   'annuity-calculator': 'annuity-calculator',
   'dividend-yield-calculator': 'dividend-yield-calculator',
+  'term-insurance-calculator': 'term-insurance-calculator',
 };
 
 export function getToolPath(tool: ToolDef | string): string {
