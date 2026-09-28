@@ -104,6 +104,9 @@ export const TermInsuranceCalculatorView: React.FC<
     setIncludeWOP(false);
   };
 
+  const activeBtn = 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)]';
+  const riderActive = 'border-[var(--brand)] bg-[var(--brand)]/10';
+
   return (
     <div>
       <ToolHeader tool={tool} onBackToHome={onBackToHome} onSelectRelated={onSelectRelated} />
@@ -164,9 +167,7 @@ export const TermInsuranceCalculatorView: React.FC<
                 <button
                   key={g}
                   onClick={() => setGender(g)}
-                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium capitalize cursor-pointer transition-all ${
-                    gender === g ? 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)]' : ''
-                  }`}
+                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium capitalize cursor-pointer transition-all ${gender === g ? activeBtn : ''}`}
                   style={gender !== g ? { borderColor: 'var(--line)', color: 'var(--ink)' } : undefined}
                 >
                   {g}
@@ -183,9 +184,7 @@ export const TermInsuranceCalculatorView: React.FC<
                 <button
                   key={String(s)}
                   onClick={() => setSmoker(s)}
-                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all ${
-                    smoker === s ? 'border-[var(--brand)] bg-[var(--brand)]/10 text-[var(--brand)]' : ''
-                  }`}
+                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium cursor-pointer transition-all ${smoker === s ? activeBtn : ''}`}
                   style={smoker !== s ? { borderColor: 'var(--line)', color: 'var(--ink)' } : undefined}
                 >
                   {s ? 'Yes' : 'No'}
@@ -247,9 +246,7 @@ export const TermInsuranceCalculatorView: React.FC<
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <button
               onClick={() => setIncludeCI(!includeCI)}
-              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${
-                includeCI ? 'border-[var(--brand)] bg-[var(--brand)]/10' : ''
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${includeCI ? riderActive : ''}`}
               style={!includeCI ? { borderColor: 'var(--line)' } : undefined}
             >
               <Heart className="w-4 h-4 shrink-0" style={{ color: includeCI ? 'var(--brand)' : 'var(--muted)' }} />
@@ -260,9 +257,7 @@ export const TermInsuranceCalculatorView: React.FC<
             </button>
             <button
               onClick={() => setIncludeADB(!includeADB)}
-              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${
-                includeADB ? 'border-[var(--brand)] bg-[var(--brand)]/10' : ''
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${includeADB ? riderActive : ''}`}
               style={!includeADB ? { borderColor: 'var(--line)' } : undefined}
             >
               <Activity className="w-4 h-4 shrink-0" style={{ color: includeADB ? 'var(--brand)' : 'var(--muted)' }} />
@@ -273,8 +268,7 @@ export const TermInsuranceCalculatorView: React.FC<
             </button>
             <button
               onClick={() => setIncludeWOP(!includeWOP)}
-              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${\n                includeWOP ? 'border-[var(--brand)] bg-[var(--brand)]/10' : ''
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border text-left text-sm cursor-pointer transition-all ${includeWOP ? riderActive : ''}`}
               style={!includeWOP ? { borderColor: 'var(--line)' } : undefined}
             >
               <Percent className="w-4 h-4 shrink-0" style={{ color: includeWOP ? 'var(--brand)' : 'var(--muted)' }} />
