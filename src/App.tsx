@@ -49,6 +49,9 @@ import { RuleOf72CalculatorView } from './components/tools/RuleOf72CalculatorVie
 import { AnnuityCalculatorView } from './components/tools/AnnuityCalculatorView';
 import { DividendYieldCalculatorView } from './components/tools/DividendYieldCalculatorView';
 import { TermInsuranceCalculatorView } from './components/tools/TermInsuranceCalculatorView';
+import { FdCalculatorView } from './components/tools/FdCalculatorView';
+import { RdCalculatorView } from './components/tools/RdCalculatorView';
+import { PpfCalculatorView } from './components/tools/PpfCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { BugReportModal } from './components/BugReportModal';
@@ -287,6 +290,9 @@ export const App: React.FC = () => {
       'annuity-calculator': <AnnuityCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'dividend-yield-calculator': <DividendYieldCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'term-insurance-calculator': <TermInsuranceCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'fd-calculator': <FdCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'rd-calculator': <RdCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'ppf-calculator': <PpfCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
     };
     return views[tool.id] || <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
   };
