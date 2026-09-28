@@ -66,6 +66,14 @@ export const SLUG_TO_TOOL_ID: Record<string, string> = {
   'nps-calculator': 'nps-calculator',
   'nps': 'nps-calculator',
   'national-pension-system-calculator': 'nps-calculator',
+  'nsc-calculator': 'nsc-calculator',
+  'nsc': 'nsc-calculator',
+  'scss-calculator': 'scss-calculator',
+  'scss': 'scss-calculator',
+  'senior-citizen-savings-calculator': 'scss-calculator',
+  'apy-calculator': 'apy-calculator',
+  'apy': 'apy-calculator',
+  'atal-pension-yojana-calculator': 'apy-calculator',
 };
 
 export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
@@ -115,6 +123,9 @@ export const TOOL_ID_TO_CANONICAL_SLUG: Record<string, string> = {
   'swp-calculator': 'swp-calculator',
   'ssy-calculator': 'ssy-calculator',
   'nps-calculator': 'nps-calculator',
+  'nsc-calculator': 'nsc-calculator',
+  'scss-calculator': 'scss-calculator',
+  'apy-calculator': 'apy-calculator',
 };
 
 export function getToolPath(tool: ToolDef | string): string {
