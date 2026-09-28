@@ -210,6 +210,16 @@ export const TOOLS: ToolDef[] = [
     isNew: true,
   },
   {
+    id: 'term-insurance-calculator',
+    name: 'Advanced Term Insurance Calculator',
+    category: 'personal-finance',
+    description: 'Estimate ideal term cover (income multiple, HLV, needs-based), insurer income-based max lock, illustrative premiums, riders and cost of delay — 100% private.',
+    keywords: ['term insurance', 'term plan', 'life cover', 'sum assured', 'premium calculator', 'income lock', 'axis max life', 'riders', 'critical illness', 'waiver of premium'],
+    icon: 'Shield',
+    popular: true,
+    isNew: true,
+  },
+  {
     id: 'income-tax-calculator',
     name: 'Income Tax Calculator',
     category: 'tax',
