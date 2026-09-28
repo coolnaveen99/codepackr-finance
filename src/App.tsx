@@ -58,6 +58,11 @@ import { NpsCalculatorView } from './components/tools/NpsCalculatorView';
 import { NscCalculatorView } from './components/tools/NscCalculatorView';
 import { ScssCalculatorView } from './components/tools/ScssCalculatorView';
 import { ApyCalculatorView } from './components/tools/ApyCalculatorView';
+import { XirrCalculatorView } from './components/tools/XirrCalculatorView';
+import { BrokerageCalculatorView } from './components/tools/BrokerageCalculatorView';
+import { StockAverageCalculatorView } from './components/tools/StockAverageCalculatorView';
+import { FlatVsReducingCalculatorView } from './components/tools/FlatVsReducingCalculatorView';
+import { TdsCalculatorView } from './components/tools/TdsCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { BugReportModal } from './components/BugReportModal';
@@ -305,6 +310,11 @@ export const App: React.FC = () => {
       'nsc-calculator': <NscCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'scss-calculator': <ScssCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'apy-calculator': <ApyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'xirr-calculator': <XirrCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'brokerage-calculator': <BrokerageCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'stock-average-calculator': <StockAverageCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'flat-vs-reducing-calculator': <FlatVsReducingCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'tds-calculator': <TdsCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
     };
     return views[tool.id] || <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
   };
