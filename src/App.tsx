@@ -55,6 +55,9 @@ import { PpfCalculatorView } from './components/tools/PpfCalculatorView';
 import { SwpCalculatorView } from './components/tools/SwpCalculatorView';
 import { SsyCalculatorView } from './components/tools/SsyCalculatorView';
 import { NpsCalculatorView } from './components/tools/NpsCalculatorView';
+import { NscCalculatorView } from './components/tools/NscCalculatorView';
+import { ScssCalculatorView } from './components/tools/ScssCalculatorView';
+import { ApyCalculatorView } from './components/tools/ApyCalculatorView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
 import { BugReportModal } from './components/BugReportModal';
@@ -299,6 +302,9 @@ export const App: React.FC = () => {
       'swp-calculator': <SwpCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'ssy-calculator': <SsyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
       'nps-calculator': <NpsCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'nsc-calculator': <NscCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'scss-calculator': <ScssCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
+      'apy-calculator': <ApyCalculatorView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />,
     };
     return views[tool.id] || <CalculatorsView tool={tool} onBackToHome={navigateToHome} onSelectRelated={navigateToTool} />;
   };
